@@ -117,12 +117,12 @@ There are these data types inside the term attribute field. Make sure you split 
 `Adjektiv`, `adj`, `形容詞`, `형용사`:: sets `term.grammar-particle` to `adj`
 `Präfix`, `(prefix)`, `(préfixe)`, `接尾語`, `접두사`, `（词头）`:: sets `term.affix` to `prefix`
 
+
 `CA`:: `term.geographical_area` => `CA`
 `US`:: `term.geographical_area` => `US`
 
 `noun`, `名詞`:: `term.grammar-particle` => `noun` (all terms default to `noun`)
-
-`動詞`:: `term.grammar-particle` => `verb`
+`verb`, `動詞`:: `term.grammar-particle` => `verb`
 
 
 
@@ -245,6 +245,22 @@ notes:
 ----
 
 
+==== Source field
+
+Original:
+
+[source]
+----
+IEC 60050-311:2001, 311-01-04
+----
+
+After parsing:
+
+[source,yaml]
+----
+authoritative_source:
+  ref: IEC 60050-311:2001, 311-01-04
+----
 
 
 
