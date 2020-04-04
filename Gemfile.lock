@@ -4,6 +4,7 @@ PATH
     iev-termbase (0.1.12)
       creek
       relaton (~> 0.5)
+      thor
 
 GEM
   remote: https://rubygems.org/
@@ -13,6 +14,7 @@ GEM
     bibtex-ruby (5.1.2)
       latex-decode (~> 0.0)
     cnccs (0.1.5)
+    coderay (1.1.2)
     creek (2.5.1)
       nokogiri (>= 1.10.0)
       rubyzip (>= 1.0.0)
@@ -30,11 +32,15 @@ GEM
     iso639 (1.3.2)
     isoics (0.1.8)
     latex-decode (0.3.1)
+    method_source (1.0.0)
     mini_portile2 (2.4.0)
     multipart-post (2.1.1)
     nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
-    public_suffix (4.0.3)
+    pry (0.13.0)
+      coderay (~> 1.1)
+      method_source (~> 1.0)
+    public_suffix (4.0.4)
     rake (13.0.1)
     relaton (0.11.0)
       relaton-calconnect (~> 0.7.0)
@@ -101,6 +107,7 @@ GEM
     ruby-debug-ide (0.7.0)
       rake (>= 0.8.1)
     rubyzip (2.3.0)
+    thor (1.0.1)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
@@ -112,6 +119,7 @@ DEPENDENCIES
   bundler (~> 2.0.1)
   debase
   iev-termbase!
+  pry
   rake (~> 13.0)
   rspec (~> 3.0)
   ruby-debug-ide
