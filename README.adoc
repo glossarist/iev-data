@@ -135,7 +135,7 @@ For all `This links to <a href=IEV112-01-01>quantity</a>`, we parse them and rep
 
 e.g.
 
-1.
+1. Every `<NOTE {N} -` goes into a separate entry under `notes:`:
 
 [source]
 ----
@@ -143,8 +143,6 @@ quotient of two quantities of different dimensions, used as a multiplier to expr
 <NOTE 1 – A coefficient is a quantity having a dimension other than one. Examples: Hall coefficient, damping coefficient, temperature coefficient, gyromagnetic coefficient.
 <NOTE 2 – The term "modulus" is sometimes used instead of coefficient. Example: modulus of elasticity.
 ----
-
-This should get parsed to:
 
 [source,yaml]
 ----
@@ -155,7 +153,7 @@ notes:
 ----
 
 
-2.
+2. A `<NOTE -` goes into `notes:`:
 
 [source]
 ----
@@ -167,29 +165,11 @@ quantity of dimension one defined by a combination of quantities
 ----
 definition:
 notes:
-  -
+  - Characteristic numbers occur in particular in the theory of similarity. They carry the word "number" in their names. Examples: Reynolds number, Prandtl number.
 ----
 
 
-3.
-
-[source]
-----
-<a href=IEV112-01-01>quantity</a> which keeps the same value under particular circumstances, or which results from theoretical considerations
-<p>EXAMPLE <a href=IEV103-05-26>time constant</a>, equilibrium constant for a chemical reaction, <a href=IEV112-03-09>fundamental physical constant</a>.
-----
-
-=>
-
-[source,yaml]
-----
-definition: {{quantity, IEV:112-01-01}} which keeps the same value under particular circumstances, or which results from theoretical considerations
-examples:
-  - {{time constant, IEV:103-05-26}}, equilibrium constant for a chemical reaction, {{fundamental physical constant, IEV:112-03-09}}.
-----
-
-
-4.
+3. Sometimes there are many `Note {N} to entry: `, they are identical to `NOTE -`.
 
 [source]
 ----
@@ -210,7 +190,26 @@ notes:
   - Conditions of use and maintenance should be expressed or implied within the requirement.
 ----
 
-5. Remember to parse both EXAMPLE and Notes.
+
+4. Parse `EXAMPLE`:
+
+[source]
+----
+<a href=IEV112-01-01>quantity</a> which keeps the same value under particular circumstances, or which results from theoretical considerations
+<p>EXAMPLE <a href=IEV103-05-26>time constant</a>, equilibrium constant for a chemical reaction, <a href=IEV112-03-09>fundamental physical constant</a>.
+----
+
+=>
+
+[source,yaml]
+----
+definition: {{quantity, IEV:112-01-01}} which keeps the same value under particular circumstances, or which results from theoretical considerations
+examples:
+  - {{time constant, IEV:103-05-26}}, equilibrium constant for a chemical reaction, {{fundamental physical constant, IEV:112-03-09}}.
+----
+
+
+5. Remember to parse both `EXAMPLE` and `Note {N} to entry:`.
 
 [source]
 ----
@@ -227,7 +226,8 @@ notes:
   - From the maintenance perspective, the indenture level depends upon various factors, including the complexity of the item's construction, the accessibility of sub items, skill level of maintenance personnel, test equipment facilities, and safety considerations.
 ----
 
-6. Parse multiple languages (French)
+
+6. Remember to parse both `EXEMPLE` and `Note {N} à l’article:` in French
 
 [source]
 ----
