@@ -1,9 +1,13 @@
 module Iev::Termbase
-
   class Term
-
     ATTRIBS = %i(
-    id term abbrev synonyms alt definition
+    id
+    alt
+    term
+    terms
+    abbrev
+    synonyms
+    definition
     country_code
     language_code
     notes examples
@@ -29,26 +33,37 @@ module Iev::Termbase
     attr_accessor *ATTRIBS
 
     def initialize(options={})
-      @examples = []
-      @notes = []
+      initialize_from_options(options)
+      # @examples = []
+      # @notes = []
+      #
+      # # puts "options #{options.inspect}"
+      #
+      # options.each_pair do |k, v|
+      #   v = v.strip if v.is_a?(String)
+      #   next unless v
+      #   case k
+      #   when /^example/
+      #     add_example(v)
+      #   when /^note/
+      #     add_note(v)
+      #   else
+      #     # puts"Key #{k}"
+      #     key = k.to_s.gsub("-", "_")
+      #     self.send("#{key}=", v)
+      #   end
+      # end
+      # self
+    end
 
-      # puts "options #{options.inspect}"
+    def initialize_from_options(options)
+      options.each_pair do |key, value|
+        next unless value
 
-      options.each_pair do |k, v|
-        v = v.strip if v.is_a?(String)
-        next unless v
-        case k
-        when /^example/
-          add_example(v)
-        when /^note/
-          add_note(v)
-        else
-          # puts"Key #{k}"
-          key = k.gsub("-", "_")
-          self.send("#{key}=", v)
-        end
+        value = value.strip if value.is_a?(String)
+        key = key.to_s.gsub("-", "_")
+        self.send("#{key}=", value)
       end
-      self
     end
 
     STRIP_PUNCTUATION = [
@@ -142,7 +157,7 @@ module Iev::Termbase
     # The termid should ALWAYS be an integer.
     # https://github.com/riboseinc/tc211-termbase/issues/1
     def id=(newid)
-      @id = Integer(newid)
+      @id = newid
     end
 
     def to_hash

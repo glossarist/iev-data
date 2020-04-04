@@ -1,7 +1,7 @@
 require "singleton"
 require "relaton"
 
-module Tc211
+module Iev
   module Termbase
     # Relaton cach singleton.
     class RelatonDb

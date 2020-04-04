@@ -1,16 +1,45 @@
+require "iev/termbase/cli/ui"
 
-module Tc211::Termbase
+module Iev::Termbase
   module Cli
     class Command < Thor
-      desc "fetch CODE", "Fetch Relaton XML for Standard identifier CODE"
-      option :type, aliases: :t, required: true, desc: "Type of standard to get bibliographic entry for"
-      option :year, aliases: :y, type: :numeric, desc: "Year the standard was published"
+      desc "xlsx2yaml FILE", "Parsing Excel exports to IEV yaml."
+      option :output, aliases: :o, default: Dir.pwd, desc: "Output directory"
 
-      def fetch(code)
-        Relaton::Cli.relaton
-        say(fetch_document(code, options) || supported_type_message)
+      option(
+        :write,
+        default: true,
+        type: :boolean,
+        desc: "Write or Stream to the output buffer",
+      )
+
+      def xlsx2yaml(file)
+        collection = Iev::Termbase::Workbook.parse(file)
+
+        if collection && options[:write]
+          write_to_file(file, collection, options)
+        else
+          UI.say(collection.to_yaml)
+        end
       end
 
+      private
+
+      def write_to_file(file, collection, options)
+        output_dir = Pathname.new(options[:output].to_s)
+        collection.to_file(collection_file_path(file, output_dir))
+
+        concept_dir = output_dir.join("concepts")
+        FileUtils.mkdir_p(concept_dir)unless concept_dir.exist?
+
+        collection.each do |key, concept|
+          concept.to_file(concept_dir.join("concept-#{key}.yaml"))
+        end
+      end
+
+      def collection_file_path(file, output_dir)
+        output_dir.join(Pathname.new(file).basename.sub_ext(".yaml"))
+      end
     end
   end
 end
