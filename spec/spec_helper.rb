@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "tc211/termbase"
+require "iev/termbase"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

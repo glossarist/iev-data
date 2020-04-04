@@ -3,7 +3,7 @@ require_relative "term"
 require_relative "relaton_db"
 require "relaton_bib"
 
-module Tc211::Termbase
+module Iev::Termbase
 
   class TermsSection < SheetSection
     attr_accessor :structure

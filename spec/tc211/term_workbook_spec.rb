@@ -1,5 +1,5 @@
-RSpec.describe Tc211::Termbase::TermWorkbook do
-  subject { Tc211::Termbase::TermWorkbook.new("spec/fixtures/termbase.xlsx") }
+RSpec.describe Iev::Termbase::TermWorkbook, skip: true do
+  subject { Iev::Termbase::TermWorkbook.new("spec/fixtures/termbase.xlsx") }
 
   it "returns authoritative source" do
     term = subject.language_sheet("English").terms_section.terms.first
