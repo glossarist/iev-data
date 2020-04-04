@@ -89,8 +89,9 @@ The columns are:
 
 ==== Term field
 
-Usually the text. If it is `.....` (5 dots), it means that the translation is not available.
-
+* Usually the text
+* If it is `.....` (5 dots), it means that the translation is not available.
+* If it is `foobar (acronym)` or `foobar (akronim)`, it is an acronym. `term.acronym` => `true`.
 
 ==== Term attribute field
 
@@ -124,6 +125,7 @@ There are these data types inside the term attribute field. Make sure you split 
 `noun`, `名詞`:: `term.grammar-particle` => `noun` (all terms default to `noun`)
 `verb`, `動詞`:: `term.grammar-particle` => `verb`
 
+`(sigle international), m` => `term.acronym = true`, `term.international = true`, `term.gender = 'm'`
 
 
 ==== Term definition field
