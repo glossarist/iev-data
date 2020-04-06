@@ -8,7 +8,7 @@ RSpec.describe "IEV Termbase" do
 
       expect(output).to include("ger:")
       expect(output).to include("103-01-01:")
-      expect(output).to include("term: 범함수")
+      expect(output).to include("designation: 범함수")
     end
   end
 
