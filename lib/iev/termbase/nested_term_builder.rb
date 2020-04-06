@@ -7,7 +7,7 @@ module Iev
       end
 
       def build
-        if options[:term] && options[:data]
+        if options[:term]
           build_nested_term.select {|_k, value| !value.nil? }
         end
       end
@@ -28,7 +28,7 @@ module Iev
         {
           "type" => options[:type],
           "normativeStatus" => term_status,
-          "designation" => options[:designation],
+          "designation" => options[:term],
           "partOfSpeech" => extract_part_of_speach,
         }.merge(extract_gender || {})
       end

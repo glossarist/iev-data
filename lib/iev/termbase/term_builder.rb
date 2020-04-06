@@ -30,7 +30,7 @@ module Iev
 
       def build_term_object
         Iev::Termbase::Term.new(
-          id: find_value_for("IEVREF"),
+          id: find_value_for("IEVREF").gsub("-", ""),
           entry_status: find_value_for("STATUS"),
           classification: find_value_for("SYNONYM1STATUS"),
           date_accepted: find_value_for("PUBLICATIONDATE"),
@@ -42,9 +42,8 @@ module Iev
 
           # Beautification
           #
-          terms: extract_terms,
           term: term_value_text,
-          # synonyms: find_synonyms,
+          terms: extract_terms,
           notes: extract_node_value,
           definition: extract_definition_value,
           authoritative_source: extract_authoritative_source,

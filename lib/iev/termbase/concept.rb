@@ -18,8 +18,7 @@ module Iev::Termbase
     # The concept id should ALWAYS be an integer.
     # https://github.com/riboseinc/tc211-termbase/issues/1
     def id=(newid)
-      @id = newid
-      # @id = Integer(newid)
+      @id = Integer(newid)
     end
 
     def add_term(term)
