@@ -36,8 +36,8 @@ module Iev::Termbase
 
     def to_hash
       default_hash = {
-        "term" => default_term.term,
-        "termid" => id
+        "termid" => id,
+        "term" => default_term.terms.first["designation"],
       }
 
       self.inject(default_hash) do |acc, (lang, term)|
