@@ -42,7 +42,6 @@ module Iev
 
           # Beautification
           #
-          term: term_value_text,
           terms: extract_terms,
           notes: extract_node_value,
           definition: extract_definition_value,

@@ -3,7 +3,6 @@ module Iev::Termbase
     ATTRIBS = %i(
     id
     alt
-    term
     terms
     abbrev
     synonyms
