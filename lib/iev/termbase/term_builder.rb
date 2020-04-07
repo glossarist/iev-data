@@ -89,13 +89,17 @@ module Iev
         @definition_values ||= split_definition
       end
 
+      def replace_newlines(input)
+        input.gsub("\n", "\n\n").gsub("<(p|br)>", "\n\n").strip
+      end
+
       def split_definition
         definition = find_value_for("DEFINITION")
         definitions = { notes: [], examples: [], definition: nil }
 
         return definitions unless definition
 
-        definition = definition.gsub("<p>", "\n\n").strip
+        definition = replace_newlines(definition)
 
         # Remove mathml <annotation> tag
         definition = definition.to_s.gsub(/<annotation .*?>.*?<\/annotation>/,"")
