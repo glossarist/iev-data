@@ -31,6 +31,7 @@ module Iev
           "normativeStatus" => term_status,
           "designation" => options[:term],
           "partOfSpeech" => extract_part_of_speach,
+          "international" => options.fetch(:international, nil),
         }.merge(extract_gender || {})
       end
 
