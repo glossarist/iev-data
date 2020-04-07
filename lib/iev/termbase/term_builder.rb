@@ -81,6 +81,7 @@ module Iev
 
         if definition
           definition = definition.to_s.gsub(/<annotation .*?>.*?<\/annotation>/,"")
+          definition = parse_anchor_tag(definition)
           definitions = definition.split(NOTE_REGEX)
         end
 
@@ -184,6 +185,12 @@ module Iev
           end
         else
           source
+        end
+      end
+
+      def parse_anchor_tag(text)
+        if text
+          text.gsub(/<a href=([A-Z]+)\s*(.*?)>(.*?)<\/a>/, '{{\3, \1:\2}}')
         end
       end
     end
