@@ -102,7 +102,12 @@ module Iev
         definition = replace_newlines(definition)
 
         # Remove mathml <annotation> tag
-        definition = definition.to_s.gsub(/<annotation .*?>.*?<\/annotation>/,"")
+        # puts "DDDD"*10
+        # # puts definition
+        puts "DDDD"*10
+        definition = definition.to_s.gsub(/<annotation.*?>.*?<\/annotation>/,"").gsub(/<\/?semantics>/,"")
+        puts definition
+        puts "EEEE"*10
         definition = parse_anchor_tag(definition)
 
         example_block = definition.match(/[\r\n](EXAMPLE|EXEMPLE) (.*?)\r?$/).to_s
@@ -181,17 +186,9 @@ module Iev
       def html_to_asciimath(input)
         return input if input.nil? || input.empty?
 
-        input = input.gsub(/(\d+)<sup>(.*?)<\/sup>/, "$$\1^\2$$")
-
-        to_asciimath = Nokogiri::XML("<root>#{input}</root>")
-
-        italics = to_asciimath.xpath('//i')
-        italics.each do |italic|
-          italic.replace "$$#{italic}$$"
-        end
-
-        to_asciimath.root.text
-        # puts "RESULTS ==> #{foo}"
+        input.
+          gsub(/(\d+)<sup>(.*?)<\/sup>/, "$$\1^\2$$").
+          gsub(/<i>(.*?)<\/i>/, "$$\1$$")
       end
 
       def mathml_to_asciimath(input)
@@ -200,7 +197,7 @@ module Iev
         text = input.gsub(
             "<math>",
             '<math xmlns="http://www.w3.org/1998/Math/MathML">'
-          ).gsub(/<\/?semantics>/,"")
+          )
 
         # puts text
 
@@ -215,7 +212,7 @@ module Iev
           math_element.replace "$$#{asciimath}$$"
         end
 
-        to_asciimath.root.text
+        to_asciimath.root.children.to_s
         # puts "RESULTS ==> #{foo}"
       end
 
