@@ -147,6 +147,7 @@ module Iev
 
         terms.push(nested_term.build(
           type: "symbol",
+          international: true,
           term: find_value_for("SYMBOLE"),
         ))
 
