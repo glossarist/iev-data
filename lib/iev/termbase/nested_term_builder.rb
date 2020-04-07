@@ -28,6 +28,7 @@ module Iev
       def build_nested_term
         {
           "type" => options[:type],
+          "prefix" => extract_prefix,
           "normativeStatus" => term_status,
           "designation" => options[:term],
           "partOfSpeech" => extract_part_of_speach,
@@ -74,6 +75,10 @@ module Iev
           part_of_speach = part_of_speaches.first
           parts_hash[part_of_speach] || part_of_speach
         end
+      end
+
+      def extract_prefix
+        term_attributes.grep(/Präfix|prefix|préfixe|接尾語|접두사|przedrostek|prefixo|词头/).empty? ? nil : true
       end
     end
   end
