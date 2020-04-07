@@ -1,6 +1,7 @@
 require "iev/termbase/relaton_db"
 require "iev/termbase/country_code"
 require "iev/termbase/nested_term_builder"
+require 'mathml2asciimath'
 
 module Iev
   module Termbase
@@ -43,8 +44,12 @@ module Iev
           # Beautification
           #
           terms: extract_terms,
-          notes: definition_values[:notes],
-          examples: definition_values[:examples],
+          notes: definition_values[:notes].map do |note|
+            mathml_to_asciimath(note)
+          end,
+          examples: definition_values[:examples].map do |example|
+            mathml_to_asciimath(example)
+          end,
           definition: extract_definition_value,
           authoritative_source: extract_authoritative_source,
           language_code: three_char_code(find_value_for("LANGUAGE")),
@@ -142,7 +147,7 @@ module Iev
         terms.push(nested_term.build(
           type: "symbol",
           international: true,
-          term: find_value_for("SYMBOLE"),
+          term: mathml_to_asciimath(find_value_for("SYMBOLE")),
         ))
 
         terms.select { |term| !term.nil? }
@@ -152,32 +157,36 @@ module Iev
         Iev::Termbase::NestedTermBuilder
       end
 
-      require 'mathml2asciimath'
+      def mathml_to_asciimath(input)
+        return input if input.nil? || input.empty?
+
+        text = input.gsub(
+            "<math>",
+            '<math xmlns="http://www.w3.org/1998/Math/MathML">'
+          ).gsub(/<\/?semantics>/,"")
+
+        puts text
+
+        to_asciimath = Nokogiri::XML("<root>#{text}</root>")
+
+        maths = to_asciimath.xpath('//mathml:math', 'mathml' => "http://www.w3.org/1998/Math/MathML")
+
+        maths.each do |math_element|
+          asciimath = MathML2AsciiMath.m2a(math_element.to_xml)
+          asciimath.gsub!("\n", " ")
+          puts "ASCIIMATH!!  #{asciimath}"
+          math_element.replace "$$#{asciimath}$$"
+        end
+
+        foo = to_asciimath.root.text
+        puts "RESULTS ==> #{foo}"
+
+        foo
+      end
+
       def extract_definition_value
         if definition_values[:definition]
-          prep_string = definition_values[:definition].gsub("<p>", "").strip
-
-          prep_string = prep_string.gsub(
-              "<math>",
-              '<math xmlns="http://www.w3.org/1998/Math/MathML">'
-            ).gsub(/<\/?semantics>/,"")
-
-          puts prep_string
-
-          to_asciimath = Nokogiri::XML("<root>#{prep_string}</root>")
-
-          maths = to_asciimath.xpath('//mathml:math', 'mathml' => "http://www.w3.org/1998/Math/MathML")
-
-          maths.each do |math_element|
-            asciimath = MathML2AsciiMath.m2a(math_element.to_xml)
-            asciimath.gsub!("\n", " ")
-            puts "ASCIIMATH!!  #{asciimath}"
-            math_element.replace "$$#{asciimath}$$"
-          end
-
-          foo = to_asciimath.root.text
-          puts "RESULTS ==> #{foo}"
-          foo
+          mathml_to_asciimath(definition_values[:definition].gsub("<p>", "").strip)
         end
       end
 
