@@ -31,6 +31,7 @@ module Iev
           "normativeStatus" => term_status,
           "designation" => options[:term],
           "partOfSpeech" => extract_part_of_speach,
+          "geographicalArea" => extract_geographical_area,
           "international" => options.fetch(:international, nil),
         }.merge(extract_gender || {})
       end
@@ -61,6 +62,9 @@ module Iev
         }
       end
 
+      def extract_geographical_area
+        term_attributes.grep(/[A-Z]{2}$/).first
+      end
 
       def extract_part_of_speach
         parts_regex = /noun|名詞|verb|動詞|Adjektiv|adj|形容詞|형용사/
