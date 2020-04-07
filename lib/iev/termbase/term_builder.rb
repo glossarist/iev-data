@@ -43,7 +43,8 @@ module Iev
           # Beautification
           #
           terms: extract_terms,
-          notes: extract_node_value,
+          notes: definition_values[:notes],
+          examples: definition_values[:examples],
           definition: extract_definition_value,
           authoritative_source: extract_authoritative_source,
           language_code: three_char_code(find_value_for("LANGUAGE")),
@@ -55,7 +56,6 @@ module Iev
           #
           abbrev: nil,
           alt: nil,
-          example: nil,
           country_code: nil,
           review_indicator: nil,
           authoritative_source_similarity: nil,
@@ -77,12 +77,18 @@ module Iev
 
       def split_definition
         definition = find_value_for("DEFINITION")
-        definitions = []
+        definitions = { notes: [], examples: [], definition: nil }
 
         if definition
           definition = definition.to_s.gsub(/<annotation .*?>.*?<\/annotation>/,"")
           definition = parse_anchor_tag(definition)
-          definitions = definition.split(NOTE_REGEX)
+
+          example_block = definition.match(/Examples:(.*?)\r?$/).to_s
+          definitions[:examples] = [Regexp.last_match(1)] if example_block
+
+          note_split  = definition.split(NOTE_REGEX)
+          definitions[:definition] = note_split.first
+          definitions[:notes] = note_split[1..-1] if note_split.size > 1
         end
 
         definitions
@@ -95,18 +101,6 @@ module Iev
         synonyms.push(find_value_for("SYNONYM3"))
 
         synonyms.select {|item| !item.nil? }
-      end
-
-      def extract_node_value
-        if definition_values.size > 1
-          definition_values[1..-1]
-        end
-      end
-
-      def extract_definition_value
-        unless definition_values.empty?
-          definition_values.first.gsub("<p>", "").strip
-        end
       end
 
       def three_char_code(code)
@@ -156,6 +150,12 @@ module Iev
 
       def nested_term
         Iev::Termbase::NestedTermBuilder
+      end
+
+      def extract_definition_value
+        if definition_values[:definition]
+          definition_values[:definition].gsub("<p>", "").strip
+        end
       end
 
       def extract_authoritative_source
