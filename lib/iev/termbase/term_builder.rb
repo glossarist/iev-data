@@ -277,7 +277,11 @@ module Iev
 
       def parse_anchor_tag(text)
         if text
-          text.gsub(/<a href=([A-Z]+)\s*(.*?)>(.*?)<\/a>/, '{{\3, \1:\2}}')
+          # Convert IEV term references
+          text.gsub(/<a href=(IEV)\s*(.*?)>(.*?)<\/a>/, '{{\3, \1:\2}}')
+
+          # Convert href links
+          text.gsub(/<a href="(.*?)">(.*?)<\/a>/, '\1[\2]')
         end
       end
     end
