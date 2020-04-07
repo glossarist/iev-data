@@ -152,9 +152,32 @@ module Iev
         Iev::Termbase::NestedTermBuilder
       end
 
+      require 'mathml2asciimath'
       def extract_definition_value
         if definition_values[:definition]
-          definition_values[:definition].gsub("<p>", "").strip
+          prep_string = definition_values[:definition].gsub("<p>", "").strip
+
+          prep_string = prep_string.gsub(
+              "<math>",
+              '<math xmlns="http://www.w3.org/1998/Math/MathML">'
+            ).gsub(/<\/?semantics>/,"")
+
+          puts prep_string
+
+          to_asciimath = Nokogiri::XML("<root>#{prep_string}</root>")
+
+          maths = to_asciimath.xpath('//mathml:math', 'mathml' => "http://www.w3.org/1998/Math/MathML")
+
+          maths.each do |math_element|
+            asciimath = MathML2AsciiMath.m2a(math_element.to_xml)
+            asciimath.gsub!("\n", " ")
+            puts "ASCIIMATH!!  #{asciimath}"
+            math_element.replace "$$#{asciimath}$$"
+          end
+
+          foo = to_asciimath.root.text
+          puts "RESULTS ==> #{foo}"
+          foo
         end
       end
 
