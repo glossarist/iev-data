@@ -6,7 +6,7 @@ require 'mathml2asciimath'
 module Iev
   module Termbase
     class TermBuilder
-      NOTE_REGEX = /Note ?\d? .*?: |<NOTE ?\d? .*?– /i
+      NOTE_REGEX = /Note[\s ]*?\d+?[\s ]to entry: |Note[\s ]*?\d+?[\s ]à l’article: |<NOTE[\s ]+?\d?[\s ]+.*?– /i
 
       def initialize(data:, indices: )
         @data = data
@@ -90,7 +90,7 @@ module Iev
       end
 
       def replace_newlines(input)
-        input.gsub("\n", "\n\n").gsub("<(p|br)>", "\n\n").strip
+        input.gsub('\n', "\n\n").gsub(/<[pbr]+>/, "\n\n").gsub(/\n+/, "\n\n").strip
       end
 
       def split_definition
@@ -105,11 +105,12 @@ module Iev
         definition = definition.to_s.gsub(/<annotation .*?>.*?<\/annotation>/,"")
         definition = parse_anchor_tag(definition)
 
-        example_block = definition.match(/(EXAMPLE|EXEMPLE) (.*?)\r?$/).to_s
+        example_block = definition.match(/[\r\n](EXAMPLE|EXEMPLE) (.*?)\r?$/).to_s
 
         if example_block && !example_block.strip.empty?
           # We only take the latter captured part
           definitions[:examples] = [Regexp.last_match(2).strip]
+          definition = definition.gsub("#{Regexp.last_match(1)} #{Regexp.last_match(2)}", "")
         end
 
         note_split  = definition.split(NOTE_REGEX)
