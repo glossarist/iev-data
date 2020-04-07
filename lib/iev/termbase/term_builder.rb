@@ -137,32 +137,32 @@ module Iev
 
         terms.push(nested_term.build(
           type: "expression",
-          term: term_value_text,
+          term: html_to_asciimath(term_value_text),
           data: find_value_for("TERMATTRIBUTE"),
-          status: find_value_for("SYNONYM1STATUS"),
+          status: 'Preferred',
         ))
 
-        terms.push(nested_term.build(
-          type: "expression",
-          term: find_value_for("SYNONYM1"),
-          data: find_value_for("SYNONYM1ATTRIBUTE"),
-          status: find_value_for("SYNONYM1STATUS"),
-        ))
+        (1..3).each do |num|
+          # Some synonyms have more than one entry
+          values = find_value_for("SYNONYM#{num}")
+          next if values.nil?
 
-        terms.push(nested_term.build(
-          type: "expression",
-          term: find_value_for("SYNONYM2"),
-          data: find_value_for("SYNONYM2ATTRIBUTE"),
-          status: find_value_for("SYNONYM2STATUS"),
-        ))
+          puts "X"*50
+          puts values
+          values = values.split(/<[pbr]+>/)
 
+          puts values.inspect
+          puts "Y"*50
 
-        terms.push(nested_term.build(
-          type: "expression",
-          term: find_value_for("SYNONYM3"),
-          data: find_value_for("SYNONYM3ATTRIBUTE"),
-          status: find_value_for("SYNONYM3STATUS"),
-        ))
+          values.each do |value|
+            terms.push(nested_term.build(
+              type: "expression",
+              term: html_to_asciimath(value),
+              data: find_value_for("SYNONYM#{num}ATTRIBUTE"),
+              status: find_value_for("SYNONYM1STATUS"),
+            ))
+          end
+        end
 
         terms.push(nested_term.build(
           type: "symbol",
@@ -175,6 +175,22 @@ module Iev
 
       def nested_term
         Iev::Termbase::NestedTermBuilder
+      end
+
+      def html_to_asciimath(input)
+        return input if input.nil? || input.empty?
+
+        input = input.gsub(/(\d+)<sup>(.*?)<\/sup>/, "$$\1^\2$$")
+
+        to_asciimath = Nokogiri::XML("<root>#{input}</root>")
+
+        italics = to_asciimath.xpath('//i')
+        italics.each do |italic|
+          italic.replace "$$#{italic}$$"
+        end
+
+        to_asciimath.root.text
+        # puts "RESULTS ==> #{foo}"
       end
 
       def mathml_to_asciimath(input)
