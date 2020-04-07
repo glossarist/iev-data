@@ -104,11 +104,12 @@ module Iev
         # Remove mathml <annotation> tag
         # puts "DDDD"*10
         # # puts definition
-        puts "DDDD"*10
-        definition = definition.to_s.gsub(/<annotation.*?>.*?<\/annotation>/,"").gsub(/<\/?semantics>/,"")
-        puts definition
-        puts "EEEE"*10
+        # puts "DDDD"*10
         definition = parse_anchor_tag(definition)
+        definition = clean_mathml(definition)
+        # #.to_s.gsub(/<annotation.*?>.*?<\/annotation>/,"").gsub(/<\/?semantics>/,"")
+        # puts definition
+        # puts "EEEE"*10
 
         example_block = definition.match(/[\r\n](EXAMPLE|EXEMPLE) (.*?)\r?$/).to_s
 
@@ -143,7 +144,7 @@ module Iev
 
         terms.push(nested_term.build(
           type: "expression",
-          term: html_to_asciimath(term_value_text),
+          term: mathml_to_asciimath(term_value_text),
           data: find_value_for("TERMATTRIBUTE"),
           status: 'Preferred',
         ))
@@ -163,7 +164,7 @@ module Iev
           values.each do |value|
             terms.push(nested_term.build(
               type: "expression",
-              term: html_to_asciimath(value),
+              term: mathml_to_asciimath(value),
               data: find_value_for("SYNONYM#{num}ATTRIBUTE"),
               status: find_value_for("SYNONYM1STATUS"),
             ))
@@ -183,6 +184,18 @@ module Iev
         Iev::Termbase::NestedTermBuilder
       end
 
+      def clean_mathml(input)
+        return input if input.nil? || input.empty?
+
+        input = input.gsub(/<\/?semantics>/,"")
+
+        f = Nokogiri::XML("<root>#{input}</root>", nil, "UTF-8")
+        f.search('//annotation').map(&:remove)
+
+        f.root.children.to_xml
+        # puts "RESULTS ==> #{foo}"
+      end
+
       def html_to_asciimath(input)
         return input if input.nil? || input.empty?
 
@@ -194,26 +207,30 @@ module Iev
       def mathml_to_asciimath(input)
         return input if input.nil? || input.empty?
 
-        text = input.gsub(
-            "<math>",
-            '<math xmlns="http://www.w3.org/1998/Math/MathML">'
-          )
+        if input.match?(/<math>/)
+          text = clean_mathml(input)
+          text = text.gsub(
+              "<math>",
+              '<math xmlns="http://www.w3.org/1998/Math/MathML">'
+            )
 
-        # puts text
+          # puts text
 
-        to_asciimath = Nokogiri::XML("<root>#{text}</root>")
+          to_asciimath = Nokogiri::XML("<root>#{text}</root>", nil, "UTF-8")
 
-        maths = to_asciimath.xpath('//mathml:math', 'mathml' => "http://www.w3.org/1998/Math/MathML")
+          maths = to_asciimath.xpath('//mathml:math', 'mathml' => "http://www.w3.org/1998/Math/MathML")
 
-        maths.each do |math_element|
-          asciimath = MathML2AsciiMath.m2a(math_element.to_xml)
-          asciimath.gsub!("\n", " ")
-          # puts "ASCIIMATH!!  #{asciimath}"
-          math_element.replace "$$#{asciimath}$$"
+          maths.each do |math_element|
+            asciimath = MathML2AsciiMath.m2a(math_element.to_xml)
+            asciimath.gsub!("\n", " ")
+            # puts "ASCIIMATH!!  #{asciimath}"
+            math_element.replace "$$#{asciimath}$$"
+          end
+
+          input = to_asciimath.root.children.to_s
         end
 
-        to_asciimath.root.children.to_s
-        # puts "RESULTS ==> #{foo}"
+        html_to_asciimath(input)
       end
 
       def extract_definition_value
