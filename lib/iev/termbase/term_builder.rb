@@ -144,6 +144,11 @@ module Iev
           status: find_value_for("SYNONYM3STATUS"),
         ))
 
+        terms.push(nested_term.build(
+          type: "symbol",
+          term: find_value_for("SYMBOLE"),
+        ))
+
         terms.select { |term| !term.nil? }
       end
 

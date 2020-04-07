@@ -4,6 +4,7 @@ module Iev
       def initialize(options = {})
         @options = options
         @data = options.fetch(:data, nil)
+        @status = options.fetch(:status, nil)
       end
 
       def build
@@ -18,7 +19,7 @@ module Iev
 
       private
 
-      attr_reader :data, :options
+      attr_reader :data, :status, :options
 
       def term_attributes
         @term_attributes ||= data.to_s.split("; ")
@@ -34,7 +35,6 @@ module Iev
       end
 
       def term_status
-        status = options[:status]
         status.downcase if status
       end
 
