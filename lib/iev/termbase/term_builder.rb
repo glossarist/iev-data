@@ -181,7 +181,7 @@ module Iev
             '<math xmlns="http://www.w3.org/1998/Math/MathML">'
           ).gsub(/<\/?semantics>/,"")
 
-        puts text
+        # puts text
 
         to_asciimath = Nokogiri::XML("<root>#{text}</root>")
 
@@ -190,14 +190,12 @@ module Iev
         maths.each do |math_element|
           asciimath = MathML2AsciiMath.m2a(math_element.to_xml)
           asciimath.gsub!("\n", " ")
-          puts "ASCIIMATH!!  #{asciimath}"
+          # puts "ASCIIMATH!!  #{asciimath}"
           math_element.replace "$$#{asciimath}$$"
         end
 
-        foo = to_asciimath.root.text
-        puts "RESULTS ==> #{foo}"
-
-        foo
+        to_asciimath.root.text
+        # puts "RESULTS ==> #{foo}"
       end
 
       def extract_definition_value
@@ -211,15 +209,20 @@ module Iev
 
         if source
           begin
+            # source = "ISO/IEC GUIDE 99:2007 1.26"
             raw_ref = source.match(/\A[^,\()]+/).to_s
+
             clean_ref = raw_ref.
               sub(";", ":").
               sub(/\u2011/, "-").
-              sub(/IEC\sIEEE/, "IEC/IEEE")
+              sub(/IEC\sIEEE/, "IEC/IEEE").
+              sub(/\d\.[\d\.]+/, "").
+              strip
 
             clause = source.
-              gsub(raw_ref, "").
-              gsub(/\A,?\s+/,"")
+              gsub(clean_ref, "").
+              gsub(/\A,?\s+/,"").
+              strip
 
             item = RelatonDb.instance.fetch(clean_ref)
 
