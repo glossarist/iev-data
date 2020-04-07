@@ -30,6 +30,7 @@ module Iev
           "type" => options[:type],
           "prefix" => extract_prefix,
           "normativeStatus" => term_status,
+          "usageInfo" => extract_usage_info,
           "designation" => options[:term],
           "partOfSpeech" => extract_part_of_speach,
           "geographicalArea" => extract_geographical_area,
@@ -74,6 +75,14 @@ module Iev
         unless part_of_speaches.empty?
           part_of_speach = part_of_speaches.first
           parts_hash[part_of_speach] || part_of_speach
+        end
+      end
+
+      def extract_usage_info
+        usage_info = term_attributes.grep(/&lt/).first
+
+        if usage_info
+          usage_info.gsub(/&lt;(.*?)&gt/, '\1')
         end
       end
 
