@@ -6,7 +6,7 @@ require 'mathml2asciimath'
 module Iev
   module Termbase
     class TermBuilder
-      NOTE_REGEX = /Note \d .*?: /
+      NOTE_REGEX = /Note ?\d? .*?: |<NOTE ?\d? .*?– /i
 
       def initialize(data:, indices: )
         @data = data
@@ -29,16 +29,25 @@ module Iev
         data.fetch(indices[key], nil)
       end
 
+      def flesh_date(incomplete_date)
+        return incomplete_date if incomplete_date.nil? || incomplete_date.empty?
+
+        # FIXME: this is a terrible assumption but the IEV export only provides
+        # year and month
+        year, month = incomplete_date.split('-')
+        DateTime.parse("#{year}-#{month}-01").to_s
+      end
+
       def build_term_object
         Iev::Termbase::Term.new(
           id: find_value_for("IEVREF").gsub("-", ""),
           entry_status: find_value_for("STATUS"),
           classification: find_value_for("SYNONYM1STATUS"),
-          date_accepted: find_value_for("PUBLICATIONDATE"),
+          date_accepted: flesh_date(find_value_for("PUBLICATIONDATE")),
           release: find_value_for("REPLACES"),
-          date_amended: find_value_for("PUBLICATIONDATE"),
-          review_date: find_value_for("PUBLICATIONDATE"),
-          review_decision_date: find_value_for("PUBLICATIONDATE"),
+          date_amended: flesh_date(find_value_for("PUBLICATIONDATE")),
+          review_date: flesh_date(find_value_for("PUBLICATIONDATE")),
+          review_decision_date: flesh_date(find_value_for("PUBLICATIONDATE")),
           review_decision_event: "published",
 
           # Beautification
@@ -84,17 +93,24 @@ module Iev
         definition = find_value_for("DEFINITION")
         definitions = { notes: [], examples: [], definition: nil }
 
-        if definition
-          definition = definition.to_s.gsub(/<annotation .*?>.*?<\/annotation>/,"")
-          definition = parse_anchor_tag(definition)
+        return definitions unless definition
 
-          example_block = definition.match(/Examples:(.*?)\r?$/).to_s
-          definitions[:examples] = [Regexp.last_match(1)] if example_block
+        definition = definition.gsub("<p>", "\n\n").strip
 
-          note_split  = definition.split(NOTE_REGEX)
-          definitions[:definition] = note_split.first
-          definitions[:notes] = note_split[1..-1] if note_split.size > 1
+        # Remove mathml <annotation> tag
+        definition = definition.to_s.gsub(/<annotation .*?>.*?<\/annotation>/,"")
+        definition = parse_anchor_tag(definition)
+
+        example_block = definition.match(/(EXAMPLE|EXEMPLE) (.*?)\r?$/).to_s
+
+        if example_block && !example_block.strip.empty?
+          # We only take the latter captured part
+          definitions[:examples] = [Regexp.last_match(2).strip]
         end
+
+        note_split  = definition.split(NOTE_REGEX)
+        definitions[:definition] = note_split.first
+        definitions[:notes] = note_split[1..-1].map(&:strip) if note_split.size > 1
 
         definitions
       end
@@ -186,7 +202,7 @@ module Iev
 
       def extract_definition_value
         if definition_values[:definition]
-          mathml_to_asciimath(definition_values[:definition].gsub("<p>", "").strip)
+          mathml_to_asciimath(definition_values[:definition].strip)
         end
       end
 
