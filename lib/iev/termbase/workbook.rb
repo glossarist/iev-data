@@ -47,6 +47,5 @@ module Iev::Termbase
     def sheet_key_indices
       @sheet_key_indices ||= workbook.sheets.first.simple_rows.first.invert
     end
-
   end
 end
