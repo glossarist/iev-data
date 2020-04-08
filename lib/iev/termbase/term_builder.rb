@@ -106,7 +106,6 @@ module Iev
         # # puts definition
         # puts "DDDD"*10
         definition = parse_anchor_tag(definition)
-        definition = clean_mathml(definition)
         # #.to_s.gsub(/<annotation.*?>.*?<\/annotation>/,"").gsub(/<\/?semantics>/,"")
         # puts definition
         # puts "EEEE"*10
@@ -184,43 +183,29 @@ module Iev
         Iev::Termbase::NestedTermBuilder
       end
 
-      def clean_mathml(input)
-        return input if input.nil? || input.empty?
-
-        input = input.gsub(/<\/?semantics>/,"")
-
-        f = Nokogiri::XML("<root>#{input}</root>", nil, "UTF-8")
-        f.search('//annotation').map(&:remove)
-
-        f.root.children.to_xml
-        # puts "RESULTS ==> #{foo}"
-      end
-
       def html_to_asciimath(input)
         return input if input.nil? || input.empty?
 
-        input.
-          gsub(/(\d+)<sup>(.*?)<\/sup>/, "$$\1^\2$$").
-          gsub(/<i>(.*?)<\/i>/, "$$\1$$")
+        to_asciimath = Nokogiri::XML("<root>#{input}</root>", nil, "UTF-8")
+
+        to_asciimath.xpath('//i').each do |math_element|
+          if math_element.to_s.length <= 8
+            puts math_element.text
+            math_element.replace "$$#{HTMLEntities.new.decode(math_element.text)}$$"
+          end
+        end
+
+        to_asciimath.root.children.to_s
       end
 
       def mathml_to_asciimath(input)
         return input if input.nil? || input.empty?
 
         if input.match?(/<math>/)
-          text = clean_mathml(input)
-          text = text.gsub(
-              "<math>",
-              '<math xmlns="http://www.w3.org/1998/Math/MathML">'
-            )
+          to_asciimath = Nokogiri::XML("<root>#{input}</root>", nil, "UTF-8")
+          to_asciimath.remove_namespaces!
 
-          # puts text
-
-          to_asciimath = Nokogiri::XML("<root>#{text}</root>", nil, "UTF-8")
-
-          maths = to_asciimath.xpath('//mathml:math', 'mathml' => "http://www.w3.org/1998/Math/MathML")
-
-          maths.each do |math_element|
+          to_asciimath.xpath('//math').each do |math_element|
             asciimath = MathML2AsciiMath.m2a(math_element.to_xml)
             asciimath.gsub!("\n", " ")
             # puts "ASCIIMATH!!  #{asciimath}"
