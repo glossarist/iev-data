@@ -6,7 +6,7 @@ require 'mathml2asciimath'
 module Iev
   module Termbase
     class TermBuilder
-      NOTE_REGEX = /Note[\s ]*?\d+?[\s ]to entry: |Note[\s ]*?\d+?[\s ]à l’article: |<NOTE[\s ]+?\d?[\s ]+.*?– /i
+      NOTE_REGEX = /Note[\s ]*\d+[\s ]to entry:\s+|Note[\s ]*\d+?[\s ]à l['’]article:\s+|<NOTE\/?>?[\s ]*\d?[\s ]+.*?–\s+|NOTE[\s ]+-[\s ]+|\nNOTE\s+/i
 
       def initialize(data:, indices: )
         @data = data
@@ -153,12 +153,11 @@ module Iev
           values = find_value_for("SYNONYM#{num}")
           next if values.nil?
 
-          puts "X"*50
-          puts values
+          # puts "X"*50
+          # puts values
           values = values.split(/<[pbr]+>/)
-
-          puts values.inspect
-          puts "Y"*50
+          # puts values.inspect
+          # puts "Y"*50
 
           values.each do |value|
             terms.push(nested_term.build(
@@ -190,7 +189,7 @@ module Iev
 
         to_asciimath.xpath('//i').each do |math_element|
           if math_element.to_s.length <= 8
-            puts math_element.text
+            # putsmath_element.text
             math_element.replace "$$#{HTMLEntities.new.decode(math_element.text)}$$"
           end
         end
