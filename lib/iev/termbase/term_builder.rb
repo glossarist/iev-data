@@ -6,7 +6,8 @@ require 'mathml2asciimath'
 module Iev
   module Termbase
     class TermBuilder
-      NOTE_REGEX = /Note[\s ]*\d+[\s ]to entry:\s+|Note[\s ]*\d+?[\s ]à l['’]article:\s+|<NOTE\/?>?[\s ]*\d?[\s ]+.*?–\s+|NOTE[\s ]+-[\s ]+|\nNOTE\s+/i
+      NOTE_REGEX_1 = /Note[\s ]*\d+[\s ]to entry:\s+|Note[\s ]*\d+?[\s ]à l['’]article:\s+|<NOTE\/?>?[\s ]*\d?[\s ]+.*?–\s+|NOTE[\s ]+-[\s ]+/i
+      NOTE_REGEX_2 = /\nNOTE\s+/
 
       def initialize(data:, indices: )
         @data = data
@@ -118,7 +119,10 @@ module Iev
           definition = definition.gsub("#{Regexp.last_match(1)} #{Regexp.last_match(2)}", "")
         end
 
-        note_split  = definition.split(NOTE_REGEX)
+        note_split  = definition.split(NOTE_REGEX_1).map do |note|
+          note.split(NOTE_REGEX_2)
+        end.flatten
+
         definitions[:definition] = note_split.first
         definitions[:notes] = note_split[1..-1].map(&:strip) if note_split.size > 1
 
