@@ -6,7 +6,7 @@ RSpec.describe "IEV Termbase" do
       command = %W(xlsx2yaml #{sample_xlsx_file} -o ./tmp --no-write)
       output = capture_stdout { Iev::Termbase::Cli.start(command) }
 
-      expect(output).to include("ger:")
+      expect(output).to include("deu:")
       expect(output).to include("103-01-01:")
       expect(output).to include("designation: 범함수")
     end
