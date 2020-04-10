@@ -1,5 +1,5 @@
 require "iev/termbase/relaton_db"
-require "iev/termbase/country_code"
+require "iev/termbase/iso_639_code"
 require "iev/termbase/nested_term_builder"
 require 'mathml2asciimath'
 
@@ -139,7 +139,7 @@ module Iev
       end
 
       def three_char_code(code)
-        Iev::Termbase::CountryCode.three_char_code(code)
+        Iev::Termbase::Iso639Code.three_char_code(code).first
       end
 
       def extract_terms
