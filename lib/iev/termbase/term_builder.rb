@@ -40,6 +40,8 @@ module Iev
       end
 
       def build_term_object
+        # puts "====== ID #{find_value_for("IEVREF").gsub("-", "")}"
+
         Iev::Termbase::Term.new(
           id: find_value_for("IEVREF").gsub("-", ""),
           entry_status: find_value_for("STATUS"),
@@ -189,36 +191,48 @@ module Iev
       def html_to_asciimath(input)
         return input if input.nil? || input.empty?
 
-        to_asciimath = Nokogiri::XML("<root>#{input}</root>", nil, "UTF-8")
+        to_asciimath = Nokogiri::HTML.fragment(input, "UTF-8")
 
-        to_asciimath.xpath('//i').each do |math_element|
-          if math_element.to_s.length <= 8
-            # putsmath_element.text
+        to_asciimath.css('i').each do |math_element|
+          # puts "HTML MATH!!  #{math_element.to_xml}"
+          # puts "HTML MATH!!  #{math_element.text}"
+          case math_element.text.length
+          when 1..8
+            # puts "(#{math_element.text} to => #{HTMLEntities.new.decode(math_element.text)})"
             math_element.replace "$$#{HTMLEntities.new.decode(math_element.text)}$$"
+          when 0
+            math_element.remove
           end
         end
 
-        to_asciimath.root.children.to_s
+        to_asciimath.children.to_s
       end
 
       def mathml_to_asciimath(input)
         return input if input.nil? || input.empty?
 
-        if input.match?(/<math>/)
-          to_asciimath = Nokogiri::XML("<root>#{input}</root>", nil, "UTF-8")
-          to_asciimath.remove_namespaces!
-
-          to_asciimath.xpath('//math').each do |math_element|
-            asciimath = MathML2AsciiMath.m2a(math_element.to_xml)
-            asciimath.gsub!("\n", " ")
-            # puts "ASCIIMATH!!  #{asciimath}"
-            math_element.replace "$$#{asciimath}$$"
-          end
-
-          input = to_asciimath.root.children.to_s
+        unless input.match?(/<math>/)
+          return html_to_asciimath(input)
         end
 
-        html_to_asciimath(input)
+        # puts "GOING TO MATHML MATH"
+        # puts input
+        input = html_to_asciimath(input)
+        to_asciimath = Nokogiri::HTML.fragment(input, "UTF-8")
+        # to_asciimath.remove_namespaces!
+
+        to_asciimath.css('math').each do |math_element|
+          asciimath = MathML2AsciiMath.m2a(math_element.to_xml).strip
+          # puts "ASCIIMATH!!  #{asciimath}"
+
+          if asciimath.empty?
+            math_element.remove
+          else
+            math_element.replace "$$#{asciimath}$$"
+          end
+        end
+
+        to_asciimath.children.to_s
       end
 
       def extract_definition_value
