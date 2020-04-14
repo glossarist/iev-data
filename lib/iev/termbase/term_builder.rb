@@ -93,7 +93,7 @@ module Iev
       end
 
       def replace_newlines(input)
-        input.gsub('\n', "\n\n").gsub(/<[pbr]+>/, "\n\n").gsub(/\n+/, "\n\n").strip
+        input.gsub('\n', "\n\n").gsub(/<[pbr]+>/, "\n\n").gsub(/\s*\n[\n\s]+/, "\n\n").strip
       end
 
       def split_definition
@@ -287,7 +287,10 @@ module Iev
             gsub(/<a href=(IEV)\s*(.*?)>(.*?)<\/a>/, '{{\3, \1:\2}}').
             gsub(/<a href="(.*?)">(.*?)<\/a>/, '\1[\2]').
             gsub(/<simg .*\/\$file\/([\d\-\w\.]+)>\s*Figure\s+(\d)\s+[–-]\s+(.+?)\s*<\/b>\s+Figure\s+(\d)\s+[–-]\s(.+)\s*<\/b>/, "image::/assets/images/parts/#{part_number}/\\1[Figure \\2 - \\3; \\5]").
-            gsub(/<simg .*\/\$file\/([\d\-\w\.]+)>\s*Figure\s+(\d)\s+[–-]\s+(.+?)\s*<\/b>/, "image::/assets/images/parts/#{part_number}/\\1[Figure \\2 - \\3]")
+            gsub(/<simg .*\/\$file\/([\d\-\w\.]+)>\s*Figure\s+(\d)\s+[–-]\s+(.+?)\s*<\/b>/, "image::/assets/images/parts/#{part_number}/\\1[Figure \\2 - \\3]").
+            gsub(/<\/?ul>/, '').
+            gsub(/<li>/, '* ').
+            gsub(/<\/li>/, '')
         end
       end
     end
