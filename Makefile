@@ -21,7 +21,7 @@ termbase.yaml: termbase.xlsx
 concepts: termbase.yaml
 
 concepts.zip: concepts
-	zip -9 -r $@ concepts
+	zip -9 -r $@ concepts images
 
 # update-init:
 # 	git submodule update --init

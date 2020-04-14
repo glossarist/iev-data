@@ -279,11 +279,15 @@ module Iev
 
       def parse_anchor_tag(text)
         if text
+          part_number = find_value_for("IEVREF").slice(0,3)
+
           # Convert IEV term references
           # Convert href links
           text.
             gsub(/<a href=(IEV)\s*(.*?)>(.*?)<\/a>/, '{{\3, \1:\2}}').
-            gsub(/<a href="(.*?)">(.*?)<\/a>/, '\1[\2]')
+            gsub(/<a href="(.*?)">(.*?)<\/a>/, '\1[\2]').
+            gsub(/<simg .*\/\$file\/([\d\-\w\.]+)>\s*Figure\s+(\d)\s+[–-]\s+(.+?)\s*<\/b>\s+Figure\s+(\d)\s+[–-]\s(.+)\s*<\/b>/, "image::assets/images/parts/#{part_number}/\\1[Figure \\2 - \\3; \\5]").
+            gsub(/<simg .*\/\$file\/([\d\-\w\.]+)>\s*Figure\s+(\d)\s+[–-]\s+(.+?)\s*<\/b>/, "image::assets/images/parts/#{part_number}/\\1[Figure \\2 - \\3]")
         end
       end
     end
