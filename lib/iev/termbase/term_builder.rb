@@ -6,7 +6,7 @@ require 'mathml2asciimath'
 module Iev
   module Termbase
     class TermBuilder
-      NOTE_REGEX_1 = /Note[\s ]*\d+[\s ]to entry:\s+|Note[\s ]*\d+?[\s ]à l['’]article:\s+|<NOTE\/?>?[\s ]*\d?[\s ]+.*?–\s+|NOTE[\s ]+-[\s ]+/i
+      NOTE_REGEX_1 = /Note[\s ]*\d+[\s ]to entry:\s+|Note[\s ]*\d+?[\s ]à l['’]article:[\s ]*|<NOTE\/?>?[\s ]*\d?[\s ]+.*?–\s+|NOTE[\s ]+-[\s ]+/i
       NOTE_REGEX_2 = /\nNOTE\s+/
 
       def initialize(data:, indices: )
@@ -199,7 +199,7 @@ module Iev
           case math_element.text.length
           when 1..8
             # puts "(#{math_element.text} to => #{HTMLEntities.new.decode(math_element.text)})"
-            math_element.replace "$$#{HTMLEntities.new.decode(math_element.text)}$$"
+            math_element.replace "stem:[#{HTMLEntities.new.decode(math_element.text)}]"
           when 0
             math_element.remove
           end
@@ -228,7 +228,7 @@ module Iev
           if asciimath.empty?
             math_element.remove
           else
-            math_element.replace "$$#{asciimath}$$"
+            math_element.replace "stem:[#{asciimath}]"
           end
         end
 
