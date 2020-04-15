@@ -97,7 +97,7 @@ module Iev
       end
 
       def split_definition
-        definition = find_value_for("DEFINITION")
+        definition = parse_anchor_tag(find_value_for("DEFINITION"))
         definitions = { notes: [], examples: [], definition: nil }
 
         return definitions unless definition
@@ -108,7 +108,7 @@ module Iev
         # puts "DDDD"*10
         # # puts definition
         # puts "DDDD"*10
-        definition = parse_anchor_tag(definition)
+        # definition = parse_anchor_tag(definition)
         # #.to_s.gsub(/<annotation.*?>.*?<\/annotation>/,"").gsub(/<\/?semantics>/,"")
         # puts definition
         # puts "EEEE"*10
@@ -149,7 +149,7 @@ module Iev
 
         terms.push(nested_term.build(
           type: "expression",
-          term: mathml_to_asciimath(term_value_text),
+          term: mathml_to_asciimath(parse_anchor_tag(term_value_text)),
           data: find_value_for("TERMATTRIBUTE"),
           status: 'Preferred',
         ))
@@ -168,7 +168,7 @@ module Iev
           values.each do |value|
             terms.push(nested_term.build(
               type: "expression",
-              term: mathml_to_asciimath(value),
+              term: mathml_to_asciimath(parse_anchor_tag(value)),
               data: find_value_for("SYNONYM#{num}ATTRIBUTE"),
               status: find_value_for("SYNONYM1STATUS"),
             ))
@@ -178,7 +178,7 @@ module Iev
         terms.push(nested_term.build(
           type: "symbol",
           international: true,
-          term: mathml_to_asciimath(find_value_for("SYMBOLE")),
+          term: mathml_to_asciimath(parse_anchor_tag(find_value_for("SYMBOLE"))),
         ))
 
         terms.select { |term| !term.nil? }
@@ -196,16 +196,96 @@ module Iev
         to_asciimath.css('i').each do |math_element|
           # puts "HTML MATH!!  #{math_element.to_xml}"
           # puts "HTML MATH!!  #{math_element.text}"
-          case math_element.text.length
-          when 1..8
+          decoded = HTMLEntities.new.decode(math_element.text)
+          case decoded.length
+          when 1..12
             # puts "(#{math_element.text} to => #{HTMLEntities.new.decode(math_element.text)})"
-            math_element.replace "stem:[#{HTMLEntities.new.decode(math_element.text)}]"
+            math_element.replace "stem:[#{decoded.gsub(/[&;]/, '')}]"
           when 0
             math_element.remove
+          else
+            math_element.replace "_#{decoded}_"
           end
         end
 
-        to_asciimath.children.to_s
+        to_asciimath.css('sub').each do |math_element|
+          case math_element.text.length
+          when 0
+            math_element.remove
+          else
+            math_element.replace "~#{math_element.text}~"
+          end
+        end
+
+        to_asciimath.css('sup').each do |math_element|
+          case math_element.text.length
+          when 0
+            math_element.remove
+          else
+            math_element.replace "^#{math_element.text}^"
+          end
+        end
+
+        to_asciimath.css('ol').each do |element|
+          element.css('li').each do |li|
+            li.replace ". #{li.text}"
+          end
+        end
+
+        to_asciimath.css('ul').each do |element|
+          element.css('li').each do |li|
+            li.replace "* #{li.text}"
+          end
+        end
+
+        # Replace sans-serif font with monospace
+        to_asciimath.css('font[style*="sans-serif"]').each do |x|
+          x.replace "`#{x.text}`"
+        end
+
+        html_entities_to_asciimath(
+          to_asciimath.children.to_s.gsub(/\]stem:\[/, '').gsub(/<\/?[uo]l>/, '')
+        )
+      end
+
+      def html_entities_to_asciimath(x)
+        x.gsub("&alpha;", "stem:[alpha]").
+          gsub("&beta;", "stem:[beta]").
+          gsub("&gamma;", "stem:[gamma]").
+          gsub("&Gamma;", "stem:[Gamma]").
+          gsub("&delta;", "stem:[delta]").
+          gsub("&Delta;", "stem:[Delta]").
+          gsub("&Delta;", "stem:[Delta]").
+          gsub("&epsilon;", "stem:[epsilon]").
+          gsub("&varepsilon;", "stem:[varepsilon]").
+          gsub("&zeta;", "stem:[zeta]").
+          gsub("&eta;", "stem:[eta]").
+          gsub("&theta;", "stem:[theta]").
+          gsub("&Theta;", "stem:[Theta]").
+          gsub("&vartheta;", "stem:[vartheta]").
+          gsub("&iota;", "stem:[iota]").
+          gsub("&kappa;", "stem:[kappa]").
+          gsub("&lambda;", "stem:[lambda]").
+          gsub("&Lambda;", "stem:[Lambda]").
+          gsub("&mu;", "stem:[mu]").
+          gsub("&nu;", "stem:[nu]").
+          gsub("&xi;", "stem:[xi]").
+          gsub("&Xi;", "stem:[Xi]").
+          gsub("&pi;", "stem:[pi]").
+          gsub("&Pi;", "stem:[Pi]").
+          gsub("&rho;", "stem:[rho]").
+          gsub("&beta;", "stem:[beta]").
+          gsub("&sigma;", "stem:[sigma]").
+          gsub("&Sigma;", "stem:[Sigma]").
+          gsub("&tau;", "stem:[tau]").
+          gsub("&upsilon;", "stem:[upsilon]").
+          gsub("&phi;", "stem:[phi]").
+          gsub("&Phi;", "stem:[Phi]").
+          gsub("&varphi;", "stem:[varphi]").
+          gsub("&chi;", "stem:[chi]").
+          gsub("&psi;", "stem:[psi]").
+          gsub("&Psi;", "stem:[Psi]").
+          gsub("&omega;", "stem:[omega]")
       end
 
       def mathml_to_asciimath(input)
@@ -217,7 +297,6 @@ module Iev
 
         # puts "GOING TO MATHML MATH"
         # puts input
-        input = html_to_asciimath(input)
         to_asciimath = Nokogiri::HTML.fragment(input, "UTF-8")
         # to_asciimath.remove_namespaces!
 
@@ -232,7 +311,9 @@ module Iev
           end
         end
 
-        to_asciimath.children.to_s
+        html_to_asciimath(
+          to_asciimath.children.to_s
+          )
       end
 
       def extract_definition_value
@@ -277,20 +358,26 @@ module Iev
         end
       end
 
+      SIMG_PATH_REGEX = "<simg .*\\/\\$file\\/([\\d\\-\\w\.]+)>"
+      FIGURE_ONE_REGEX = "<p><b>\\s*Figure\\s+(\\d)\\s+[–-]\\s+(.+)\\s*<\\/b>(<\\/p>)?"
+      FIGURE_TWO_REGEX = "#{FIGURE_ONE_REGEX}\\s*#{FIGURE_ONE_REGEX}"
       def parse_anchor_tag(text)
         if text
           part_number = find_value_for("IEVREF").slice(0,3)
 
           # Convert IEV term references
           # Convert href links
+          # Need to take care of this pattern: `inverse de la <a href="IEV103-06-01">période<a>`
           text.
-            gsub(/<a href=(IEV)\s*(.*?)>(.*?)<\/a>/, '{{\3, \1:\2}}').
+            gsub(/<a href="?(IEV)\s*(\d\d\d-\d\d-\d\d)"?>(.*?)<\/?a>/, '{{\3, \1:\2}}').
+            gsub(/<a href="?\s*(\d\d\d-\d\d-\d\d)"?>(.*?)<\/?a>/, '{{\3, IEV:\2}}').
             gsub(/<a href="(.*?)">(.*?)<\/a>/, '\1[\2]').
-            gsub(/<simg .*\/\$file\/([\d\-\w\.]+)>\s*Figure\s+(\d)\s+[–-]\s+(.+?)\s*<\/b>\s+Figure\s+(\d)\s+[–-]\s(.+)\s*<\/b>/, "image::/assets/images/parts/#{part_number}/\\1[Figure \\2 - \\3; \\5]").
-            gsub(/<simg .*\/\$file\/([\d\-\w\.]+)>\s*Figure\s+(\d)\s+[–-]\s+(.+?)\s*<\/b>/, "image::/assets/images/parts/#{part_number}/\\1[Figure \\2 - \\3]").
-            gsub(/<\/?ul>/, '').
-            gsub(/<li>/, '* ').
-            gsub(/<\/li>/, '')
+            gsub(Regexp.new([SIMG_PATH_REGEX, "\\s*", FIGURE_TWO_REGEX].join('')), "image::/assets/images/parts/#{part_number}/\\1[Figure \\2 - \\3; \\6]").
+            gsub(Regexp.new([SIMG_PATH_REGEX, "\\s*", FIGURE_ONE_REGEX].join('')), "image::/assets/images/parts/#{part_number}/\\1[Figure \\2 - \\3]").
+            gsub(/<img\s+(.+?)\s*>/, "image::/assets/images/parts/#{part_number}/\\1[]").
+            gsub(/<br>/, "\n").
+            gsub(/<b>(.*?)<\/b>/, "*\\1*")
+
         end
       end
     end
