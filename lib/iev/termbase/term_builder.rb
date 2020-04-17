@@ -2,6 +2,7 @@ require "iev/termbase/relaton_db"
 require "iev/termbase/iso_639_code"
 require "iev/termbase/nested_term_builder"
 require 'mathml2asciimath'
+require 'relaton_bib'
 
 module Iev
   module Termbase
@@ -188,6 +189,10 @@ module Iev
         Iev::Termbase::NestedTermBuilder
       end
 
+      def text_to_asciimath(text)
+        html_entities_to_asciimath(HTMLEntities.new(:expanded).decode(text))
+      end
+
       def html_to_asciimath(input)
         return input if input.nil? || input.empty?
 
@@ -196,11 +201,11 @@ module Iev
         to_asciimath.css('i').each do |math_element|
           # puts "HTML MATH!!  #{math_element.to_xml}"
           # puts "HTML MATH!!  #{math_element.text}"
-          decoded = HTMLEntities.new.decode(math_element.text)
+          decoded = text_to_asciimath(math_element.text)
           case decoded.length
           when 1..12
-            # puts "(#{math_element.text} to => #{HTMLEntities.new.decode(math_element.text)})"
-            math_element.replace "stem:[#{decoded.gsub(/[&;]/, '')}]"
+            # puts "(#{math_element.text} to => #{decoded})"
+            math_element.replace "stem:[#{decoded}]"
           when 0
             math_element.remove
           else
@@ -213,7 +218,7 @@ module Iev
           when 0
             math_element.remove
           else
-            math_element.replace "~#{math_element.text}~"
+            math_element.replace "~#{text_to_asciimath(math_element.text)}~"
           end
         end
 
@@ -222,7 +227,7 @@ module Iev
           when 0
             math_element.remove
           else
-            math_element.replace "^#{math_element.text}^"
+            math_element.replace "^#{text_to_asciimath(math_element.text)}^"
           end
         end
 
@@ -243,18 +248,56 @@ module Iev
           x.replace "`#{x.text}`"
         end
 
-        html_entities_to_asciimath(
+        html_entities_to_stem(
           to_asciimath.children.to_s.gsub(/\]stem:\[/, '').gsub(/<\/?[uo]l>/, '')
         )
       end
 
       def html_entities_to_asciimath(x)
+        x.gsub("&alpha;", "alpha").
+          gsub("&beta;", "beta").
+          gsub("&gamma;", "gamma").
+          gsub("&Gamma;", "Gamma").
+          gsub("&delta;", "delta").
+          gsub("&Delta;", "Delta").
+          gsub("&epsilon;", "epsilon").
+          gsub("&varepsilon;", "varepsilon").
+          gsub("&zeta;", "zeta").
+          gsub("&eta;", "eta").
+          gsub("&theta;", "theta").
+          gsub("&Theta;", "Theta").
+          gsub("&vartheta;", "vartheta").
+          gsub("&iota;", "iota").
+          gsub("&kappa;", "kappa").
+          gsub("&lambda;", "lambda").
+          gsub("&Lambda;", "Lambda").
+          gsub("&mu;", "mu").
+          gsub("&nu;", "nu").
+          gsub("&xi;", "xi").
+          gsub("&Xi;", "Xi").
+          gsub("&pi;", "pi").
+          gsub("&Pi;", "Pi").
+          gsub("&rho;", "rho").
+          gsub("&beta;", "beta").
+          gsub("&sigma;", "sigma").
+          gsub("&Sigma;", "Sigma").
+          gsub("&tau;", "tau").
+          gsub("&upsilon;", "upsilon").
+          gsub("&phi;", "phi").
+          gsub("&Phi;", "Phi").
+          gsub("&varphi;", "varphi").
+          gsub("&chi;", "chi").
+          gsub("&psi;", "psi").
+          gsub("&Psi;", "Psi").
+          gsub("&omega;", "omega")
+      end
+
+      def html_entities_to_stem(x)
         x.gsub("&alpha;", "stem:[alpha]").
           gsub("&beta;", "stem:[beta]").
           gsub("&gamma;", "stem:[gamma]").
           gsub("&Gamma;", "stem:[Gamma]").
           gsub("&delta;", "stem:[delta]").
-          gsub("&Delta;", "stem:[Delta]").
           gsub("&Delta;", "stem:[Delta]").
           gsub("&epsilon;", "stem:[epsilon]").
           gsub("&varepsilon;", "stem:[varepsilon]").
@@ -301,8 +344,8 @@ module Iev
         # to_asciimath.remove_namespaces!
 
         to_asciimath.css('math').each do |math_element|
-          asciimath = MathML2AsciiMath.m2a(math_element.to_xml).strip
-          # puts "ASCIIMATH!!  #{asciimath}"
+          asciimath = MathML2AsciiMath.m2a(text_to_asciimath(math_element.to_xml)).strip
+          # puts"ASCIIMATH!!  #{asciimath}"
 
           if asciimath.empty?
             math_element.remove
@@ -325,37 +368,32 @@ module Iev
       def extract_authoritative_source
         source = find_value_for("SOURCE")
 
-        if source
-          begin
-            # source = "ISO/IEC GUIDE 99:2007 1.26"
-            raw_ref = source.match(/\A[^,\()]+/).to_s
+        return nil if source.nil?
 
-            clean_ref = raw_ref.
-              sub(";", ":").
-              sub(/\u2011/, "-").
-              sub(/IEC\sIEEE/, "IEC/IEEE").
-              sub(/\d\.[\d\.]+/, "").
-              strip
+        # source = "ISO/IEC GUIDE 99:2007 1.26"
+        raw_ref = source.match(/\A[^,\()]+/).to_s
 
-            clause = source.
-              gsub(clean_ref, "").
-              gsub(/\A,?\s+/,"").
-              strip
+        clean_ref = raw_ref.
+          sub(";", ":").
+          sub(/\u2011/, "-").
+          sub(/IEC\sIEEE/, "IEC/IEEE").
+          sub(/\d\.[\d\.]+/, "").
+          strip
 
-            item = RelatonDb.instance.fetch(clean_ref)
+        clause = source.
+          gsub(clean_ref, "").
+          gsub(/\A,?\s+/,"").
+          strip
 
-            src = {}
-            src["ref"] = clean_ref
-            src["clause"] = clause unless clause.empty?
-            src["link"] = item.url if item
-            src
-          rescue RelatonBib::RequestError => e
-            warn e.message
-            src
-          end
-        else
-          source
-        end
+        item = ::Iev::Termbase::RelatonDb.instance.fetch(clean_ref)
+
+        src = {}
+        src["ref"] = clean_ref
+        src["clause"] = clause unless clause.empty?
+        src["link"] = item.url if item
+        src
+      rescue ::RelatonBib::RequestError => e
+        warn e.message
       end
 
       SIMG_PATH_REGEX = "<simg .*\\/\\$file\\/([\\d\\-\\w\.]+)>"

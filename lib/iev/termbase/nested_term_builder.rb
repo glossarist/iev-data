@@ -22,7 +22,7 @@ module Iev
       attr_reader :data, :status, :options
 
       def term_attributes
-        @term_attributes ||= data.to_s.split("; ")
+        @term_attributes ||= HTMLEntities.new(:expanded).decode(data.to_s) || ""
       end
 
       def build_nested_term
@@ -43,14 +43,14 @@ module Iev
       end
 
       def extract_gender
-        genders = term_attributes.grep(/[m|f|n]$|[m|f|n] pl/)
+        genders = term_attributes.match(/\s([m|f|n])$|^([m|f|n])[\s,]?|([m|f|n]) (pl)/)
 
-        unless genders.empty?
+        if genders
           plurality = "singular"
-          genders = genders.first.split(" ")
-          plurality = "plural" if genders.size > 1 && genders[1] == "pl" 
+          gender = genders[1..3].join('')
+          plurality = "plural" if genders.size > 1 && genders[4] == "pl"
 
-          { "gender" => genders[0], "plurality" => plurality }
+          { "gender" => gender, "plurality" => plurality }
         end
       end
 
@@ -65,29 +65,32 @@ module Iev
       end
 
       def extract_geographical_area
-        term_attributes.grep(/[A-Z]{2}$/).first
+        area = term_attributes.match(/([A-Z]{2})$/)
+        if area && area.size > 1
+          area[1]
+        end
       end
 
       def extract_part_of_speach
         parts_regex = /noun|名詞|verb|動詞|Adjektiv|adj|形容詞|형용사/
-        part_of_speaches = term_attributes.grep(parts_regex)
+        part_of_speaches = term_attributes.match(parts_regex)
 
-        unless part_of_speaches.empty?
-          part_of_speach = part_of_speaches.first
+        if part_of_speaches
+          part_of_speach = part_of_speaches[1]
           parts_hash[part_of_speach] || part_of_speach
         end
       end
 
       def extract_usage_info
-        usage_info = term_attributes.grep(/&lt/).first
+        usage_info = term_attributes.match(/<(.*?)>/)
 
-        if usage_info
-          usage_info.gsub(/&lt;(.*?)&gt/, '\1')
+        if usage_info && usage_info.size > 1
+          usage_info[1].strip
         end
       end
 
       def extract_prefix
-        term_attributes.grep(/Präfix|prefix|préfixe|接尾語|접두사|przedrostek|prefixo|词头/).empty? ? nil : true
+        term_attributes.match(/Präfix|prefix|préfixe|接尾語|접두사|przedrostek|prefixo|词头/) ? true : nil
       end
     end
   end
