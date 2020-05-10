@@ -29,11 +29,11 @@ module Iev
         {
           "type" => options[:type],
           "prefix" => extract_prefix,
-          "normativeStatus" => term_status,
-          "usageInfo" => extract_usage_info,
+          "normative_status" => term_status,
+          "usage_info" => extract_usage_info,
           "designation" => options[:term],
-          "partOfSpeech" => extract_part_of_speach,
-          "geographicalArea" => extract_geographical_area,
+          "part_of_speech" => extract_part_of_speach,
+          "geographical_area" => extract_geographical_area,
           "international" => options.fetch(:international, nil),
         }.merge(extract_gender || {})
       end
