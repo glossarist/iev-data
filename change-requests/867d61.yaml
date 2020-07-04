@@ -1,0 +1,37 @@
+id: 867d61
+author:
+  username: phuonghuynh
+  email: phuonghqh@gmail.com
+  name: phuong
+timeCreated: 2020-07-04T06:14:57.785Z
+revisions: {}
+meta:
+  registry:
+    stage: Draft
+  submitter:
+    primaryPerson:
+      name: phuong
+      email: phuonghqh@gmail.com
+      affiliation: ''
+_revisions:
+  current: 08a970
+  tree:
+    08a970:
+      object:
+        id: 867d61
+        author:
+          username: phuonghuynh
+          email: phuonghqh@gmail.com
+          name: phuong
+        timeCreated: 2020-07-04T06:14:57.785Z
+        revisions: {}
+        meta:
+          registry:
+            stage: Draft
+          submitter:
+            primaryPerson:
+              name: phuong
+              email: phuonghqh@gmail.com
+              affiliation: ''
+      parents: []
+      timeCreated: 2020-07-04T06:14:57.785Z
