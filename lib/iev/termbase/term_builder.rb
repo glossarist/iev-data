@@ -374,6 +374,7 @@ module Iev
         raw_ref = source.match(/\A[^,\()]+/).to_s
 
         clean_ref = raw_ref.
+          gsub("&nbsp;", " ").
           sub(";", ":").
           sub(/\u2011/, "-").
           sub(/IEC\sIEEE/, "IEC/IEEE").
