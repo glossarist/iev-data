@@ -15,12 +15,6 @@ module Iev::Termbase
       end
     end
 
-    # The concept id should ALWAYS be an integer.
-    # https://github.com/riboseinc/tc211-termbase/issues/1
-    def id=(newid)
-      @id = Integer(newid)
-    end
-
     def add_term(term)
       self[term.language_code] = term
     end
