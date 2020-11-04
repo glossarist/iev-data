@@ -44,7 +44,7 @@ module Iev
         # puts "====== ID #{find_value_for("IEVREF").gsub("-", "")}"
 
         Iev::Termbase::Term.new(
-          id: find_value_for("IEVREF").gsub("-", ""),
+          id: find_value_for("IEVREF"),
           entry_status: find_value_for("STATUS"),
           classification: find_value_for("SYNONYM1STATUS"),
           date_accepted: flesh_date(find_value_for("PUBLICATIONDATE")),
