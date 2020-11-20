@@ -378,6 +378,10 @@ module Iev
           sub(";", ":").
           sub(/\u2011/, "-").
           sub(/IEC\sIEEE/, "IEC/IEEE").
+          sub(/UIT/, "ITU").
+          sub(/Guide CEI/, "IEC Guide").
+          sub(/Guide ISO\/CEI/, "ISO/IEC Guide").
+          sub(/CEI/, "IEC").
           sub(/\d\.[\d\.]+/, "").
           strip
 
