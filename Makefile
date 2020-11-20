@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 # TERMBASE_VERSION := $(shell yq r metadata.yaml version)
 # TERMBASE_XLSX_PATH := $(shell yq r metadata.yaml filename)
-TERMBASE_VERSION := 20200330
+TERMBASE_VERSION := 20200902
 TERMBASE_XLSX_PATH := data/${TERMBASE_VERSION}-iev-export.xlsx
 
 all: concepts
