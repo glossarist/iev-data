@@ -30,7 +30,7 @@ module Iev
       def find_value_for(key)
         # Some IEV fields have the string `\uFEFF` polluting them
         data.fetch(indices[key], nil).tap do |val|
-          val ? val.gsub(/\uFEFF/, "") : nil
+          val ? val.unicode_normalize.gsub("\uFEFF","") : nil
         end
       end
 
