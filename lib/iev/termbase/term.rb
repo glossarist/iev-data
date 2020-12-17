@@ -59,9 +59,8 @@ module Iev::Termbase
       options.each_pair do |key, value|
         next unless value
 
-        # Some IEV fields have the string `\uFEFF` polluting them
         if value.is_a?(String)
-          value = value.unicode_normalize.gsub("\uFEFF","").strip
+          value = value.strip
         end
 
         key = key.to_s.gsub("-", "_")
