@@ -9,7 +9,7 @@ all: concepts
 clean:
 	rm -rf termbase.xlsx
 
-distclean:
+distclean: clean
 	rm -rf concepts termbase.yaml
 
 termbase.xlsx:

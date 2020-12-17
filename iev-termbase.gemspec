@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "thor"
   spec.add_runtime_dependency "creek"
-  spec.add_runtime_dependency "relaton", "~> 0.5"
+  spec.add_runtime_dependency "relaton", "~> 1.0"
   spec.add_runtime_dependency "mathml2asciimath"
 
   spec.add_development_dependency "pry"

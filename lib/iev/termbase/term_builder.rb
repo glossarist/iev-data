@@ -28,10 +28,7 @@ module Iev
       attr_reader :data, :indices
 
       def find_value_for(key)
-        # Some IEV fields have the string `\uFEFF` polluting them
-        data.fetch(indices[key], nil).tap do |val|
-          val ? val.unicode_normalize.gsub("\uFEFF","") : nil
-        end
+        clean_string(data.fetch(indices[key], nil))
       end
 
       def flesh_date(incomplete_date)
@@ -41,6 +38,12 @@ module Iev
         # year and month
         year, month = incomplete_date.split('-')
         DateTime.parse("#{year}-#{month}-01").to_s
+      end
+
+      # Some IEV fields have the string `\uFEFF` polluting them
+      def clean_string(val)
+        return unless val
+        val.unicode_normalize.gsub("\uFEFF","").strip
       end
 
       def build_term_object
