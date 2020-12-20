@@ -45,9 +45,11 @@ module Iev
 
       def build_term_object
         # puts "====== ID #{find_value_for("IEVREF").gsub("-", "")}"
+        row_term_id = find_value_for("IEVREF")
+        row_lang = three_char_code(find_value_for("LANGUAGE"))
 
         Iev::Termbase::Term.new(
-          id: find_value_for("IEVREF"),
+          id: row_term_id,
           entry_status: find_value_for("STATUS"),
           classification: find_value_for("SYNONYM1STATUS"),
           date_accepted: flesh_date(find_value_for("PUBLICATIONDATE")),
@@ -68,7 +70,7 @@ module Iev
           end,
           definition: extract_definition_value,
           authoritative_source: extract_authoritative_source,
-          language_code: three_char_code(find_value_for("LANGUAGE")),
+          language_code: row_lang,
 
           # @todo: Unsorted Attributes
           #
