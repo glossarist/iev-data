@@ -44,9 +44,10 @@ module Iev
       end
 
       def build_term_object
-        # puts "====== ID #{find_value_for("IEVREF").gsub("-", "")}"
         row_term_id = find_value_for("IEVREF")
         row_lang = three_char_code(find_value_for("LANGUAGE"))
+
+        print "\rProcessing term #{row_term_id} (#{row_lang})... "
 
         Iev::Termbase::Term.new(
           id: row_term_id,
