@@ -392,12 +392,24 @@ module Iev
         clean_ref = raw_ref.
           gsub("&nbsp;", " ").
           sub(";", ":").
-          sub(/\u2011/, "-").
+          sub(/\A(from|d'après|voir la|see|See|voir|Voir|definition\s+of|définition\s+de\s+la)\s+/, "").
+          sub(/\ASI Brochure\Z/, "BIPM SI Brochure").
+          sub(/\ABrochure sur le SI\Z/, "BIPM SI Brochure").
+          sub(/\ MOD/, "").
+          sub(/MOD\ /, "").
+          sub(/\A(\d{2,3}-\d{2,3}-\d{2,3})/, 'IEV \1').
+          sub(/IEV part\s+(\d+)/, 'IEC 60500-\1').
+          sub(/partie\s+(\d+)\s+de l'IEV/, 'IEC 60500-\1').
           sub(/IEC\sIEEE/, "IEC/IEEE").
+          sub(/\AVEI/, "IEV").
+          sub(/\AAIEA/, "IAEA").
           sub(/UIT/, "ITU").
-          sub(/Guide CEI/, "IEC Guide").
-          sub(/Guide ISO\/CEI/, "ISO/IEC Guide").
+          sub(/UTI-R/, "ITU-R").
+          sub(/Recomm[ea]ndation ITU-T/, "ITU-T Recommendation").
+          sub(/ITU-T (\w.\d{3}):(\d{4})/, 'ITU-T \1 (\2)').
           sub(/CEI/, "IEC").
+          sub(/\AGuide IEC/, "IEC Guide").
+          sub(/\AGuide ISO\/IEC/, "ISO/IEC Guide").
           sub(/\d\.[\d\.]+/, "").
           strip
 
