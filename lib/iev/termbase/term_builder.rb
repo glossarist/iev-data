@@ -45,9 +45,11 @@ module Iev
         return unless val
 
         # u2011: issue iev-data#51
+        # u00a0: issue iev-data#50
         val.unicode_normalize
           .gsub("\uFEFF", "")
           .gsub("\u2011", "-")
+          .gsub("\u00a0", " ")
           .strip
       end
 
