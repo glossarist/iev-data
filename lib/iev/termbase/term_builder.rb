@@ -43,7 +43,12 @@ module Iev
       # Some IEV fields have the string `\uFEFF` polluting them
       def clean_string(val)
         return unless val
-        val.unicode_normalize.gsub("\uFEFF","").strip
+
+        # u2011: issue iev-data#51
+        val.unicode_normalize
+          .gsub("\uFEFF", "")
+          .gsub("\u2011", "-")
+          .strip
       end
 
       def build_term_object
