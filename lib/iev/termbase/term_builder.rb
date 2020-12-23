@@ -389,6 +389,18 @@ module Iev
         # source = "ISO/IEC GUIDE 99:2007 1.26"
         raw_ref = source.match(/\A[^,\()]+/).to_s
 
+        relation_type = case raw_ref
+        when /^([Ss]ee)|([Vv]oir)/
+          :related
+        when raw_ref.include?("MOD")
+          :modified
+        when /^(from|d'après)/,
+          /^(definition\s+of)|(définition\s+de\s+la)/
+          :identical
+        else
+          :identical
+        end
+
         clean_ref = raw_ref.
           gsub("&nbsp;", " ").
           sub(";", ":").
@@ -424,6 +436,7 @@ module Iev
         src["ref"] = clean_ref
         src["clause"] = clause unless clause.empty?
         src["link"] = item.url if item
+        src["type"] = relation_type
         src
       rescue ::RelatonBib::RequestError => e
         warn e.message
