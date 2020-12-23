@@ -401,29 +401,7 @@ module Iev
           :identical
         end
 
-        clean_ref = raw_ref.
-          gsub("&nbsp;", " ").
-          sub(";", ":").
-          sub(/\A(from|d'après|voir la|see|See|voir|Voir|definition\s+of|définition\s+de\s+la)\s+/, "").
-          sub(/\ASI Brochure\Z/, "BIPM SI Brochure").
-          sub(/\ABrochure sur le SI\Z/, "BIPM SI Brochure").
-          sub(/\ MOD/, "").
-          sub(/MOD\ /, "").
-          sub(/\A(\d{2,3}-\d{2,3}-\d{2,3})/, 'IEV \1').
-          sub(/IEV part\s+(\d+)/, 'IEC 60500-\1').
-          sub(/partie\s+(\d+)\s+de l'IEV/, 'IEC 60500-\1').
-          sub(/IEC\sIEEE/, "IEC/IEEE").
-          sub(/\AVEI/, "IEV").
-          sub(/\AAIEA/, "IAEA").
-          sub(/UIT/, "ITU").
-          sub(/UTI-R/, "ITU-R").
-          sub(/Recomm[ea]ndation ITU-T/, "ITU-T Recommendation").
-          sub(/ITU-T (\w.\d{3}):(\d{4})/, 'ITU-T \1 (\2)').
-          sub(/CEI/, "IEC").
-          sub(/\AGuide IEC/, "IEC Guide").
-          sub(/\AGuide ISO\/IEC/, "ISO/IEC Guide").
-          sub(/\d\.[\d\.]+/, "").
-          strip
+        clean_ref = clean_ref_string(raw_ref)
 
         clause = source.
           gsub(clean_ref, "").
@@ -440,6 +418,36 @@ module Iev
         src
       rescue ::RelatonBib::RequestError => e
         warn e.message
+      end
+
+      # Cleans up ref string, removes unnecessary junk, fixes common typos,
+      # canonicalizes alternative names, etc.
+      def clean_ref_string(str)
+        str = str.dup
+
+        str.gsub!("&nbsp;", " ")
+        str.sub!(";", ":")
+        str.sub!(/\A(from|d'après|voir la|see|See|voir|Voir|definition\s+of|définition\s+de\s+la)\s+/, "")
+        str.sub!(/\ASI Brochure\Z/, "BIPM SI Brochure")
+        str.sub!(/\ABrochure sur le SI\Z/, "BIPM SI Brochure")
+        str.sub!(/\ MOD/, "")
+        str.sub!(/MOD\ /, "")
+        str.sub!(/\A(\d{2,3}-\d{2,3}-\d{2,3})/, 'IEV \1')
+        str.sub!(/IEV part\s+(\d+)/, 'IEC 60500-\1')
+        str.sub!(/partie\s+(\d+)\s+de l'IEV/, 'IEC 60500-\1')
+        str.sub!(/IEC\sIEEE/, "IEC/IEEE")
+        str.sub!(/\AVEI/, "IEV")
+        str.sub!(/\AAIEA/, "IAEA")
+        str.sub!(/UIT/, "ITU")
+        str.sub!(/UTI-R/, "ITU-R")
+        str.sub!(/Recomm[ea]ndation ITU-T/, "ITU-T Recommendation")
+        str.sub!(/ITU-T (\w.\d{3}):(\d{4})/, 'ITU-T \1 (\2)')
+        str.sub!(/CEI/, "IEC")
+        str.sub!(/\AGuide IEC/, "IEC Guide")
+        str.sub!(/\AGuide ISO\/IEC/, "ISO/IEC Guide")
+        str.sub!(/\d\.[\d\.]+/, "")
+        str.strip!
+        str
       end
 
       SIMG_PATH_REGEX = "<simg .*\\/\\$file\\/([\\d\\-\\w\.]+)>"
