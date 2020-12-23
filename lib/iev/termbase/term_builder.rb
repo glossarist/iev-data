@@ -365,7 +365,7 @@ module Iev
 
         html_to_asciimath(
           to_asciimath.children.to_s
-          )
+        )
       end
 
       def extract_definition_value
