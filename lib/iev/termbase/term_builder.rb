@@ -187,7 +187,7 @@ module Iev
               type: "expression",
               term: mathml_to_asciimath(parse_anchor_tag(value)),
               data: find_value_for("SYNONYM#{num}ATTRIBUTE"),
-              status: find_value_for("SYNONYM1STATUS"),
+              status: find_value_for("SYNONYM#{num}STATUS"),
             ))
           end
         end
