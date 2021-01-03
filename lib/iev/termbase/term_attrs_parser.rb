@@ -58,10 +58,12 @@ module Iev
         end
       end
 
+      # TODO this is likely buggy
       def extract_geographical_area
-        area = src_str.match(/([A-Z]{2})$/)
-        if area && area.size > 1
-          @geographical_area = area[1]
+        ga_rx = /\b[A-Z]{2}$/
+
+        if ga_rx =~ src_str
+          @geographical_area = $&
         end
       end
 
