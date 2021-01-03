@@ -84,4 +84,55 @@ RSpec.describe Iev::Termbase::TermAttrsParser do
 
     pending "it cannot be placed inside brackets" # too difficult for now
   end
+
+  describe "part of speech" do
+    example "adj" do
+      expect(subject.part_of_speech).to eq("adj")
+    end
+
+    example "noun" do
+      expect(subject.part_of_speech).to eq("noun")
+    end
+
+    example "verb" do
+      expect(subject.part_of_speech).to eq("verb")
+    end
+
+    example "名詞" do
+      expect(subject.part_of_speech).to eq("noun")
+    end
+
+    example "動詞" do
+      expect(subject.part_of_speech).to eq("verb")
+    end
+
+    example "形容詞" do
+      expect(subject.part_of_speech).to eq("adj")
+    end
+
+    example "형용사" do
+      expect(subject.part_of_speech).to eq("adj")
+    end
+
+    example "Adjektiv" do
+      expect(subject.part_of_speech).to eq("adj")
+    end
+
+    it "works for empty strings", string: "" do
+      expect(subject.part_of_speech).to be(nil)
+    end
+
+    it "works for strings which do not specify p.o.s.", string: "a whatever" do
+      expect(subject.part_of_speech).to be(nil)
+    end
+
+    it "allows comma as a separator", string: "adj, whatever" do
+      expect(subject.part_of_speech).to eq("adj")
+    end
+
+    it "is not fooled with longer sentences (begin/end of word)",
+      string: "adjunction radj" do
+      expect(subject.part_of_speech).to be(nil)
+    end
+  end
 end
