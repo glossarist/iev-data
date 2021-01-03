@@ -6,6 +6,17 @@ module Iev
       attr_reader :gender, :geographical_area, :part_of_speech, :plurality,
         :prefix, :usage_info
 
+      PARTS_OF_SPEECH = {
+        "adj" => "adj",
+        "noun" => "noun",
+        "verb" => "verb",
+        "名詞" => "noun",
+        "動詞" => "verb",
+        "形容詞" => "adj",
+        "형용사" => "adj",
+        "Adjektiv" => "adj",
+      }.freeze
+
       def initialize(attr_str)
         @raw_str = attr_str.dup.freeze
         @src_str = decode_attrs_string(raw_str).freeze
@@ -47,16 +58,6 @@ module Iev
         end
       end
 
-      def parts_hash
-        @parts_hash ||= {
-          "名詞" => "noun",
-          "動詞" => "verb",
-          "形容詞" => "adj",
-          "형용사" => "adj",
-          "Adjektiv" => "adj",
-        }
-      end
-
       def extract_geographical_area
         area = src_str.match(/([A-Z]{2})$/)
         if area && area.size > 1
@@ -65,12 +66,14 @@ module Iev
       end
 
       def extract_part_of_speech
-        parts_regex = /noun|名詞|verb|動詞|Adjektiv|adj|形容詞|형용사/
-        part_of_speeches = src_str.match(parts_regex)
+        pos_rx = %r{
+          \b
+          #{Regexp.union(PARTS_OF_SPEECH.keys)}
+          \b
+        }x.freeze
 
-        if part_of_speeches
-          part_of_speech = part_of_speeches[1]
-          @part_of_speech = parts_hash[part_of_speech] || part_of_speech
+        if pos_rx =~ src_str
+          @part_of_speech = PARTS_OF_SPEECH[$&] || $&
         end
       end
 
