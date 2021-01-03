@@ -30,14 +30,16 @@ module Iev
       def build_nested_term
         {
           "type" => options[:type],
-          "prefix" => term_attributes.extract_prefix,
+          "prefix" => term_attributes.prefix,
           "normative_status" => term_status,
-          "usage_info" => term_attributes.extract_usage_info,
+          "usage_info" => term_attributes.usage_info,
           "designation" => options[:term],
-          "part_of_speech" => term_attributes.extract_part_of_speech,
-          "geographical_area" => term_attributes.extract_geographical_area,
+          "part_of_speech" => term_attributes.part_of_speech,
+          "geographical_area" => term_attributes.geographical_area,
           "international" => options.fetch(:international, nil),
-        }.merge(term_attributes.extract_gender || {})
+          "gender" => term_attributes.gender,
+          "plurality" => term_attributes.plurality,
+        }
       end
 
       def term_status
