@@ -32,7 +32,7 @@ module Iev
           "normative_status" => term_status,
           "usage_info" => extract_usage_info,
           "designation" => options[:term],
-          "part_of_speech" => extract_part_of_speach,
+          "part_of_speech" => extract_part_of_speech,
           "geographical_area" => extract_geographical_area,
           "international" => options.fetch(:international, nil),
         }.merge(extract_gender || {})
@@ -71,13 +71,13 @@ module Iev
         end
       end
 
-      def extract_part_of_speach
+      def extract_part_of_speech
         parts_regex = /noun|名詞|verb|動詞|Adjektiv|adj|形容詞|형용사/
-        part_of_speaches = term_attributes.match(parts_regex)
+        part_of_speeches = term_attributes.match(parts_regex)
 
-        if part_of_speaches
-          part_of_speach = part_of_speaches[1]
-          parts_hash[part_of_speach] || part_of_speach
+        if part_of_speeches
+          part_of_speech = part_of_speeches[1]
+          parts_hash[part_of_speech] || part_of_speech
         end
       end
 
