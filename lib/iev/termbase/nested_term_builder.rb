@@ -6,7 +6,6 @@ module Iev
       def initialize(options = {})
         @options = options
         @data = options.fetch(:data, nil)
-        @status = options.fetch(:status, nil)
       end
 
       def build
@@ -21,7 +20,7 @@ module Iev
 
       private
 
-      attr_reader :data, :status, :options
+      attr_reader :data, :options
 
       def term_attributes
         @term_attributes ||= TermAttrsParser.new(data.to_s)
@@ -31,7 +30,7 @@ module Iev
         {
           "type" => options[:type],
           "prefix" => term_attributes.prefix,
-          "normative_status" => term_status,
+          "normative_status" => options.fetch(:status, nil)&.downcase,
           "usage_info" => term_attributes.usage_info,
           "designation" => options[:term],
           "part_of_speech" => term_attributes.part_of_speech,
@@ -40,10 +39,6 @@ module Iev
           "gender" => term_attributes.gender,
           "plurality" => term_attributes.plurality,
         }
-      end
-
-      def term_status
-        status.downcase if status
       end
     end
   end
