@@ -11,7 +11,7 @@ module Iev
 
       def build
         if options[:term]
-          build_nested_term.select {|_k, value| !value.nil? }
+          build_nested_term.compact
         end
       end
 
