@@ -187,4 +187,51 @@ RSpec.describe Iev::Termbase::TermAttrsParser do
     end
   end
 
+  describe "prefix" do
+    example "Präfix" do
+      expect(subject.prefix).to be(true)
+    end
+
+    example "prefix" do
+      expect(subject.prefix).to be(true)
+    end
+
+    example "préfixe" do
+      expect(subject.prefix).to be(true)
+    end
+
+    example "接尾語" do
+      expect(subject.prefix).to be(true)
+    end
+
+    example "접두사" do
+      expect(subject.prefix).to be(true)
+    end
+
+    example "przedrostek" do
+      expect(subject.prefix).to be(true)
+    end
+
+    example "prefixo" do
+      expect(subject.prefix).to be(true)
+    end
+
+    example "词头" do
+      expect(subject.prefix).to be(true)
+    end
+
+    it "works for empty strings", string: "" do
+      expect(subject.prefix).to be(nil)
+    end
+
+    it "works for strings which do not specify prefix",
+      string: "a whatever" do
+      expect(subject.prefix).to be(nil)
+    end
+
+    it "is not fooled with longer words",
+      string: "prefixed" do
+      expect(subject.prefix).to be(nil)
+    end
+  end
 end
