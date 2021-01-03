@@ -5,7 +5,7 @@ module Iev
 
       def initialize(attr_str)
         @raw_str = attr_str.dup.freeze
-        @src_str = (HTMLEntities.new(:expanded).decode(attr_str) || "").freeze
+        @src_str = decode_attrs_string(raw_str).freeze
       end
 
       def inspect
@@ -61,6 +61,12 @@ module Iev
 
       def extract_prefix
         src_str.match(/Präfix|prefix|préfixe|接尾語|접두사|przedrostek|prefixo|词头/) ? true : nil
+      end
+
+    private
+
+      def decode_attrs_string(str)
+        HTMLEntities.new(:expanded).decode(str) || ""
       end
     end
   end
