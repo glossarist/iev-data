@@ -159,4 +159,32 @@ RSpec.describe Iev::Termbase::TermAttrsParser do
     end
   end
 
+  describe "geographical area" do
+    example "US" do
+      expect(subject.geographical_area).to eq("US")
+    end
+
+    example "DE" do
+      expect(subject.geographical_area).to eq("DE")
+    end
+
+    it "requires capital letters", string: "us" do
+      expect(subject.geographical_area).to be(nil)
+    end
+
+    it "works for empty strings", string: "" do
+      expect(subject.geographical_area).to be(nil)
+    end
+
+    it "works for strings which do not specify area",
+      string: "a whatever" do
+      expect(subject.geographical_area).to be(nil)
+    end
+
+    it "is not fooled with longer words",
+      string: "THUS" do
+      expect(subject.geographical_area).to be(nil)
+    end
+  end
+
 end
