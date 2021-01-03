@@ -78,10 +78,10 @@ module Iev
       end
 
       def extract_usage_info
-        usage_info = src_str.match(/<(.*?)>/)
+        info_rx = /<(.*?)>/
 
-        if usage_info && usage_info.size > 1
-          @usage_info = usage_info[1].strip
+        if info_rx =~ src_str
+          @usage_info = $~[1].strip
         end
       end
 

@@ -135,4 +135,28 @@ RSpec.describe Iev::Termbase::TermAttrsParser do
       expect(subject.part_of_speech).to be(nil)
     end
   end
+
+  describe "usage info" do
+    it "a string <info>" do
+      expect(subject.usage_info).to eq("info")
+    end
+
+    it "<only info>" do
+      expect(subject.usage_info).to eq("only info")
+    end
+
+    it "<  info with extra spaces\t>" do
+      expect(subject.usage_info).to eq("info with extra spaces")
+    end
+
+    it "works for empty strings", string: "" do
+      expect(subject.usage_info).to be(nil)
+    end
+
+    it "works for strings which do not specify usage info",
+      string: "a whatever" do
+      expect(subject.usage_info).to be(nil)
+    end
+  end
+
 end
