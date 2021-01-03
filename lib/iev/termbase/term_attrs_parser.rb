@@ -20,6 +20,7 @@ module Iev
 
       def parse
         extract_gender
+        extract_plurality
         extract_geographical_area
         extract_part_of_speech
         extract_usage_info
@@ -27,12 +28,22 @@ module Iev
       end
 
       def extract_gender
-        genders = src_str.match(/\s([m|f|n])$|^([m|f|n])[\s,]?|([m|f|n]) (pl)/)
+        gender_rx = /\b[mfn]\b/
 
-        if genders
+        if gender_rx =~ src_str
+          @gender = $&
+        end
+      end
+
+      # Must happen after #extract_gender
+      def extract_plurality
+        plural_rx = /\bpl\b/
+
+        if plural_rx =~ src_str
+          @plurality = "plural"
+        elsif !gender.nil?
+          # TODO Really needed?
           @plurality = "singular"
-          @gender = genders[1..3].join('')
-          @plurality = "plural" if genders.size > 1 && genders[4] == "pl"
         end
       end
 
