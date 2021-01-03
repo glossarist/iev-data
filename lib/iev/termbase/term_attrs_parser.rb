@@ -17,6 +17,10 @@ module Iev
         "Adjektiv" => "adj",
       }.freeze
 
+      PREFIX_KEYWORDS = %w[
+        Präfix prefix préfixe 接尾語 접두사 przedrostek prefixo 词头
+      ].freeze
+
       def initialize(attr_str)
         @raw_str = attr_str.dup.freeze
         @src_str = decode_attrs_string(raw_str).freeze
@@ -88,7 +92,15 @@ module Iev
       end
 
       def extract_prefix
-        @prefix = src_str.match(/Präfix|prefix|préfixe|接尾語|접두사|przedrostek|prefixo|词头/) ? true : nil
+        prefix_rx = %r{
+          \b
+          #{Regexp.union(PREFIX_KEYWORDS)}
+          \b
+        }x.freeze
+
+        if prefix_rx =~ src_str
+          @prefix = true
+        end
       end
 
       def decode_attrs_string(str)
