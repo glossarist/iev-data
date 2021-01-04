@@ -393,7 +393,7 @@ module Iev
           # "SI Brochure, 9th edition, 2019, 2.3.1, modified – The definition from the SI Brochure has been adapted to comply with the IEV rules. Notes 1 to 4 to entry have been added."
           # SI Brochure, 9th edition, 2019, Appendix 1, modified – The definition in the SI Brochure has been revised to comply with the IEV rules. The synonym "Loschmidt number" and the symbol "<i>L</i>" have been added to Note 2 to entry.
           # Brochure sur le SI, 9<sup>e</sup> édition, 2019, Annexe 1, modifié – La définition d e la Brochure sur le SI a été révisée à des fins de mise en conformité avec les règles de l’IEV. Le synonyme "nombre de Loschmidt" et le symbole "<i>L</i>" ont été ajoutés dans la Note 2 à l’article.
-          "BIPM SI Brochure"
+          "BBIPM SI Brochure TEMP DISABLED DUE TO RELATON"
 
         when /VIM/
           "JCGM VIM"
@@ -654,7 +654,7 @@ module Iev
 
         pp h
 
-        item = ::Iev::Termbase::RelatonDb.instance.fetch(clean_ref)
+        item = ::Iev::Termbase::RelatonDb.instance.fetch(source_ref)
 
         src = {}
 
