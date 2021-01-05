@@ -100,11 +100,6 @@ module Iev
         )
       end
 
-      def term_value_text
-        term = find_value_for("TERM")
-        term == "....." ? "NA" : term
-      end
-
       def definition_values
         @definition_values ||= split_definition
       end
@@ -161,7 +156,10 @@ module Iev
       end
 
       def extract_primary_designation
-        term = mathml_to_asciimath(parse_anchor_tag(term_value_text))
+        raw_term = find_value_for("TERM")
+        raw_term = "NA" if raw_term == "....."
+
+        term = mathml_to_asciimath(parse_anchor_tag(raw_term))
 
         nested_term.build(
           type: "expression",
