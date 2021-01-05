@@ -161,7 +161,7 @@ module Iev
 
         term = mathml_to_asciimath(parse_anchor_tag(raw_term))
 
-        nested_term.build(
+        Iev::Termbase::NestedTermBuilder.build(
           type: "expression",
           term: term,
           data: find_value_for("TERMATTRIBUTE"),
@@ -177,7 +177,7 @@ module Iev
           designations.split(/<[pbr]+>/).map do |raw_term|
             term = mathml_to_asciimath(parse_anchor_tag(raw_term))
 
-            nested_term.build(
+            Iev::Termbase::NestedTermBuilder.build(
               type: "expression",
               term: term,
               data: find_value_for("SYNONYM#{num}ATTRIBUTE"),
@@ -192,15 +192,11 @@ module Iev
       def extract_international_symbol_designation
         term = mathml_to_asciimath(parse_anchor_tag(find_value_for("SYMBOLE")))
 
-        nested_term.build(
+        Iev::Termbase::NestedTermBuilder.build(
           type: "symbol",
           international: true,
           term: term,
         )
-      end
-
-      def nested_term
-        Iev::Termbase::NestedTermBuilder
       end
 
       def text_to_asciimath(text)
