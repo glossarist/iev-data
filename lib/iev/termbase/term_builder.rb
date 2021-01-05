@@ -168,7 +168,7 @@ module Iev
           type: "expression",
           term: mathml_to_asciimath(parse_anchor_tag(term_value_text)),
           data: find_value_for("TERMATTRIBUTE"),
-          status: 'Preferred',
+          status: "Preferred",
         ))
 
         (1..3).each do |num|
