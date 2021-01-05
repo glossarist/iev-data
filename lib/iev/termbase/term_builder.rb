@@ -148,15 +148,6 @@ module Iev
         definitions
       end
 
-      def find_synonyms
-        synonyms = []
-        synonyms.push(find_value_for("SYNONYM1"))
-        synonyms.push(find_value_for("SYNONYM2"))
-        synonyms.push(find_value_for("SYNONYM3"))
-
-        synonyms.select {|item| !item.nil? }
-      end
-
       def three_char_code(code)
         Iev::Termbase::Iso639Code.three_char_code(code).first
       end
