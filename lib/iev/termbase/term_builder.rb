@@ -25,8 +25,6 @@ module Iev
         new(data: data, indices: indices).build
       end
 
-      private
-
       attr_reader :data, :indices
 
       def find_value_for(key)
@@ -663,15 +661,7 @@ module Iev
         warn e.message
       end
 
-      def extract_authoritative_source
-        source = find_value_for("SOURCE")
-
-        return nil if source.nil?
-
-        source = HTMLEntities.new.decode(source).gsub("\u00a0", " ")
-
-        puts "[RAW] #{source}"
-
+      def split_source_field(source)
         # IEC 62047-22:2014, 3.1.1, modified – In the definition, ...
         source = source
           .gsub(/;\s?([A-Z][A-Z])/, ';; \1')
@@ -683,14 +673,17 @@ module Iev
           .gsub(/MOD,\s*([UIC\d])/, 'MOD;; \1')
           .gsub(/MOD[,\.]/, 'MOD;;')
 
-        # TODO
         # 702-09-44 MOD, 723-07-47, voir 723-10-91
+        source = source
+          .gsub(/MOD,\s*(\d{3})/, 'MOD;; \1')
+          .gsub(/,\s*see\s*(\d{3})/, ';;see \1')
+          .gsub(/,\s*voir\s*(\d{3})/, ';;voir \1')
+
         # IEC 62303:2008, 3.1, modified and IEC 62302:2007, 3.2; IAEA 4
         # CEI 62303:2008, 3.1, modifiée et CEI 62302:2007, 3.2; AIEA 4
-
         source = source
-          .gsub(/modified and IEC/, "modified;; IEC")
-          .gsub(/modifiée et CEI/, "modifiée;; IEC")
+          .gsub(/modified and ([ISOECUT])/, 'modified;; \1')
+          .gsub(/modifiée et ([ISOECUT])/, 'modifiée;; \1')
 
         # 725-12-50, ITU RR 11
         source = source.gsub(/,\s+ITU/, ";; ITU")
@@ -698,9 +691,19 @@ module Iev
         # 705-02-01, 702-02-07
         source = source.gsub(/(\d{2,3}-\d{2,3}-\d{2,3}),\s*(\d{2,3}-\d{2,3}-\d{2,3})/, '\1;; \2')
 
-        sources = source.split(';;').map(&:strip)
+        source.split(';;').map(&:strip)
+      end
 
-        sources.map do |src|
+      def extract_authoritative_source
+        source_val = find_value_for("SOURCE")
+
+        return nil if source_val.nil?
+
+        source_val = HTMLEntities.new.decode(source_val).gsub("\u00a0", " ")
+
+        puts "[RAW] #{source_val}"
+
+        split_source_field(source_val).map do |src|
           extract_single_source(src)
         end
       end
