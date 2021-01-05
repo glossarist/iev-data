@@ -162,43 +162,52 @@ module Iev
       end
 
       def extract_terms
-        terms = []
+        [
+          extract_primary_designation,
+          *extract_synonymous_designations,
+          extract_international_symbol_designation,
+        ].compact
+      end
 
-        terms.push(nested_term.build(
+      def extract_primary_designation
+        term = mathml_to_asciimath(parse_anchor_tag(term_value_text))
+
+        nested_term.build(
           type: "expression",
-          term: mathml_to_asciimath(parse_anchor_tag(term_value_text)),
+          term: term,
           data: find_value_for("TERMATTRIBUTE"),
           status: "Preferred",
-        ))
+        )
+      end
 
-        (1..3).each do |num|
+      def extract_synonymous_designations
+        retval = (1..3).map do |num|
+          designations = find_value_for("SYNONYM#{num}") || ""
+
           # Some synonyms have more than one entry
-          values = find_value_for("SYNONYM#{num}")
-          next if values.nil?
+          designations.split(/<[pbr]+>/).map do |raw_term|
+            term = mathml_to_asciimath(parse_anchor_tag(raw_term))
 
-          # puts "X"*50
-          # puts values
-          values = values.split(/<[pbr]+>/)
-          # puts values.inspect
-          # puts "Y"*50
-
-          values.each do |value|
-            terms.push(nested_term.build(
+            nested_term.build(
               type: "expression",
-              term: mathml_to_asciimath(parse_anchor_tag(value)),
+              term: term,
               data: find_value_for("SYNONYM#{num}ATTRIBUTE"),
               status: find_value_for("SYNONYM#{num}STATUS"),
-            ))
+            )
           end
         end
 
-        terms.push(nested_term.build(
+        retval.flatten.compact
+      end
+
+      def extract_international_symbol_designation
+        term = mathml_to_asciimath(parse_anchor_tag(find_value_for("SYMBOLE")))
+
+        nested_term.build(
           type: "symbol",
           international: true,
-          term: mathml_to_asciimath(parse_anchor_tag(find_value_for("SYMBOLE"))),
-        ))
-
-        terms.select { |term| !term.nil? }
+          term: term,
+        )
       end
 
       def nested_term
