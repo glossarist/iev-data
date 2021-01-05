@@ -384,15 +384,11 @@ module Iev
       end
 
       def extract_source_ref(str)
-
-        # ISO/IEC 2382:2015 (https://www.iso.org/obp/ui/#iso:std:iso-iec:2382:ed-1:v1:en), 2126371, modified – Notes 1 to 3 to entry have been omitted.
-
-
         case str
         when /SI Brochure/, /Brochure sur le SI/
-          # "SI Brochure, 9th edition, 2019, 2.3.1, modified – The definition from the SI Brochure has been adapted to comply with the IEV rules. Notes 1 to 4 to entry have been added."
-          # SI Brochure, 9th edition, 2019, Appendix 1, modified – The definition in the SI Brochure has been revised to comply with the IEV rules. The synonym "Loschmidt number" and the symbol "<i>L</i>" have been added to Note 2 to entry.
-          # Brochure sur le SI, 9<sup>e</sup> édition, 2019, Annexe 1, modifié – La définition d e la Brochure sur le SI a été révisée à des fins de mise en conformité avec les règles de l’IEV. Le synonyme "nombre de Loschmidt" et le symbole "<i>L</i>" ont été ajoutés dans la Note 2 à l’article.
+          # SI Brochure, 9th edition, 2019, 2.3.1
+          # SI Brochure, 9th edition, 2019, Appendix 1
+          # Brochure sur le SI, 9<sup>e</sup> édition, 2019, Annexe 1
           "BBIPM SI Brochure TEMP DISABLED DUE TO RELATON"
 
         when /VIM/
@@ -472,7 +468,6 @@ module Iev
       end
 
       def extract_source_clause(str)
-
         # Strip out the modifications
         str = str.sub(/[,\ ]*modif.+\s[-–].*\Z/, "")
 
@@ -496,21 +491,20 @@ module Iev
           # 221 04 03
           [/(\d{3}\ \d{2}\ \d{2})/, "1"],
           # ", 1.1"
+
           # "SI Brochure, 9th edition, 2019, 2.3.1,"
           [/,\s?(\d+\.[\d\.]+)/, "1"],
-
-          #  CLAUSENIL!!! SI Brochure, 9th edition, 2019, Appendix 1, modified
+          #  SI Brochure, 9th edition, 2019, Appendix 1, modified
+          #  Brochure sur le SI, 9<sup>e</sup> édition, 2019, Annexe 1,
           [/\d{4}, (Appendix \d)/, "1"],
-
-          #  CLAUSENIL!!! Brochure sur le SI, 9<sup>e</sup> édition, 2019, Annexe 1,
           [/\d{4}, (Annexe \d)/, "1"],
 
-          #  International Telecommunication Union (ITU) Constitution (Ed. 2015), No. 1012 of the Annex,
+          # International Telecommunication Union (ITU) Constitution (Ed. 2015), No. 1012 of the Annex,
           # Constitution de l’Union internationale des télécommunications (UIT) (Ed. 2015), N° 1012 de l’Annexe,
           [/, (No. \d{4} of the Annex)/, "1"],
           [/, (N° \d{4} 1012 de l’Annexe)/, "1"],
 
-          # ISO/IEC 2382:2015 (https://www.iso.org/obp/ui/#iso:std:iso-iec:2382:ed-1:v1:en), 2126371,
+          # ISO/IEC 2382:2015 (https://www.iso.org/obp/ui/#iso:std:iso-iec:2382:ed-1:v1:en), 2126371
           [/\), (\d{7}),/, "1"],
 
           # " 1.1 "
@@ -678,20 +672,19 @@ module Iev
 
         puts "[RAW] #{source}"
 
-        # IEC 62047-22:2014, 3.1.1, modified – In the definition, "the product of" has been added. Note 1 to entry has been deleted; its content is now part of the definition.
+        # IEC 62047-22:2014, 3.1.1, modified – In the definition, ...
         source = source
           .gsub(/;\s?([A-Z][A-Z])/, ';; \1')
           .gsub(/MOD[,\.]/, 'MOD;;')
 
-        # "702-01-02 MOD,ITU-R Rec. 431 MOD"
-        # 702-09-44 MOD, 723-07-47, voir 723-10-91
-        # definition 3.7 of IEC 62127-1 MOD, adapted from 4.2.9 of IEC 61828 and 3.6 of IEC 61102
-        # définition 3.7 de la CEI 62127-1 MOD, adaptées sur la base du 4.2.9 de la CEI 61828 et du 3.6 de la CEI 61102
+        # 702-01-02 MOD,ITU-R Rec. 431 MOD
         # 161-06-01 MOD. ITU RR 139 MOD
         source = source
           .gsub(/MOD,\s*([UIC\d])/, 'MOD;; \1')
           .gsub(/MOD[,\.]/, 'MOD;;')
 
+        # TODO
+        # 702-09-44 MOD, 723-07-47, voir 723-10-91
         # IEC 62303:2008, 3.1, modified and IEC 62302:2007, 3.2; IAEA 4
         # CEI 62303:2008, 3.1, modifiée et CEI 62302:2007, 3.2; AIEA 4
 
