@@ -6,7 +6,7 @@ RSpec.describe Iev::Termbase::Workbook do
       workbook = Iev::Termbase::Workbook.parse(sample_file)
 
       first_term = workbook.to_hash["103-01-01"]
-      kor_source = first_term["kor"]["authoritative_source"]
+      kor_source = first_term["kor"]["authoritative_source"][0]
 
       expect(workbook.size).to eq(2)
       expect(first_term["eng"]["id"]).to eq("103-01-01")
