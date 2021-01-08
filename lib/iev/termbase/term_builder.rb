@@ -569,16 +569,16 @@ module Iev
         case str
         when /^MOD ([\d\-])/
           {
-            type: type
+            "type" => type.to_s
           }
         when /(modified|modifié|modifiée|modifiés|MOD)\s*[–-–]?\s+(.+)\Z/
           {
-            type: type,
-            modification: $LAST_MATCH_INFO[2]
+            "type" => type.to_s,
+            "modification" => $LAST_MATCH_INFO[2]
           }
         else
           {
-            type: type
+            "type" => type.to_s
           }
         end
       end
