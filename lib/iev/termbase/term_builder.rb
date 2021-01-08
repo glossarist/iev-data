@@ -1,11 +1,5 @@
 require 'pp'
 
-require "iev/termbase/relaton_db"
-require "iev/termbase/iso_639_code"
-require "iev/termbase/nested_term_builder"
-require 'mathml2asciimath'
-require 'relaton_bib'
-
 module Iev
   module Termbase
     class TermBuilder

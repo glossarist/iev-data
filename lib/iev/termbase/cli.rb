@@ -1,6 +1,3 @@
-require "thor"
-require "iev/termbase/cli/command"
-
 module Iev
   module Termbase
     module Cli

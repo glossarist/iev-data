@@ -1,5 +1,3 @@
-require 'yaml'
-
 module Iev
   module Termbase
     class Iso639Code

@@ -1,5 +1,3 @@
-require "iev/termbase/cli/ui"
-
 module Iev::Termbase
   module Cli
     class Command < Thor
