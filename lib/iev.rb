@@ -1,5 +1,12 @@
 require "creek"
 require "yaml"
+require "zeitwerk"
+
+loader = Zeitwerk::Loader.for_gem
+loader.inflector.inflect(
+  "ui" => "UI",
+)
+loader.setup
 
 module Iev
   def self.root_path
