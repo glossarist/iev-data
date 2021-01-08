@@ -1,5 +1,3 @@
-require "thor"
-
 module Iev::Termbase
   module Cli
     class UI < Thor

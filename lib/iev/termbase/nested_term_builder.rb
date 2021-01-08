@@ -1,5 +1,3 @@
-require "iev/termbase/term_attrs_parser"
-
 module Iev
   module Termbase
     class NestedTermBuilder

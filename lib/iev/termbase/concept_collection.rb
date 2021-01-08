@@ -1,5 +1,3 @@
-require "yaml"
-
 module Iev::Termbase
   class ConceptCollection < Hash
 

@@ -1,5 +1,4 @@
 require "singleton"
-require "relaton"
 
 module Iev
   module Termbase
