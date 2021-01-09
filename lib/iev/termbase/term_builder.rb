@@ -183,7 +183,7 @@ module Iev
       end
 
       def text_to_asciimath(text)
-        html_entities_to_asciimath(HTMLEntities.new(:expanded).decode(text))
+        html_entities_to_asciimath(text.decode_html)
       end
 
       def html_to_asciimath(input)
@@ -676,7 +676,7 @@ module Iev
 
         return nil if source_val.nil?
 
-        source_val = HTMLEntities.new.decode(source_val).sanitize
+        source_val = source_val.decode_html.sanitize
 
         puts "[RAW] #{source_val}"
 

@@ -2,6 +2,15 @@ module Iev
   module Termbase
     module DataConversions
       refine String do
+        def decode_html!
+          replace(decode_html)
+          nil
+        end
+
+        def decode_html
+          HTMLEntities.new(:expanded).decode(self)
+        end
+
         # Normalize various encoding anomalies like `\uFEFF` in strings
         def sanitize!
           unicode_normalize!

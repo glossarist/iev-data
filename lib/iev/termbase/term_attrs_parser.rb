@@ -1,6 +1,8 @@
 module Iev
   module Termbase
     class TermAttrsParser
+      using DataConversions
+
       attr_reader :raw_str, :src_str
 
       attr_reader :gender, :geographical_area, :part_of_speech, :plurality,
@@ -104,7 +106,7 @@ module Iev
       end
 
       def decode_attrs_string(str)
-        HTMLEntities.new(:expanded).decode(str) || ""
+        str.decode_html || ""
       end
     end
   end
