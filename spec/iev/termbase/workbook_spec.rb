@@ -2,8 +2,10 @@ require "spec_helper"
 
 RSpec.describe Iev::Termbase::Workbook do
   describe ".parse" do
+    subject { described_class.method(:parse) }
+
     it "parses to xls file to workbook" do
-      workbook = silence_output_streams { Iev::Termbase::Workbook.parse(sample_file) }
+      workbook = silence_output_streams { subject.(sample_file) }
 
       first_term = workbook.to_hash["103-01-01"]
       kor_source = first_term["kor"]["authoritative_source"][0]
