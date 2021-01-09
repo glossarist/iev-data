@@ -3,6 +3,8 @@ require "pp"
 module Iev
   module Termbase
     class TermBuilder
+      using DataConversions
+
       NOTE_REGEX_1 = /Note[\s ]*\d+[\s ]to entry:\s+|Note[\s ]*\d+?[\s ]à l['’]article:[\s ]*|<NOTE\/?>?[\s ]*\d?[\s ]+.*?–\s+|NOTE[\s ]+-[\s ]+/i
       NOTE_REGEX_2 = /\nNOTE\s+/
 
@@ -22,7 +24,7 @@ module Iev
       attr_reader :data, :indices
 
       def find_value_for(key)
-        clean_string(data.fetch(indices[key], nil))
+        data.fetch(indices[key], nil)&.sanitize
       end
 
       def flesh_date(incomplete_date)
@@ -32,19 +34,6 @@ module Iev
         # year and month
         year, month = incomplete_date.split('-')
         DateTime.parse("#{year}-#{month}-01").to_s
-      end
-
-      # Some IEV fields have the string `\uFEFF` polluting them
-      def clean_string(val)
-        return unless val
-
-        # u2011: issue iev-data#51
-        # u00a0: issue iev-data#50
-        val.unicode_normalize
-          .gsub("\uFEFF", "")
-          .gsub("\u2011", "-")
-          .gsub("\u00a0", " ")
-          .strip
       end
 
       def build_term_object
@@ -687,7 +676,7 @@ module Iev
 
         return nil if source_val.nil?
 
-        source_val = HTMLEntities.new.decode(source_val).gsub("\u00a0", " ")
+        source_val = HTMLEntities.new.decode(source_val).sanitize
 
         puts "[RAW] #{source_val}"
 
