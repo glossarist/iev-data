@@ -57,4 +57,18 @@ RSpec.describe "string conversion refinements" do
       expect { str.sanitize! }.to change { str }.to("whatever")
     end
   end
+
+  describe "#to_three_char_code" do
+    it "returns corresponding ISO 639-2 code for terminology" do
+      expect("en".to_three_char_code).to eq("eng")
+      expect("de".to_three_char_code).to eq("deu") # not ger
+    end
+
+    it "raises error when self is not a proper ISO 639-1 code" do
+      expect { "whatever".to_three_char_code }.to raise_error(StandardError)
+      expect { "xy".to_three_char_code }.to raise_error(StandardError)
+      # already ISO 639-2
+      expect { "eng".to_three_char_code }.to raise_error(StandardError)
+    end
+  end
 end
