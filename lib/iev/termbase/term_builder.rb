@@ -38,7 +38,7 @@ module Iev
 
       def build_term_object
         row_term_id = find_value_for("IEVREF")
-        row_lang = three_char_code(find_value_for("LANGUAGE"))
+        row_lang = find_value_for("LANGUAGE").to_three_char_code
 
         print "\rProcessing term #{row_term_id} (#{row_lang})... "
 
@@ -124,10 +124,6 @@ module Iev
         definitions[:notes] = note_split[1..-1].map(&:strip) if note_split.size > 1
 
         definitions
-      end
-
-      def three_char_code(code)
-        Iev::Termbase::Iso639Code.three_char_code(code).first
       end
 
       def extract_terms

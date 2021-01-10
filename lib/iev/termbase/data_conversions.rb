@@ -25,6 +25,10 @@ module Iev
         def sanitize
           dup.tap(&:sanitize!)
         end
+
+        def to_three_char_code
+          Iev::Termbase::Iso639Code.three_char_code(self).first
+        end
       end
     end
   end
