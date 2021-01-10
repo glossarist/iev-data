@@ -1,4 +1,4 @@
-require 'pp'
+require "pp"
 
 module Iev
   module Termbase
@@ -532,7 +532,7 @@ module Iev
           # sort by index and also the length of match
         end.flatten.sort_by { |hash| [hash[:index], -hash[:clause].length] }
 
-        pp results
+        # pp results
 
         if results.first
           results.first[:clause]
@@ -626,13 +626,13 @@ module Iev
         # puts "SOURCE!!! #{raw_ref}" if source_ref.nil?
 
         # puts "[RAW] #{raw_ref}"
-        h = {
-          source_ref: source_ref,
-          clause: clause,
-          relation_type: relation_type
-        }
+        # h = {
+        #   source_ref: source_ref,
+        #   clause: clause,
+        #   relation_type: relation_type
+        # }
 
-        pp h
+        # pp h
 
         item = ::Iev::Termbase::RelatonDb.instance.fetch(source_ref)
 
