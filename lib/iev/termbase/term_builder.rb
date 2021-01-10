@@ -566,7 +566,7 @@ module Iev
         # source = "ISO/IEC GUIDE 99:2007 1.26"
         # raw_ref = str.match(/\A[^,\()]+/).to_s
 
-        puts "[extract_single_source] #{raw_ref}"
+        # puts "[extract_single_source] #{raw_ref}"
 
         relation_type = extract_source_relationship(raw_ref)
 
@@ -674,7 +674,7 @@ module Iev
 
         source_val = source_val.decode_html.sanitize
 
-        puts "[RAW] #{source_val}"
+        # puts "[RAW] #{source_val}"
 
         split_source_field(source_val).map do |src|
           extract_single_source(src)
