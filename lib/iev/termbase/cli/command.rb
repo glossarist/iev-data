@@ -12,7 +12,9 @@ module Iev::Termbase
       )
 
       def xlsx2yaml(file)
-        collection = Iev::Termbase::Workbook.parse(file)
+        db = Sequel.sqlite
+        DbWriter.new(db).import_spreadsheet(file)
+        collection = ConceptCollection.build_from_dataset(db[:concepts])
 
         if collection && options[:write]
           write_to_file(file, collection, options)
