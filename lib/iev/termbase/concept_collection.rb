@@ -9,6 +9,15 @@ module Iev::Termbase
       end
     end
 
+    def self.build_from_dataset(ds)
+      new.tap do |concept_collection|
+        ds.each do |row|
+          term = TermBuilder.build_from(row)
+          concept_collection.add_term(term)
+        end
+      end
+    end
+
     def to_hash
       self.inject({}) do |acc, (id, concept)|
         acc.merge!(id => concept.to_hash)
