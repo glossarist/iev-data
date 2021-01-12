@@ -8,23 +8,22 @@ module Iev
       NOTE_REGEX_1 = /Note[\s ]*\d+[\s ]to entry:\s+|Note[\s ]*\d+?[\s ]à l['’]article:[\s ]*|<NOTE\/?>?[\s ]*\d?[\s ]+.*?–\s+|NOTE[\s ]+-[\s ]+/i
       NOTE_REGEX_2 = /\nNOTE\s+/
 
-      def initialize(data:, indices: )
+      def initialize(data)
         @data = data
-        @indices = indices
       end
 
       def build
         build_term_object
       end
 
-      def self.build_from(data, indices)
-        new(data: data, indices: indices).build
+      def self.build_from(data)
+        new(data).build
       end
 
-      attr_reader :data, :indices
+      attr_reader :data
 
       def find_value_for(key)
-        data.fetch(indices[key], nil)&.sanitize
+        data.fetch(key.to_sym, nil)&.sanitize
       end
 
       def flesh_date(incomplete_date)
