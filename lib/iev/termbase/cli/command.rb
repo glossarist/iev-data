@@ -4,23 +4,11 @@ module Iev::Termbase
       desc "xlsx2yaml FILE", "Parsing Excel exports to IEV yaml."
       option :output, aliases: :o, default: Dir.pwd, desc: "Output directory"
 
-      option(
-        :write,
-        default: true,
-        type: :boolean,
-        desc: "Write or Stream to the output buffer",
-      )
-
       def xlsx2yaml(file)
         db = Sequel.sqlite
         DbWriter.new(db).import_spreadsheet(file)
         collection = ConceptCollection.build_from_dataset(db[:concepts])
-
-        if collection && options[:write]
-          write_to_file(file, collection, options)
-        else
-          UI.say(collection.to_yaml)
-        end
+        write_to_file(file, collection, options)
       end
 
       desc "xlsx2db FILE, DB_FILE", "Imports Excel to SQLite database."
