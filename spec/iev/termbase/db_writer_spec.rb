@@ -3,6 +3,7 @@ require "spec_helper"
 RSpec.describe Iev::Termbase::DbWriter do
   let(:instance) { described_class.new(db) }
   let(:db) { Sequel.sqlite }
+  let(:sample_file) { fixture_path("sample-file.xlsx") }
 
   describe "#import_spreadsheet" do
     subject { instance.method(:import_spreadsheet) }
@@ -26,9 +27,5 @@ RSpec.describe Iev::Termbase::DbWriter do
       expect(kor_row[:TERM]).to eq("함수")
       expect(kor_row[:SOURCE]).not_to be(nil)
     end
-  end
-
-  def sample_file
-    Iev.root_path.join("spec", "fixtures", "sample-file.xlsx")
   end
 end
