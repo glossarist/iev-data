@@ -31,7 +31,6 @@ module Iev::Termbase
 
       def write_to_file(file, collection, options)
         output_dir = Pathname.new(options[:output].to_s)
-        collection.to_file(collection_file_path(file, output_dir))
 
         concept_dir = output_dir.join("concepts")
         FileUtils.mkdir_p(concept_dir)unless concept_dir.exist?
