@@ -8,7 +8,7 @@ module Iev::Termbase
         db = Sequel.sqlite
         DbWriter.new(db).import_spreadsheet(file)
         collection = ConceptCollection.build_from_dataset(db[:concepts])
-        write_to_file(file, collection, options)
+        save_collection_to_files(file, collection, options)
       end
 
       desc "xlsx2db FILE, DB_FILE", "Imports Excel to SQLite database."
@@ -24,12 +24,12 @@ module Iev::Termbase
       def db2yaml(dbfile)
         db = Sequel.sqlite(dbfile)
         collection = ConceptCollection.build_from_dataset(db[:concepts])
-        write_to_file(file, collection, options)
+        save_collection_to_files(file, collection, options)
       end
 
       private
 
-      def write_to_file(file, collection, options)
+      def save_collection_to_files(file, collection, options)
         output_dir = Pathname.new(options[:output].to_s)
 
         concept_dir = output_dir.join("concepts")
