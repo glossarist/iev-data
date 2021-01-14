@@ -33,7 +33,7 @@ module Iev::Termbase
         output_dir = Pathname.new(options[:output].to_s)
 
         concept_dir = output_dir.join("concepts")
-        FileUtils.mkdir_p(concept_dir)unless concept_dir.exist?
+        FileUtils.mkdir_p(concept_dir)
 
         collection.each do |key, concept|
           concept.to_file(concept_dir.join("concept-#{key}.yaml"))
