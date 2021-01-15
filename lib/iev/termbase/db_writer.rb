@@ -61,7 +61,7 @@ module IEV
       def display_progress(data)
         ievref = data[:IEVREF]
         lang = data[:LANGUAGE].to_three_char_code
-        print "\rImporting term #{ievref} (#{lang})... "
+        CLI::UI.progress "Importing term #{ievref} (#{lang})..."
       end
 
       def insert_data(data)

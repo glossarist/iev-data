@@ -11,6 +11,7 @@ loader = Zeitwerk::Loader.for_gem
 loader.inflector.inflect(
   "cli" => "CLI",
   "iev" => "IEV",
+  "ui" => "UI",
 )
 loader.setup
 
