@@ -34,6 +34,12 @@ module Iev
         Creek::Book.new(file)
       end
 
+      # Creates a database table which is going to be filled with data extracted
+      # from the spreadsheet.
+      #
+      # Note that columns are defined as +VARCHAR(255)+, but they can store
+      # strings of any length without truncating, see:
+      # https://www.sqlite.org/faq.html#q9
       def create_table(column_names)
         db.create_table!(:concepts) do
           column_names.each { |cn| column cn, String }
