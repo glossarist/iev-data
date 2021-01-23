@@ -1,10 +1,8 @@
 require "spec_helper"
 
-RSpec.describe Iev::Termbase::TermBuilder do
+RSpec.describe Iev::Termbase::SourceParser do
 
-  let(:builder) {
-    Iev::Termbase::TermBuilder.new(data: {}, indices: {})
-  }
+  let(:builder) { described_class.new("") }
 
   describe ".split_source_field" do
 
