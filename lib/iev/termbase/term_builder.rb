@@ -668,16 +668,8 @@ module Iev
 
       def extract_authoritative_source
         source_val = find_value_for("SOURCE")
-
         return nil if source_val.nil?
-
-        source_val = source_val.decode_html.sanitize
-
-        # puts "[RAW] #{source_val}"
-
-        split_source_field(source_val).map do |src|
-          extract_single_source(src)
-        end
+        SourceParser.new(source_val).parsed_sources
       end
 
       SIMG_PATH_REGEX = "<simg .*\\/\\$file\\/([\\d\\-\\w\.]+)>"
