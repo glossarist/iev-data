@@ -4,18 +4,15 @@ RSpec.describe Iev::Termbase::SourceParser do
 
   let(:builder) { described_class.new("") }
 
-  describe ".split_source_field" do
+  it "parses 'MOD,ITU" do
+    phrase = "702-01-02 MOD,ITU-R Rec. 431 MOD"
+    results = builder.split_source_field(phrase)
 
-    it "parses 'MOD,ITU" do
-      phrase = "702-01-02 MOD,ITU-R Rec. 431 MOD"
-      results = builder.split_source_field(phrase)
+    expect(results.class).to be(Array)
+    expect(results.size).to eq(2)
 
-      expect(results.class).to be(Array)
-      expect(results.size).to eq(2)
-
-      results.each do |r|
-        expect([ "702-01-02 MOD", "ITU-R Rec. 431 MOD" ]).to include(r)
-      end
+    results.each do |r|
+      expect([ "702-01-02 MOD", "ITU-R Rec. 431 MOD" ]).to include(r)
     end
   end
 
