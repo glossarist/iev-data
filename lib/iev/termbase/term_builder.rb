@@ -46,7 +46,6 @@ module Iev
           entry_status: find_value_for("STATUS"),
           classification: find_value_for("SYNONYM1STATUS"),
           date_accepted: flesh_date(find_value_for("PUBLICATIONDATE")),
-          release: find_value_for("REPLACES"),
           date_amended: flesh_date(find_value_for("PUBLICATIONDATE")),
           review_date: flesh_date(find_value_for("PUBLICATIONDATE")),
           review_decision_date: flesh_date(find_value_for("PUBLICATIONDATE")),
