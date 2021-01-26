@@ -26,7 +26,6 @@ module Iev::Termbase
     review_decision_date
     review_decision_event
     review_decision_notes
-    release
     )
 
     attr_accessor *ATTRIBS
@@ -245,11 +244,6 @@ module Iev::Termbase
       end
       @review_decision = value
     end
-
-    def retired?
-      release >= 0
-    end
-
   end
 
 end

@@ -20,7 +20,6 @@ RSpec.describe "IEV Termbase" do
         expect(concept1).to include("term: function")
         expect(concept1).to include("deu:")
         expect(concept1).to include("designation: function")
-        expect(concept1).to include("release: 103-01-01:2009-12")
 
         expect(concept2).to include("termid: 103-01-02")
         expect(concept2).to include("term: functional")
