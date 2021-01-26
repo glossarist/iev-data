@@ -23,9 +23,6 @@ loader.inflector.inflect(
 loader.setup
 
 module IEV
-  def self.root_path
-    Pathname.new(File.dirname(__dir__))
-  end
 end
 
 require "iev/termbase/cli"
