@@ -7,6 +7,10 @@ RSpec.describe Iev::Termbase::SourceParser do
     described_class.new(attributes_str)
   end
 
+  around do |example|
+    silence_output_streams { example.run }
+  end
+
   example "MOD,ITU", string: "702-01-02 MOD,ITU-R Rec. 431 MOD" do
     expect(subject.src_split).to be_an(Array) & contain_exactly(
       "702-01-02 MOD", "ITU-R Rec. 431 MOD")
