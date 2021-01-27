@@ -30,6 +30,8 @@ module Iev::Termbase
 
     attr_accessor *ATTRIBS
 
+    attr_accessor :superseded_concepts
+
     def initialize(options={})
       initialize_from_options(options)
       # @examples = []
@@ -243,6 +245,12 @@ module Iev::Termbase
         value = ""
       end
       @review_decision = value
+    end
+
+    def related_concepts
+      # TODO someday other relation types too
+      arr = [superseded_concepts].flatten.compact
+      arr.empty? ? nil : arr
     end
   end
 
