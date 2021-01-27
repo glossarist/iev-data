@@ -63,6 +63,7 @@ module Iev
           definition: extract_definition_value,
           authoritative_source: extract_authoritative_source,
           language_code: row_lang,
+          superseded_concepts: extract_superseded_concepts,
 
           # @todo: Unsorted Attributes
           #
@@ -356,6 +357,12 @@ module Iev
         source_val = find_value_for("SOURCE")
         return nil if source_val.nil?
         SourceParser.new(source_val).parsed_sources
+      end
+
+      def extract_superseded_concepts
+        replaces_val = find_value_for("REPLACES")
+        return nil if replaces_val.nil?
+        SupersessionParser.new(replaces_val).supersessions
       end
 
       SIMG_PATH_REGEX = "<simg .*\\/\\$file\\/([\\d\\-\\w\.]+)>"

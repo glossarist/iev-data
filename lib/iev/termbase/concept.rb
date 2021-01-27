@@ -32,7 +32,10 @@ module Iev::Termbase
       default_hash = {
         "termid" => id,
         "term" => default_term.terms.first["designation"],
+        "related" => default_term.related_concepts,
       }
+
+      default_hash.compact!
 
       self.inject(default_hash) do |acc, (lang, term)|
         acc.merge!(lang => term.to_hash)
