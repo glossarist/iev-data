@@ -1,5 +1,12 @@
 module Iev
   module Termbase
+    # Parses information from the spreadsheet's TERMATTRIBUTE column and alike.
+    #
+    # @example
+    #   parser = TermAttrsParser.new(cell_data_string)
+    #   parser.gender # returns grammatical gender
+    #   parser.plurality # returns grammatical plurality
+    #   parser.part_of_speech # returns part of speech
     class TermAttrsParser
       using DataConversions
 

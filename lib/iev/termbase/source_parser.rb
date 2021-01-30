@@ -1,5 +1,9 @@
 module Iev
   module Termbase
+    # Parses information from the spreadsheet's SOURCE column.
+    #
+    # @example
+    #   SourceParser.new(cell_data_string).parsed_sources
     class SourceParser
       using DataConversions
 
