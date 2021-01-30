@@ -25,9 +25,8 @@ jobs:
       - name: Generate concepts
         run: make all
 
-      - name: Build
-        run: |
-          make concepts.zip
+      - name: Package concepts
+        run: make concepts.zip
 
       - name: Create Release
         id: create_release
