@@ -10,15 +10,13 @@ clean:
 	rm -rf termbase.xlsx
 
 distclean: clean
-	rm -rf concepts termbase.yaml
+	rm -rf concepts
 
 termbase.xlsx:
 	cp '${TERMBASE_XLSX_PATH}' termbase.xlsx
 
-termbase.yaml: termbase.xlsx
+concepts: termbase.xlsx
 	bundle exec iev-termbase xlsx2yaml $<;
-
-concepts: termbase.yaml
 
 concepts.zip: concepts
 	zip -9 -r $@ concepts images
