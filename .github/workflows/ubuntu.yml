@@ -8,7 +8,8 @@ on:
   pull_request:
 
 jobs:
-  test:
+  rspec:
+    name: Run tests
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +28,9 @@ jobs:
       - name: Run tests
         run: bin/rspec
 
-  build:
+
+  test-xlsx2yaml:
+    name: Run xlsx2yaml
     runs-on: ubuntu-latest
 
     steps:
@@ -43,6 +46,47 @@ jobs:
       - name: Setup
         run: bin/setup
 
-      - name: Generate concepts
-        run: make all
+      - name: Run command
+        run: make test-xlsx2yaml
 
+
+  test-xlsx2db:
+    name: Run xlsx2db
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-ruby@master
+        with:
+          ruby-version: 2.6
+
+      - name: Install bundler
+        run: gem install bundler
+
+      - name: Setup
+        run: bin/setup
+
+      - name: Run command
+        run: make test-xlsx2db
+
+
+  test-db2yaml:
+    name: Run db2yaml
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-ruby@master
+        with:
+          ruby-version: 2.6
+
+      - name: Install bundler
+        run: gem install bundler
+
+      - name: Setup
+        run: bin/setup
+
+      - name: Run command
+        run: make test-db2yaml

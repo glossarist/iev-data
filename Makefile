@@ -33,3 +33,10 @@ concepts.zip: concepts
 .PHONY: all clean distclean
 
 # update-init update-modules
+
+test-xlsx2yaml: concepts
+
+test-xlsx2db: concepts.sqlite3
+
+test-db2yaml: concepts.sqlite3
+	bundle exec iev-termbase db2yaml $<;
