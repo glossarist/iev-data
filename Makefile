@@ -19,7 +19,7 @@ concepts: termbase.xlsx
 	bundle exec iev-termbase xlsx2yaml $<;
 
 concepts.sqlite3: termbase.xlsx
-	bundle exec iev-termbase xlsx2db $< $@;
+	bundle exec iev-termbase xlsx2db $< --output $@;
 
 concepts.zip: concepts
 	zip -9 -r $@ concepts images
