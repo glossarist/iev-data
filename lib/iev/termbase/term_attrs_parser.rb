@@ -43,27 +43,29 @@ module Iev
     private
 
       def parse
-        extract_gender
-        extract_plurality
-        extract_geographical_area
-        extract_part_of_speech
-        extract_usage_info
-        extract_prefix
+        curr_str = src_str.dup
+
+        extract_gender(curr_str)
+        extract_plurality(curr_str)
+        extract_geographical_area(curr_str)
+        extract_part_of_speech(curr_str)
+        extract_usage_info(curr_str)
+        extract_prefix(curr_str)
+
+        print_debug(curr_str) if debug?
       end
 
-      def extract_gender
+      def extract_gender(str)
         gender_rx = /\b[mfn]\b/
 
-        if gender_rx =~ src_str
-          @gender = $&
-        end
+        @gender = remove_from_string(str, gender_rx)
       end
 
       # Must happen after #extract_gender
-      def extract_plurality
+      def extract_plurality(str)
         plural_rx = /\bpl\b/
 
-        if plural_rx =~ src_str
+        if remove_from_string(str, plural_rx)
           @plurality = "plural"
         elsif !gender.nil?
           # TODO Really needed?
@@ -72,48 +74,64 @@ module Iev
       end
 
       # TODO this is likely buggy
-      def extract_geographical_area
+      def extract_geographical_area(str)
         ga_rx = /\b[A-Z]{2}$/
 
-        if ga_rx =~ src_str
-          @geographical_area = $&
-        end
+        @geographical_area = remove_from_string(str, ga_rx)
       end
 
-      def extract_part_of_speech
+      def extract_part_of_speech(str)
         pos_rx = %r{
           \b
           #{Regexp.union(PARTS_OF_SPEECH.keys)}
           \b
         }x.freeze
 
-        if pos_rx =~ src_str
-          @part_of_speech = PARTS_OF_SPEECH[$&] || $&
-        end
+        removed = remove_from_string(str, pos_rx)
+        @part_of_speech = PARTS_OF_SPEECH[removed] || removed
       end
 
-      def extract_usage_info
+      def extract_usage_info(str)
         info_rx = /<(.*?)>/
 
-        if info_rx =~ src_str
-          @usage_info = $~[1].strip
+        remove_from_string(str, info_rx) do |md|
+          @usage_info = md[1].strip
         end
       end
 
-      def extract_prefix
+      def extract_prefix(str)
         prefix_rx = %r{
           \b
           #{Regexp.union(PREFIX_KEYWORDS)}
           \b
         }x.freeze
 
-        if prefix_rx =~ src_str
-          @prefix = true
-        end
+        @prefix = true if remove_from_string(str, prefix_rx)
       end
 
       def decode_attrs_string(str)
         str.decode_html || ""
+      end
+
+      def remove_from_string(string, regexp)
+        string.sub!(regexp, "")
+
+        if $~ && block_given?
+          yield $~
+        else
+          $& # removed substring or nil
+        end
+      end
+
+      def print_debug(remaining_str)
+        if /\p{Word}/ =~ remaining_str
+          puts "Term attributes could not be parsed completely: " +
+            "'#{src_str}'"
+        end
+      end
+
+      def debug?
+        $TERMBASE_DEBUG_TERM_ATTRIBUTES
       end
     end
   end
