@@ -22,6 +22,7 @@ module Iev::Termbase
       end
 
       desc "db2yaml DB_FILE", "Exports SQLite to IEV YAMLs."
+      option :output, aliases: :o, default: Dir.pwd, desc: "Output directory"
       def db2yaml(dbfile)
         db = Sequel.sqlite(dbfile)
         collection = ConceptCollection.build_from_dataset(db[:concepts])
