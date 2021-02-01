@@ -30,17 +30,15 @@ module Iev::Termbase
       # Options must be declared at the bottom because Thor must have commands
       # defined in advance.
 
-      option :output,
-        desc: "Output directory",
-        aliases: :o,
-        default: Dir.pwd,
-        for: :xlsx2yaml
+      def self.shared_option(name, methods:, **kwargs)
+        [*methods].each { |m| option name, for: m, **kwargs }
+      end
 
-      option :output,
+      shared_option :output,
         desc: "Output directory",
         aliases: :o,
         default: Dir.pwd,
-        for: :db2yaml
+        methods: %i[xlsx2yaml db2yaml]
     end
   end
 end
