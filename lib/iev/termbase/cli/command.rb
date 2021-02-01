@@ -3,7 +3,7 @@ module Iev::Termbase
     class Command < Thor
       include CommandHelper
 
-      desc "xlsx2yaml FILE", "Parsing Excel exports to IEV yaml."
+      desc "xlsx2yaml FILE", "Converts Excel IEV exports to YAMLs."
       def xlsx2yaml(file)
         db = Sequel.sqlite
         DbWriter.new(db).import_spreadsheet(file)
