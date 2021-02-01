@@ -48,6 +48,12 @@ module Iev::Termbase
         aliases: :o,
         default: File.join(Dir.pwd, "concepts.sqlite3"),
         methods: :xlsx2db
+
+      shared_option :debug_term_attributes,
+        desc: "Prints some debug messages on term attributes",
+        type: :boolean,
+        default: false,
+        methods: %i[xlsx2yaml db2yaml]
     end
   end
 end

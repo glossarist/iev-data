@@ -35,7 +35,7 @@ module Iev::Termbase
       # Assigns some global variables accordingly, so these settings are
       # available throughout the program.
       def handle_generic_options(options)
-        # TODO These options are yet to be defined.
+        $TERMBASE_DEBUG_TERM_ATTRIBUTES = options[:debug_term_attributes]
       end
     end
   end
