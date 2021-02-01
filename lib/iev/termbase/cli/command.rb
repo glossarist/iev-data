@@ -3,7 +3,6 @@ module Iev::Termbase
     class Command < Thor
       desc "xlsx2yaml FILE", "Parsing Excel exports to IEV yaml."
       option :output, aliases: :o, default: Dir.pwd, desc: "Output directory"
-
       def xlsx2yaml(file)
         db = Sequel.sqlite
         DbWriter.new(db).import_spreadsheet(file)
