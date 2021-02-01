@@ -11,13 +11,13 @@ module Iev::Termbase
         save_collection_to_files(collection, options[:output])
       end
 
-      desc "xlsx2db FILE, DB_FILE", "Imports Excel to SQLite database."
-      def xlsx2db(file, dbfile)
+      desc "xlsx2db FILE", "Imports Excel to SQLite database."
+      def xlsx2db(file)
         # Instantiating an in-memory db and dumping it later is faster than
         # just working on file db.
         db = Sequel.sqlite
         DbWriter.new(db).import_spreadsheet(file)
-        save_db_to_file(db, dbfile)
+        save_db_to_file(db, options[:output])
       end
 
       desc "db2yaml DB_FILE", "Exports SQLite to IEV YAMLs."
@@ -39,6 +39,12 @@ module Iev::Termbase
         aliases: :o,
         default: Dir.pwd,
         methods: %i[xlsx2yaml db2yaml]
+
+      shared_option :output,
+        desc: "Output file",
+        aliases: :o,
+        default: File.join(Dir.pwd, "concepts.sqlite3"),
+        methods: :xlsx2db
     end
   end
 end
