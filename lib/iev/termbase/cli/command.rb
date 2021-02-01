@@ -4,7 +4,6 @@ module Iev::Termbase
       include CommandHelper
 
       desc "xlsx2yaml FILE", "Parsing Excel exports to IEV yaml."
-      option :output, aliases: :o, default: Dir.pwd, desc: "Output directory"
       def xlsx2yaml(file)
         db = Sequel.sqlite
         DbWriter.new(db).import_spreadsheet(file)
@@ -22,12 +21,26 @@ module Iev::Termbase
       end
 
       desc "db2yaml DB_FILE", "Exports SQLite to IEV YAMLs."
-      option :output, aliases: :o, default: Dir.pwd, desc: "Output directory"
       def db2yaml(dbfile)
         db = Sequel.sqlite(dbfile)
         collection = ConceptCollection.build_from_dataset(db[:concepts])
         save_collection_to_files(collection, options[:output])
       end
+
+      # Options must be declared at the bottom because Thor must have commands
+      # defined in advance.
+
+      option :output,
+        desc: "Output directory",
+        aliases: :o,
+        default: Dir.pwd,
+        for: :xlsx2yaml
+
+      option :output,
+        desc: "Output directory",
+        aliases: :o,
+        default: Dir.pwd,
+        for: :db2yaml
     end
   end
 end
