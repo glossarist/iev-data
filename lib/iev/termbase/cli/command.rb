@@ -5,6 +5,7 @@ module Iev::Termbase
 
       desc "xlsx2yaml FILE", "Converts Excel IEV exports to YAMLs."
       def xlsx2yaml(file)
+        handle_generic_options(options)
         db = Sequel.sqlite
         DbWriter.new(db).import_spreadsheet(file)
         collection = ConceptCollection.build_from_dataset(db[:concepts])
@@ -13,6 +14,7 @@ module Iev::Termbase
 
       desc "xlsx2db FILE", "Imports Excel to SQLite database."
       def xlsx2db(file)
+        handle_generic_options(options)
         # Instantiating an in-memory db and dumping it later is faster than
         # just working on file db.
         db = Sequel.sqlite
@@ -22,6 +24,7 @@ module Iev::Termbase
 
       desc "db2yaml DB_FILE", "Exports SQLite to IEV YAMLs."
       def db2yaml(dbfile)
+        handle_generic_options(options)
         db = Sequel.sqlite(dbfile)
         collection = ConceptCollection.build_from_dataset(db[:concepts])
         save_collection_to_files(collection, options[:output])
