@@ -5,6 +5,7 @@ module IEV
         module_function
 
         def progress(message)
+          return unless $TERMBASE_PROGRESS
           print "\r#{message} "
         end
       end
