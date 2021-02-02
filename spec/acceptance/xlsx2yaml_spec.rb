@@ -4,7 +4,7 @@ RSpec.describe "IEV Termbase" do
   let(:sample_xlsx_file) { fixture_path("sample-file.xlsx") }
 
   describe "xlsx2yaml" do
-    it "parses xlsx document to yaml" do
+    it "exports YAMLs from given XLSX document" do
       Dir.mktmpdir("iev-test") do |dir|
         command = %W(xlsx2yaml #{sample_xlsx_file} -o #{dir})
         silence_output_streams { Iev::Termbase::Cli.start(command) }
