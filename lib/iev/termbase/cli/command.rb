@@ -63,6 +63,12 @@ module IEV::Termbase
         default: File.join(Dir.pwd, "concepts.sqlite3"),
         methods: :xlsx2db
 
+      shared_option :progress,
+        type: :boolean,
+        desc: "Enables or disables progress indicator. By default disabled " +
+          "when 'CI' environment variable is set and enabled otherwise",
+        methods: %i[xlsx2yaml xlsx2db db2yaml]
+
       shared_option :debug_term_attributes,
         desc: "Prints some debug messages on term attributes",
         type: :boolean,
