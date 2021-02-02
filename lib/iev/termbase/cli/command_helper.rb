@@ -30,6 +30,13 @@ module Iev::Termbase
       def collection_file_path(file, output_dir)
         output_dir.join(Pathname.new(file).basename.sub_ext(".yaml"))
       end
+
+      # Handles various generic options, e.g. detailed debug switches.
+      # Assigns some global variables accordingly, so these settings are
+      # available throughout the program.
+      def handle_generic_options(options)
+        # TODO These options are yet to be defined.
+      end
     end
   end
 end
