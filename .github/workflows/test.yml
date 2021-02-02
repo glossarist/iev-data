@@ -33,6 +33,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Cache Relaton DB
+        uses: actions/cache@v2
+        with:
+          path: db
+          key: relaton-test-xlsx2yaml
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6
@@ -68,6 +74,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Cache Relaton DB
+        uses: actions/cache@v2
+        with:
+          path: db
+          key: relaton-test-db2yaml
 
       - uses: ruby/setup-ruby@v1
         with:
