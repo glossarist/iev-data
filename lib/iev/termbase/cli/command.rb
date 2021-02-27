@@ -45,6 +45,12 @@ module Iev::Termbase
           "LIKE operator",
         methods: %i[xlsx2yaml db2yaml]
 
+      shared_option :only_languages,
+        desc: "Only export these languages, skip concepts which aren't " +
+          "translated to any of them (comma-separated list, language " +
+          "codes must be as in spreadsheet)",
+        methods: %i[xlsx2yaml db2yaml]
+
       shared_option :output,
         desc: "Output directory",
         aliases: :o,

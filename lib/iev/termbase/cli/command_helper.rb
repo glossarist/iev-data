@@ -45,6 +45,10 @@ module Iev::Termbase
           query = query.where(Sequel.ilike(:ievref, options[:only_concepts]))
         end
 
+        if options[:only_languages]
+          query = query.where(language: options[:only_languages].split(","))
+        end
+
         query
       end
     end
