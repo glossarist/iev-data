@@ -40,6 +40,11 @@ module Iev::Termbase
 
       def filter_dataset(db, options)
         query = db[:concepts]
+
+        if options[:only_concepts]
+          query = query.where(Sequel.ilike(:ievref, options[:only_concepts]))
+        end
+
         query
       end
     end

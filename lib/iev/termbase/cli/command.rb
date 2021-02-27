@@ -39,6 +39,12 @@ module Iev::Termbase
         [*methods].each { |m| option name, for: m, **kwargs }
       end
 
+      shared_option :only_concepts,
+        desc: "Only process concepts with IEVREF matching this argument, " +
+          "'%' and '_' wildcards are supported and have meaning as in SQL " +
+          "LIKE operator",
+        methods: %i[xlsx2yaml db2yaml]
+
       shared_option :output,
         desc: "Output directory",
         aliases: :o,
