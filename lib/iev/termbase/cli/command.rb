@@ -8,7 +8,8 @@ module Iev::Termbase
         handle_generic_options(options)
         db = Sequel.sqlite
         DbWriter.new(db).import_spreadsheet(file)
-        collection = ConceptCollection.build_from_dataset(db[:concepts])
+        ds = filter_dataset(db, options)
+        collection = ConceptCollection.build_from_dataset(ds)
         save_collection_to_files(collection, options[:output])
       end
 
@@ -26,7 +27,8 @@ module Iev::Termbase
       def db2yaml(dbfile)
         handle_generic_options(options)
         db = Sequel.sqlite(dbfile)
-        collection = ConceptCollection.build_from_dataset(db[:concepts])
+        ds = filter_dataset(db, options)
+        collection = ConceptCollection.build_from_dataset(ds)
         save_collection_to_files(collection, options[:output])
       end
 
