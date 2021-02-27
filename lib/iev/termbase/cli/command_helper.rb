@@ -37,6 +37,11 @@ module Iev::Termbase
       def handle_generic_options(options)
         $TERMBASE_DEBUG_TERM_ATTRIBUTES = options[:debug_term_attributes]
       end
+
+      def filter_dataset(db, options)
+        query = db[:concepts]
+        query
+      end
     end
   end
 end
