@@ -4,9 +4,10 @@ module IEV
       module UI
         module_function
 
-        def progress(message)
+        def progress(message, persistent: false)
           return unless $TERMBASE_PROGRESS
-          print "\r#{message} "
+          print "\r#{" " * 40}\r" # clear line
+          print persistent ? "#{message}\n" : "#{message} "
         end
       end
     end
