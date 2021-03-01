@@ -157,6 +157,15 @@ RSpec.describe IEV::Termbase::TermAttrsParser do
       string: "a whatever" do
       expect(subject.usage_info).to be(nil)
     end
+
+    it "supports full-width signs", string: "a string \uFF1Cinfo\uFF1E" do
+      expect(subject.usage_info).to eq("info")
+    end
+
+    it "disallows mixing regular and full-width signs",
+      string: "a string \uFF1Cinfo>" do
+      expect(subject.usage_info).to be(nil)
+    end
   end
 
   describe "geographical area" do
