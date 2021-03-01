@@ -1,4 +1,4 @@
-module Iev
+module IEV
   module Termbase
     # Parses information from the spreadsheet's SOURCE column.
     #
@@ -287,7 +287,7 @@ module Iev
 
         # pp h
 
-        item = ::Iev::Termbase::RelatonDb.instance.fetch(source_ref)
+        item = ::IEV::Termbase::RelatonDb.instance.fetch(source_ref)
 
         src = {}
 

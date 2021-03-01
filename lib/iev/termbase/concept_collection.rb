@@ -1,4 +1,4 @@
-module Iev::Termbase
+module IEV::Termbase
   class ConceptCollection < Hash
 
     def add_term(term)

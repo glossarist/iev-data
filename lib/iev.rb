@@ -10,7 +10,7 @@ require "zeitwerk"
 loader = Zeitwerk::Loader.for_gem
 loader.setup
 
-module Iev
+module IEV
   def self.root_path
     Pathname.new(File.dirname(__dir__))
   end

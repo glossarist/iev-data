@@ -1,4 +1,4 @@
-module Iev
+module IEV
   module ConsoleHelper
     # Executes given block.  Anything written to $stdout or $stderr in that
     # block is captured and returned.

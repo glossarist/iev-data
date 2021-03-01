@@ -4,7 +4,7 @@ require "iev/termbase/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "iev-termbase"
-  spec.version       = Iev::Termbase::VERSION
+  spec.version       = IEV::Termbase::VERSION
   spec.authors       = ["Ribose"]
   spec.email         = ["open.source@ribose.com"]
 

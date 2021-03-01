@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe "string conversion refinements" do
-  using Iev::Termbase::DataConversions
+  using IEV::Termbase::DataConversions
 
   describe "#decode_html" do
     it "decodes HTML entities" do

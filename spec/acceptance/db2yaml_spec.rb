@@ -7,7 +7,7 @@ RSpec.describe "IEV Termbase" do
     it "exports YAMLs from given database" do
       Dir.mktmpdir("iev-test") do |dir|
         command = %W(db2yaml #{sample_db} -o #{dir})
-        silence_output_streams { Iev::Termbase::Cli.start(command) }
+        silence_output_streams { IEV::Termbase::Cli.start(command) }
 
         concepts_dir = File.join(dir, "concepts")
         expect(concepts_dir).to satisfy { |p| File.directory? p }

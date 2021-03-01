@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe Iev::Termbase::DbWriter do
+RSpec.describe IEV::Termbase::DbWriter do
   let(:instance) { described_class.new(db) }
   let(:db) { Sequel.sqlite }
   let(:sample_file) { fixture_path("sample-file.xlsx") }
