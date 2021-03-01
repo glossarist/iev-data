@@ -92,10 +92,17 @@ module IEV
       end
 
       def extract_usage_info(str)
-        info_rx = /<(.*?)>/
+        info_rx = %r{
+          # regular ASCII less and greater than signs
+          < (?<inner>.*?) >
+          |
+          # ＜ and ＞, i.e. full-width less and greater than signs
+          # which are used instead of ASCII signs in some CJK terms
+          \uFF1C (?<inner>.*?) \uFF1E
+        }x.freeze
 
         remove_from_string(str, info_rx) do |md|
-          @usage_info = md[1].strip
+          @usage_info = md[:inner].strip
         end
       end
 
