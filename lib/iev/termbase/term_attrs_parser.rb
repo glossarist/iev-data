@@ -1,4 +1,4 @@
-module Iev
+module IEV
   module Termbase
     # Parses information from the spreadsheet's TERMATTRIBUTE column and alike.
     #

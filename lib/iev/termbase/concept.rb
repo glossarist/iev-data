@@ -1,4 +1,4 @@
-module Iev::Termbase
+module IEV::Termbase
   class Concept < Hash
     attr_accessor :id
     attr_accessor :terms

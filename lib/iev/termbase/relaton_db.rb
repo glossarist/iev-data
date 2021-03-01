@@ -1,6 +1,6 @@
 require "singleton"
 
-module Iev
+module IEV
   module Termbase
     # Relaton cach singleton.
     class RelatonDb

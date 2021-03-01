@@ -18,4 +18,4 @@ end
 require "iev"
 require "iev/termbase"
 
-Iev::Termbase::Cli.start(ARGV)
+IEV::Termbase::Cli.start(ARGV)

@@ -1,4 +1,4 @@
-module Iev::Termbase
+module IEV::Termbase
   class Term
     ATTRIBS = %i(
     id

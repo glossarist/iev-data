@@ -1,4 +1,4 @@
-module Iev
+module IEV
   module Termbase
     module DataConversions
       refine String do
@@ -27,7 +27,7 @@ module Iev
         end
 
         def to_three_char_code
-          Iev::Termbase::Iso639Code.three_char_code(self).first
+          IEV::Termbase::Iso639Code.three_char_code(self).first
         end
       end
     end

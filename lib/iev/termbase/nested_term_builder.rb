@@ -1,4 +1,4 @@
-module Iev
+module IEV
   module Termbase
     class NestedTermBuilder
       def initialize(options = {})

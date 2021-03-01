@@ -1,4 +1,4 @@
-RSpec.describe Iev::Termbase::TermAttrsParser do
+RSpec.describe IEV::Termbase::TermAttrsParser do
   # Parses :string metadata or example description.
   subject do
     example = RSpec.current_example

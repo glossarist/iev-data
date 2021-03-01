@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe Iev::Termbase::SourceParser do
+RSpec.describe IEV::Termbase::SourceParser do
   subject do
     example = RSpec.current_example
     attributes_str = example.metadata[:string] || example.description

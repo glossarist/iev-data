@@ -1,4 +1,4 @@
-module Iev
+module IEV
   module FixtureHelper
     def fixture_path(fixture_name)
       File.expand_path(fixture_name, fixture_root)

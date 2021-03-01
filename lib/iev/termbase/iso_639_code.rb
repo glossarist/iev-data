@@ -1,4 +1,4 @@
-module Iev
+module IEV
   module Termbase
     class Iso639Code
       COUNTRY_CODES = YAML.load(IO.read(File.join(__dir__, "iso_639_2.yaml")))
