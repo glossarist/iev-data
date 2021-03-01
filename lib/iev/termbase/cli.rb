@@ -1,8 +1,8 @@
 module IEV
   module Termbase
-    module Cli
+    module CLI
       def self.start(arguments)
-        IEV::Termbase::Cli::Command.start(arguments)
+        IEV::Termbase::CLI::Command.start(arguments)
       end
     end
   end

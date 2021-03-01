@@ -1,5 +1,5 @@
 module IEV::Termbase
-  module Cli
+  module CLI
     class Command < Thor
       include CommandHelper
 

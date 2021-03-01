@@ -8,7 +8,7 @@ RSpec.describe "IEV Termbase" do
       Dir.mktmpdir("iev-test") do |dir|
         dbfile = "#{dir}/test.sqlite3"
         command = %W(xlsx2db #{sample_xlsx_file} -o #{dbfile})
-        silence_output_streams { IEV::Termbase::Cli.start(command) }
+        silence_output_streams { IEV::Termbase::CLI.start(command) }
 
         expect(dbfile).to satisfy { |p| File.file? p }
 

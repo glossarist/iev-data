@@ -1,5 +1,5 @@
 module IEV::Termbase
-  module Cli
+  module CLI
     module CommandHelper
 
       protected
