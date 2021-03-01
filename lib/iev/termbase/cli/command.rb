@@ -11,6 +11,7 @@ module IEV::Termbase
         ds = filter_dataset(db, options)
         collection = ConceptCollection.build_from_dataset(ds)
         save_collection_to_files(collection, options[:output])
+        summary
       end
 
       desc "xlsx2db FILE", "Imports Excel to SQLite database."
@@ -21,6 +22,7 @@ module IEV::Termbase
         db = Sequel.sqlite
         DbWriter.new(db).import_spreadsheet(file)
         save_db_to_file(db, options[:output])
+        summary
       end
 
       desc "db2yaml DB_FILE", "Exports SQLite to IEV YAMLs."
@@ -30,6 +32,7 @@ module IEV::Termbase
         ds = filter_dataset(db, options)
         collection = ConceptCollection.build_from_dataset(ds)
         save_collection_to_files(collection, options[:output])
+        summary
       end
 
       # Options must be declared at the bottom because Thor must have commands
