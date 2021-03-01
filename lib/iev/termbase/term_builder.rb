@@ -43,7 +43,7 @@ module IEV
 
         IEV::Termbase::Term.new(
           id: row_term_id,
-          entry_status: find_value_for("STATUS"),
+          entry_status: extract_entry_status,
           classification: find_value_for("SYNONYM1STATUS"),
           date_accepted: flesh_date(find_value_for("PUBLICATIONDATE")),
           date_amended: flesh_date(find_value_for("PUBLICATIONDATE")),
@@ -350,6 +350,13 @@ module IEV
       def extract_definition_value
         if definition_values[:definition]
           mathml_to_asciimath(definition_values[:definition].strip)
+        end
+      end
+
+      def extract_entry_status
+        case find_value_for("STATUS").downcase
+        when "standard" then "valid"
+        else nil
         end
       end
 
