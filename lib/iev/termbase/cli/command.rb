@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# (c) Copyright 2020 Ribose Inc.
+#
+
 module IEV::Termbase
   module CLI
     class Command < Thor

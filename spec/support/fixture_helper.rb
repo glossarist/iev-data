@@ -1,3 +1,6 @@
+# (c) Copyright 2020 Ribose Inc.
+#
+
 module IEV
   module FixtureHelper
     def fixture_path(fixture_name)

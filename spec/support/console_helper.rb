@@ -1,3 +1,6 @@
+# (c) Copyright 2020 Ribose Inc.
+#
+
 module IEV
   module ConsoleHelper
     # Executes given block.  Anything written to $stdout or $stderr in that
