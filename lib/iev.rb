@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "creek"
 require "mathml2asciimath"
 require "relaton"

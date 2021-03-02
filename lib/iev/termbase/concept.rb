@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module IEV::Termbase
   class Concept < Hash
     attr_accessor :id
