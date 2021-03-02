@@ -1,3 +1,6 @@
+# (c) Copyright 2020 Ribose Inc.
+#
+
 RSpec.describe IEV::Termbase::TermAttrsParser do
   # Parses :string metadata or example description.
   subject do

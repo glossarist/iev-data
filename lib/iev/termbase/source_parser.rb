@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# (c) Copyright 2020 Ribose Inc.
+#
+
 module IEV
   module Termbase
     # Parses information from the spreadsheet's SOURCE column.

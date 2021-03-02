@@ -1,3 +1,6 @@
+# (c) Copyright 2020 Ribose Inc.
+#
+
 require "spec_helper"
 
 RSpec.describe "string conversion refinements" do
