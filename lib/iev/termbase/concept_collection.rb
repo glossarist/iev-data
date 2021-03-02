@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module IEV::Termbase
   class ConceptCollection < Hash
 

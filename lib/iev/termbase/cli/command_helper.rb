@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module IEV::Termbase
   module CLI
     module CommandHelper
