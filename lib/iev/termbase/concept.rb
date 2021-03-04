@@ -27,11 +27,8 @@ module IEV::Termbase
     end
 
     def default_term
-      if self[DEFAULT_LANGUAGE]
-        self[DEFAULT_LANGUAGE]
-      else
-        set_ui_tag id
-        warn "Concept is missing an English term and probably needs updating."
+      self[DEFAULT_LANGUAGE] or begin
+        warn_about_missing_default_term
         self[keys.first]
       end
     end
@@ -56,5 +53,14 @@ module IEV::Termbase
       end
     end
 
+    private
+
+    def warn_about_missing_default_term
+      unless @already_warned_about_default_term
+        @already_warned_about_default_term = true
+        set_ui_tag id
+        warn "Concept is missing an English term and probably needs updating."
+      end
+    end
   end
 end
