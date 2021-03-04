@@ -10,6 +10,7 @@ module IEV
     # @example
     #   SourceParser.new(cell_data_string).parsed_sources
     class SourceParser
+      include CLI::UI
       using DataConversions
 
       attr_reader :src_split, :parsed_sources, :raw_str, :src_str
@@ -105,7 +106,7 @@ module IEV
           /Constitution de l’Union internationale des télécommunications (UIT)/
           "International Telecommunication Union (ITU) Constitution (Ed. 2015)"
         else
-          CLI::UI.warn "[FAILED TO PARSE SOURCE] #{str}"
+          warn "[FAILED TO PARSE SOURCE] #{str}"
           str
         end
 
