@@ -28,6 +28,12 @@ module IEV
           print "#{Helper.clear_progress}#{message}\n"
         end
 
+        # Sets an UI tag which will be prepended to messages printed with
+        # #debug and #warn.
+        def set_ui_tag(str)
+          Thread.current[:iev_ui_tag] = str
+        end
+
         module Helper
           module_function
 
@@ -37,9 +43,12 @@ module IEV
 
           def cli_out(_level, *args)
             message = args.map(&:to_s).join(" ").chomp
+            ui_tag = Thread.current[:iev_ui_tag]
 
             print [
               clear_progress,
+              ui_tag,
+              ui_tag && ": ",
               message,
               "\n",
             ].join

@@ -45,6 +45,7 @@ module IEV
         row_term_id = find_value_for("IEVREF")
         row_lang = find_value_for("LANGUAGE").to_three_char_code
 
+        set_ui_tag "#{row_term_id} (#{row_lang})"
         progress "Processing term #{row_term_id} (#{row_lang})..."
 
         IEV::Termbase::Term.new(
