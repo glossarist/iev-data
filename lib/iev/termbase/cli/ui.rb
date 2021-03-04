@@ -45,9 +45,12 @@ module IEV
             $TERMBASE_PROGRESS ? "\r#{" " * 40}\r" : ""
           end
 
-          def cli_out(_level, *args)
+          def cli_out(level, *args)
+            topic = Symbol === args[0] ? args.shift : nil
             message = args.map(&:to_s).join(" ").chomp
             ui_tag = Thread.current[:iev_ui_tag]
+
+            return unless should_out?(level, topic)
 
             print [
               clear_progress,
@@ -56,6 +59,10 @@ module IEV
               message,
               "\n",
             ].join
+          end
+
+          def should_out?(level, topic)
+            topic.nil? || level == :warn || $TERMBASE_DEBUG[topic]
           end
         end
       end
