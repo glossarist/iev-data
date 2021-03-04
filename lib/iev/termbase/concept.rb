@@ -30,6 +30,7 @@ module IEV::Termbase
       if self[DEFAULT_LANGUAGE]
         self[DEFAULT_LANGUAGE]
       else
+        set_ui_tag id
         warn "[tc211-termbase] term (lang: #{keys.first}, ID: #{id}) is missing a corresponding English term, probably needs updating."
         self[keys.first]
       end
