@@ -31,7 +31,7 @@ module IEV::Termbase
         self[DEFAULT_LANGUAGE]
       else
         set_ui_tag id
-        warn "[tc211-termbase] term (lang: #{keys.first}, ID: #{id}) is missing a corresponding English term, probably needs updating."
+        warn "Concept is missing an English term and probably needs updating."
         self[keys.first]
       end
     end

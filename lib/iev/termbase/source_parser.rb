@@ -106,7 +106,7 @@ module IEV
           /Constitution de l’Union internationale des télécommunications (UIT)/
           "International Telecommunication Union (ITU) Constitution (Ed. 2015)"
         else
-          warn "[FAILED TO PARSE SOURCE] #{str}"
+          warn "Failed to parse source: '#{str}'"
           str
         end
 

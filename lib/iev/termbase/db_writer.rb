@@ -74,7 +74,7 @@ module IEV
       def insert_data(data)
         db[:concepts].insert(data)
       rescue Sequel::UniqueConstraintViolation
-        warn "SKIPPING, duplicated (TERMID, LANGUAGE) pair"
+        warn "Duplicated (TERMID, LANGUAGE) pair, skipping"
       end
     end
   end

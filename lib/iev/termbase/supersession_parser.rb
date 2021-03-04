@@ -44,7 +44,7 @@ module IEV
         if IEV_SUPERSESSION_RX =~ src_str
           [relation_from_match($~)]
         else
-          warn "[INCORRECT SUPERSEDED CONCEPT] #{src_str}"
+          warn "Incorrect supersession: '#{src_str}'"
           nil
         end
       end
