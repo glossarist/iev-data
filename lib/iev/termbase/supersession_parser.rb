@@ -43,7 +43,7 @@ module IEV
         if IEV_SUPERSESSION_RX =~ src_str
           [relation_from_match($~)]
         else
-          puts "[INCORRECT SUPERSEDED CONCEPT] #{src_str}"
+          CLI::UI.warn "[INCORRECT SUPERSEDED CONCEPT] #{src_str}"
           nil
         end
       end

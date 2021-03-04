@@ -35,7 +35,7 @@ module IEV
       private
 
       def open_workbook(file)
-        puts "Opening spreadsheet..."
+        CLI::UI.info "Opening spreadsheet..."
         Creek::Book.new(file)
       end
 
@@ -72,7 +72,7 @@ module IEV
       def insert_data(data)
         db[:concepts].insert(data)
       rescue Sequel::UniqueConstraintViolation
-        puts "SKIPPING, duplicated (TERMID, LANGUAGE) pair"
+        CLI::UI.warn "SKIPPING, duplicated (TERMID, LANGUAGE) pair"
       end
     end
   end

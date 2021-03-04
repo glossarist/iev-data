@@ -137,7 +137,7 @@ module IEV
 
       def print_debug(remaining_str)
         if /\p{Word}/ =~ remaining_str
-          puts "Term attributes could not be parsed completely: " +
+          CLI::UI.debug "Term attributes could not be parsed completely: " +
             "'#{src_str}'"
         end
       end
