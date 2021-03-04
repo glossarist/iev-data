@@ -58,7 +58,12 @@ module IEV
         extract_usage_info(curr_str)
         extract_prefix(curr_str)
 
-        print_debug(curr_str) if debug?
+        if /\p{Word}/ =~ curr_str
+          debug(
+            :term_attributes,
+            "Term attributes could not be parsed completely: '#{src_str}'",
+          )
+        end
       end
 
       def extract_gender(str)
@@ -134,17 +139,6 @@ module IEV
         else
           $& # removed substring or nil
         end
-      end
-
-      def print_debug(remaining_str)
-        if /\p{Word}/ =~ remaining_str
-          debug "Term attributes could not be parsed completely: " +
-            "'#{src_str}'"
-        end
-      end
-
-      def debug?
-        $TERMBASE_DEBUG[:term_attributes]
       end
     end
   end
