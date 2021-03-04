@@ -144,7 +144,7 @@ module IEV
       end
 
       def debug?
-        $TERMBASE_DEBUG_TERM_ATTRIBUTES
+        $TERMBASE_DEBUG[:term_attributes]
       end
     end
   end
