@@ -6,6 +6,7 @@
 module IEV
   module Termbase
     class DbWriter
+      include CLI::UI
       using DataConversions
 
       attr_reader :db
@@ -35,7 +36,7 @@ module IEV
       private
 
       def open_workbook(file)
-        CLI::UI.info "Opening spreadsheet..."
+        info "Opening spreadsheet..."
         Creek::Book.new(file)
       end
 
@@ -66,13 +67,13 @@ module IEV
       def display_progress(data)
         ievref = data[:IEVREF]
         lang = data[:LANGUAGE].to_three_char_code
-        CLI::UI.progress "Importing term #{ievref} (#{lang})..."
+        progress "Importing term #{ievref} (#{lang})..."
       end
 
       def insert_data(data)
         db[:concepts].insert(data)
       rescue Sequel::UniqueConstraintViolation
-        CLI::UI.warn "SKIPPING, duplicated (TERMID, LANGUAGE) pair"
+        warn "SKIPPING, duplicated (TERMID, LANGUAGE) pair"
       end
     end
   end

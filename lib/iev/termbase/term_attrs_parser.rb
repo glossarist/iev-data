@@ -13,6 +13,7 @@ module IEV
     #   parser.plurality # returns grammatical plurality
     #   parser.part_of_speech # returns part of speech
     class TermAttrsParser
+      include CLI::UI
       using DataConversions
 
       attr_reader :raw_str, :src_str
@@ -137,7 +138,7 @@ module IEV
 
       def print_debug(remaining_str)
         if /\p{Word}/ =~ remaining_str
-          CLI::UI.debug "Term attributes could not be parsed completely: " +
+          debug "Term attributes could not be parsed completely: " +
             "'#{src_str}'"
         end
       end

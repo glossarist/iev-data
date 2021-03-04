@@ -6,11 +6,12 @@
 module IEV::Termbase
   module CLI
     module CommandHelper
+      include CLI::UI
 
       protected
 
       def save_collection_to_files(collection, output_dir)
-        CLI::UI.info "Writing concepts to files..."
+        info "Writing concepts to files..."
         output_dir = Pathname.new(output_dir.to_s)
 
         concept_dir = output_dir.join("concepts")
@@ -24,7 +25,7 @@ module IEV::Termbase
       # Note: Implementation examples here:
       # https://www.rubydoc.info/github/luislavena/sqlite3-ruby/SQLite3/Backup
       def save_db_to_file(src_db, dbfile)
-        CLI::UI.info "Saving database to a file..."
+        info "Saving database to a file..."
         src_db.synchronize do |src_conn|
           dest_conn = SQLite3::Database.new(dbfile)
           b = SQLite3::Backup.new(dest_conn, "main", src_conn, "main")
@@ -34,7 +35,7 @@ module IEV::Termbase
       end
 
       def summary
-        CLI::UI.info "Done!"
+        info "Done!"
       end
 
       def collection_file_path(file, output_dir)

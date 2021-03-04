@@ -10,6 +10,7 @@ module IEV
     # @example
     #   SupersessionParser.new(cell_data_string).supersessions
     class SupersessionParser
+      include CLI::UI
       using DataConversions
 
       attr_reader :raw_str, :src_str
@@ -43,7 +44,7 @@ module IEV
         if IEV_SUPERSESSION_RX =~ src_str
           [relation_from_match($~)]
         else
-          CLI::UI.warn "[INCORRECT SUPERSEDED CONCEPT] #{src_str}"
+          warn "[INCORRECT SUPERSEDED CONCEPT] #{src_str}"
           nil
         end
       end

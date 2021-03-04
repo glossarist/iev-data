@@ -8,6 +8,7 @@ require "pp"
 module IEV
   module Termbase
     class TermBuilder
+      include CLI::UI
       using DataConversions
 
       NOTE_REGEX_1 = /Note[\s ]*\d+[\s ]to entry:\s+|Note[\s ]*\d+?[\s ]à l['’]article:[\s ]*|<NOTE\/?>?[\s ]*\d?[\s ]+.*?–\s+|NOTE[\s ]+-[\s ]+/i
@@ -44,7 +45,7 @@ module IEV
         row_term_id = find_value_for("IEVREF")
         row_lang = find_value_for("LANGUAGE").to_three_char_code
 
-        CLI::UI.progress "Processing term #{row_term_id} (#{row_lang})..."
+        progress "Processing term #{row_term_id} (#{row_lang})..."
 
         IEV::Termbase::Term.new(
           id: row_term_id,

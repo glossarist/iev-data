@@ -5,6 +5,8 @@
 
 module IEV::Termbase
   class Concept < Hash
+    include CLI::UI
+
     attr_accessor :id
     attr_accessor :terms
     DEFAULT_LANGUAGE = "eng"
@@ -28,7 +30,7 @@ module IEV::Termbase
       if self[DEFAULT_LANGUAGE]
         self[DEFAULT_LANGUAGE]
       else
-        CLI::UI.warn "[tc211-termbase] term (lang: #{keys.first}, ID: #{id}) is missing a corresponding English term, probably needs updating."
+        warn "[tc211-termbase] term (lang: #{keys.first}, ID: #{id}) is missing a corresponding English term, probably needs updating."
         self[keys.first]
       end
     end
