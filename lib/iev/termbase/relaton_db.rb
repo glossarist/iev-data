@@ -10,6 +10,7 @@ module IEV
     # Relaton cach singleton.
     class RelatonDb
       include Singleton
+      include CLI::UI
 
       def initialize
         @db = Relaton::Db.new "db", nil
@@ -19,7 +20,9 @@ module IEV
       # @return [RelatonIso::IsoBibliongraphicItem]
       def fetch(code)
         retrying_on_failures do
-          @db.fetch code
+          capture_output_streams do
+            @db.fetch code
+          end
         end
       end
 
@@ -39,6 +42,21 @@ module IEV
           else
             raise
           end
+        end
+      end
+
+      def capture_output_streams
+        original_stdout = $stdout
+        original_stderr = $stderr
+        $stderr = $stdout = fake_out = StringIO.new
+
+        begin
+          yield
+
+        ensure
+          $stdout = original_stdout
+          $stderr = original_stderr
+          warn(fake_out.string) if fake_out.pos > 0
         end
       end
     end
