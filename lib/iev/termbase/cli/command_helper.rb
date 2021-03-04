@@ -50,7 +50,10 @@ module IEV::Termbase
       def handle_generic_options(options)
         $TERMBASE_PROFILE = options[:profile]
         $TERMBASE_PROGRESS = options.fetch(:progress, !ENV["CI"])
-        $TERMBASE_DEBUG_TERM_ATTRIBUTES = options[:debug_term_attributes]
+
+        $TERMBASE_DEBUG = options.to_h.
+          select { |k,_| k.to_s.start_with? "debug_" }.
+          transform_keys { |k| k.to_s.sub("debug_", "").to_sym }
       end
 
       def filter_dataset(db, options)
