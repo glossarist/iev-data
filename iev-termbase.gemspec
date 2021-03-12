@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "debase"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "ruby-debug-ide"
+  spec.add_development_dependency "ruby-prof"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "bundler", "~> 2.1"
 end
