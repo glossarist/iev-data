@@ -5,8 +5,10 @@
 
 module IEV
   module Termbase
+    # @todo This needs to be rewritten.
     class Iso639Code
       COUNTRY_CODES = YAML.load(IO.read(File.join(__dir__, "iso_639_2.yaml")))
+      THREE_CHAR_MEMO = {}
 
       def initialize(two_char_code)
         @code = case two_char_code.length
@@ -31,7 +33,8 @@ module IEV
       end
 
       def self.three_char_code(two_char_code, code_type="terminology")
-        new(two_char_code).find(code_type)
+        memo_index = [two_char_code, code_type]
+        THREE_CHAR_MEMO[memo_index] ||= new(two_char_code).find(code_type)
       end
 
       private
