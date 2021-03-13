@@ -3,10 +3,12 @@
 
 # frozen_string_literal: true
 
+require "benchmark"
 require "creek"
 require "mathml2asciimath"
 require "relaton"
 require "relaton_bib"
+require "ruby-prof"
 require "sequel"
 require "thor"
 require "yaml"

@@ -46,6 +46,7 @@ module IEV::Termbase
       # Assigns some global variables accordingly, so these settings are
       # available throughout the program.
       def handle_generic_options(options)
+        $TERMBASE_PROFILE = options[:profile]
         $TERMBASE_PROGRESS = options.fetch(:progress, !ENV["CI"])
         $TERMBASE_DEBUG_TERM_ATTRIBUTES = options[:debug_term_attributes]
       end
