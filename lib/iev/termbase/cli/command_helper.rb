@@ -11,14 +11,16 @@ module IEV::Termbase
       protected
 
       def save_collection_to_files(collection, output_dir)
-        info "Writing concepts to files..."
-        output_dir = Pathname.new(output_dir.to_s)
+        Profiler.measure("writing-yamls") do
+          info "Writing concepts to files..."
+          output_dir = Pathname.new(output_dir.to_s)
 
-        concept_dir = output_dir.join("concepts")
-        FileUtils.mkdir_p(concept_dir)
+          concept_dir = output_dir.join("concepts")
+          FileUtils.mkdir_p(concept_dir)
 
-        collection.each do |key, concept|
-          concept.to_file(concept_dir.join("concept-#{key}.yaml"))
+          collection.each do |key, concept|
+            concept.to_file(concept_dir.join("concept-#{key}.yaml"))
+          end
         end
       end
 

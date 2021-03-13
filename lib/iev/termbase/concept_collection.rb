@@ -15,10 +15,12 @@ module IEV::Termbase
     end
 
     def self.build_from_dataset(ds)
-      new.tap do |concept_collection|
-        ds.each do |row|
-          term = TermBuilder.build_from(row)
-          concept_collection.add_term(term)
+      Profiler.measure("building-collection") do
+        new.tap do |concept_collection|
+          ds.each do |row|
+            term = TermBuilder.build_from(row)
+            concept_collection.add_term(term)
+          end
         end
       end
     end
