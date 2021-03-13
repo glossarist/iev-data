@@ -82,6 +82,12 @@ module IEV::Termbase
         type: :boolean,
         default: false,
         methods: %i[xlsx2yaml db2yaml]
+
+      shared_option :profile,
+        desc: "Generates profiler reports for this program, requires ruby-prof",
+        type: :boolean,
+        default: false,
+        methods: %i[xlsx2yaml xlsx2db db2yaml]
     end
   end
 end
