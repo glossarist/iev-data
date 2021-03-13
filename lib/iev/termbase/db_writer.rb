@@ -16,20 +16,22 @@ module IEV
       end
 
       def import_spreadsheet(file)
-        workbook = open_workbook(file)
-        row_enumerator = workbook.sheets.first.simple_rows.each
+        Profiler.measure("xlsx-import") do
+          workbook = open_workbook(file)
+          row_enumerator = workbook.sheets.first.simple_rows.each
 
-        title_row = row_enumerator.next
-        symbolized_title_row = title_row.compact.transform_values(&:to_sym)
+          title_row = row_enumerator.next
+          symbolized_title_row = title_row.compact.transform_values(&:to_sym)
 
-        create_table(symbolized_title_row.values)
+          create_table(symbolized_title_row.values)
 
-        loop do
-          row = row_enumerator.next
-          next if row.empty?
-          data = prepare_data(row, symbolized_title_row)
-          display_progress(data)
-          insert_data(data)
+          loop do
+            row = row_enumerator.next
+            next if row.empty?
+            data = prepare_data(row, symbolized_title_row)
+            display_progress(data)
+            insert_data(data)
+          end
         end
       end
 
