@@ -6,6 +6,10 @@
 module IEV
   module Termbase
     module CLI
+      # @todo
+      #   Make it thread-safe.  Currently, calling UI methods from different
+      #   threads may result with mangled output.  At first glance it seems like
+      #   something is wrong with carriage returns, but more research is needed.
       module UI
         module_function
 
