@@ -56,7 +56,7 @@ module IEV
         ensure
           $stdout = original_stdout
           $stderr = original_stderr
-          warn(fake_out.string) if fake_out.pos > 0
+          debug(:relaton, fake_out.string) if fake_out.pos > 0
         end
       end
     end
