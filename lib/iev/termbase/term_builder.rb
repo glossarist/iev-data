@@ -327,7 +327,7 @@ module IEV
       end
 
       def mathml_to_asciimath(input)
-        return input if input.nil? || input.empty?
+        return input if input.nil? || input.empty? || !input.include?("<")
 
         unless input.match?(/<math>/)
           return html_to_asciimath(input)
