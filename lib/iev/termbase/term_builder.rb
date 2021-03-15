@@ -336,7 +336,10 @@ module IEV
       end
 
       def mathml_to_asciimath(input)
-        return input unless input&.include?("<")
+        # If given string does not include '<' (for elements) nor '&'
+        # (for entities), then it's certain that it doesn't contain
+        # any MathML or HTML formula.
+        return input unless input&.match?(/<|&/)
 
         unless input.match?(/<math>/)
           return html_to_asciimath(input)
