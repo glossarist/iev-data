@@ -42,14 +42,11 @@ module IEV
       end
 
       def build_term_object
-        row_term_id = find_value_for("IEVREF")
-        row_lang = find_value_for("LANGUAGE").to_three_char_code
-
-        set_ui_tag "#{row_term_id} (#{row_lang})"
-        progress "Processing term #{row_term_id} (#{row_lang})..."
+        set_ui_tag "#{term_id} (#{term_language})"
+        progress "Processing term #{term_id} (#{term_language})..."
 
         IEV::Termbase::Term.new(
-          id: row_term_id,
+          id: term_id,
           entry_status: extract_entry_status,
           classification: find_value_for("SYNONYM1STATUS"),
           date_accepted: flesh_date(find_value_for("PUBLICATIONDATE")),
@@ -69,7 +66,7 @@ module IEV
           end,
           definition: extract_definition_value,
           authoritative_source: extract_authoritative_source,
-          language_code: row_lang,
+          language_code: term_language,
           superseded_concepts: extract_superseded_concepts,
 
           # @todo: Unsorted Attributes
@@ -87,6 +84,18 @@ module IEV
           review_type: nil,
           review_decision_notes: nil,
         )
+      end
+
+      def term_id
+        @term_id ||= find_value_for("IEVREF")
+      end
+
+      def term_domain
+        @term_domain ||= term_id.slice(0, 3)
+      end
+
+      def term_language
+        @term_language ||= find_value_for("LANGUAGE").to_three_char_code
       end
 
       def definition_values
@@ -384,8 +393,6 @@ module IEV
       FIGURE_TWO_REGEX = "#{FIGURE_ONE_REGEX}\\s*#{FIGURE_ONE_REGEX}"
       def parse_anchor_tag(text)
         if text
-          part_number = find_value_for("IEVREF").slice(0,3)
-
           # Convert IEV term references
           # Convert href links
           # Need to take care of this pattern: `inverse de la <a href="IEV103-06-01">période<a>`
@@ -393,9 +400,9 @@ module IEV
             gsub(/<a href="?(IEV)\s*(\d\d\d-\d\d-\d\d)"?>(.*?)<\/?a>/, '{{\3, \1:\2}}').
             gsub(/<a href="?\s*(\d\d\d-\d\d-\d\d)"?>(.*?)<\/?a>/, '{{\3, IEV:\2}}').
             gsub(/<a href="(.*?)">(.*?)<\/a>/, '\1[\2]').
-            gsub(Regexp.new([SIMG_PATH_REGEX, "\\s*", FIGURE_TWO_REGEX].join('')), "image::/assets/images/parts/#{part_number}/\\1[Figure \\2 - \\3; \\6]").
-            gsub(Regexp.new([SIMG_PATH_REGEX, "\\s*", FIGURE_ONE_REGEX].join('')), "image::/assets/images/parts/#{part_number}/\\1[Figure \\2 - \\3]").
-            gsub(/<img\s+(.+?)\s*>/, "image::/assets/images/parts/#{part_number}/\\1[]").
+            gsub(Regexp.new([SIMG_PATH_REGEX, "\\s*", FIGURE_TWO_REGEX].join('')), "image::/assets/images/parts/#{term_domain}/\\1[Figure \\2 - \\3; \\6]").
+            gsub(Regexp.new([SIMG_PATH_REGEX, "\\s*", FIGURE_ONE_REGEX].join('')), "image::/assets/images/parts/#{term_domain}/\\1[Figure \\2 - \\3]").
+            gsub(/<img\s+(.+?)\s*>/, "image::/assets/images/parts/#{term_domain}/\\1[]").
             gsub(/<br>/, "\n").
             gsub(/<b>(.*?)<\/b>/, "*\\1*")
 
