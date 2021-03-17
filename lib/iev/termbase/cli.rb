@@ -7,6 +7,16 @@ module IEV
   module Termbase
     module CLI
       def self.start(arguments)
+        Signal.trap("INT") do
+          UI.info "Signal SIGINT received, quitting!"
+          Kernel.exit(1)
+        end
+
+        Signal.trap("TERM") do
+          UI.info "Signal SIGTERM received, quitting!"
+          Kernel.exit(1)
+        end
+
         IEV::Termbase::CLI::Command.start(arguments)
       end
     end
