@@ -11,9 +11,6 @@ module IEV
       include CLI::UI
       using DataConversions
 
-      NOTE_REGEX_1 = /Note[\s ]*\d+[\s ]to entry:\s+|Note[\s ]*\d+?[\s ]à l['’]article:[\s ]*|<NOTE\/?>?[\s ]*\d?[\s ]+.*?–\s+|NOTE[\s ]+-[\s ]+/i
-      NOTE_REGEX_2 = /\nNOTE\s+/
-
       def initialize(data)
         @data = data
       end
@@ -45,6 +42,8 @@ module IEV
         set_ui_tag "#{term_id} (#{term_language})"
         progress "Processing term #{term_id} (#{term_language})..."
 
+        split_definition
+
         IEV::Termbase::Term.new(
           id: term_id,
           entry_status: extract_entry_status,
@@ -58,12 +57,8 @@ module IEV
           # Beautification
           #
           terms: extract_terms,
-          notes: definition_values[:notes].map do |note|
-            mathml_to_asciimath(note)
-          end,
-          examples: definition_values[:examples].map do |example|
-            mathml_to_asciimath(example)
-          end,
+          notes: extract_notes,
+          examples: extract_examples,
           definition: extract_definition_value,
           authoritative_source: extract_authoritative_source,
           language_code: term_language,
@@ -98,47 +93,50 @@ module IEV
         @term_language ||= find_value_for("LANGUAGE").to_three_char_code
       end
 
-      def definition_values
-        @definition_values ||= split_definition
-      end
-
       def replace_newlines(input)
         input.gsub('\n', "\n\n").gsub(/<[pbr]+>/, "\n\n").gsub(/\s*\n[\n\s]+/, "\n\n").strip
       end
 
+      # Splits unified definition (from the spreadsheet) into separate
+      # definition, examples, and notes strings (for YAMLs).
+      #
+      # Sets +@definition+, +@examples+ and +@notes+ variables.
       def split_definition
-        definition = parse_anchor_tag(find_value_for("DEFINITION"))
-        definitions = { notes: [], examples: [], definition: nil }
+        slicer_rx = %r{
+          \s*
+          (?:<p>\s*)?
+          (
+            (?<example>
+              \bEXAMPLE\b |
+              \bEXEMPLE\b
+            )
+            |
+            (?<note>
+              Note\s*\d+\sto\sentry: |
+              Note\s*\d+?\sà\sl['’]article: |
+              <NOTE\/?>?\s*\d?\s+.*?– |
+              NOTE(?:\s+-)?
+            )
+          )
+          \s*
+        }x
 
-        return definitions unless definition
+        @examples = []
+        @notes = []
+        definition_arr = [] # here array for consistent interface
 
-        definition = replace_newlines(definition)
+        next_part_arr = definition_arr
+        remaining_str = find_value_for("DEFINITION")
 
-        # Remove mathml <annotation> tag
-        # puts "DDDD"*10
-        # # puts definition
-        # puts "DDDD"*10
-        # definition = parse_anchor_tag(definition)
-        # #.to_s.gsub(/<annotation.*?>.*?<\/annotation>/,"").gsub(/<\/?semantics>/,"")
-        # puts definition
-        # puts "EEEE"*10
-
-        example_block = definition.match(/[\r\n](EXAMPLE|EXEMPLE) (.*?)\r?$/).to_s
-
-        if example_block && !example_block.strip.empty?
-          # We only take the latter captured part
-          definitions[:examples] = [Regexp.last_match(2).strip]
-          definition = definition.gsub("#{Regexp.last_match(1)} #{Regexp.last_match(2)}", "")
+        while md = remaining_str&.match(slicer_rx)
+          next_part_arr.push(md.pre_match)
+          next_part_arr = md[:example] ? @examples : @notes
+          remaining_str = md.post_match
         end
 
-        note_split  = definition.split(NOTE_REGEX_1).map do |note|
-          note.split(NOTE_REGEX_2)
-        end.flatten
-
-        definitions[:definition] = note_split.first
-        definitions[:notes] = note_split[1..-1].map(&:strip) if note_split.size > 1
-
-        definitions
+        next_part_arr.push(remaining_str)
+        @definition = definition_arr.first
+        @definition = nil if @definition&.empty?
       end
 
       def extract_terms
@@ -367,8 +365,20 @@ module IEV
       end
 
       def extract_definition_value
-        if definition_values[:definition]
-          mathml_to_asciimath(definition_values[:definition].strip)
+        if @definition
+          mathml_to_asciimath(replace_newlines(parse_anchor_tag(@definition))).strip
+        end
+      end
+
+      def extract_examples
+        @examples.map do |str|
+          mathml_to_asciimath(replace_newlines(parse_anchor_tag(str))).strip
+        end
+      end
+
+      def extract_notes
+        @notes.map do |str|
+          mathml_to_asciimath(replace_newlines(parse_anchor_tag(str))).strip
         end
       end
 
