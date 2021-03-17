@@ -22,6 +22,7 @@ module IEV
           gsub!("\uFEFF", "")
           gsub!("\u2011", "-")
           gsub!("\u00a0", " ")
+          gsub!(/[\u2000-\u2006]/, " ")
           strip!
           nil
         end
