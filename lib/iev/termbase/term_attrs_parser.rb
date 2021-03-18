@@ -46,7 +46,7 @@ module IEV
         "<ATTRIBUTES: #{src_str}>".freeze
       end
 
-    private
+      private
 
       def parse
         curr_str = src_str.dup

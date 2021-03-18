@@ -52,7 +52,7 @@ module IEV::Termbase
         $TERMBASE_PROGRESS = options.fetch(:progress, !ENV["CI"])
 
         $TERMBASE_DEBUG = options.to_h.
-          select { |k,_| k.to_s.start_with? "debug_" }.
+          select { |k, _| k.to_s.start_with? "debug_" }.
           transform_keys { |k| k.to_s.sub("debug_", "").to_sym }
       end
 

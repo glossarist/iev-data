@@ -271,7 +271,7 @@ module IEV
           .sub(/definition ([\d\.]+) of IEC ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
           .sub(/définition ([\d\.]+) de la ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
           .sub(/définition ([\d\.]+) de la IEC ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
-          .sub(/(\d{3})\ (\d{2})\ (\d{2})/, '\1-\2-\3')  # for 221 04 03
+          .sub(/(\d{3})\ (\d{2})\ (\d{2})/, '\1-\2-\3') # for 221 04 03
 
           # .sub(/\A(from|d'après|voir la|see|See|voir|Voir)\s+/, "")
 

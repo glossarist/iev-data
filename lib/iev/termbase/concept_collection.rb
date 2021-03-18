@@ -32,7 +32,7 @@ module IEV::Termbase
     end
 
     def to_file(filename)
-      File.open(filename,"w") do |file|
+      File.open(filename, "w") do |file|
         file.write(to_hash.to_yaml)
       end
     end
