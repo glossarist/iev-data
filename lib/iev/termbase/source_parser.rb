@@ -312,13 +312,13 @@ module IEV
         # IEC 62047-22:2014, 3.1.1, modified – In the definition, ...
         source = source
           .gsub(/;\s?([A-Z][A-Z])/, ';; \1')
-          .gsub(/MOD[,\.]/, 'MOD;;')
+          .gsub(/MOD[,\.]/, "MOD;;")
 
         # 702-01-02 MOD,ITU-R Rec. 431 MOD
         # 161-06-01 MOD. ITU RR 139 MOD
         source = source
           .gsub(/MOD,\s*([UIC\d])/, 'MOD;; \1')
-          .gsub(/MOD[,\.]/, 'MOD;;')
+          .gsub(/MOD[,\.]/, "MOD;;")
 
         # 702-09-44 MOD, 723-07-47, voir 723-10-91
         source = source
@@ -338,7 +338,7 @@ module IEV
         # 705-02-01, 702-02-07
         source = source.gsub(/(\d{2,3}-\d{2,3}-\d{2,3}),\s*(\d{2,3}-\d{2,3}-\d{2,3})/, '\1;; \2')
 
-        source.split(';;').map(&:strip)
+        source.split(";;").map(&:strip)
       end
     end
   end

@@ -155,7 +155,7 @@ module IEV::Termbase
             "[#{STRIP_PUNCTUATION.join('')}]?\s*",
             Regexp::IGNORECASE
           ),
-          '')
+          "")
       end
 
       carry
