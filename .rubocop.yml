@@ -3,3 +3,50 @@ inherit_from:
 
 # local repo-specific modifications
 # ...
+
+AllCops:
+  TargetRubyVersion: 2.7
+
+# I prefer this way, especially in specs.
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
+# This is very inconsistent in this project.  Will likely change in future.
+Layout/DotPosition:
+  Enabled: false
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/SpaceAroundOperators:
+  EnforcedStyleForExponentOperator: space
+
+# This one breaks plenty of RSpec idioms.
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - "spec/**/*"
+
+# This project has large and complicated methods.  Disabling these cops for now.
+Metrics:
+  Enabled: false
+
+# Obviously this is not a Rails application.
+Rails:
+  Enabled: false
+
+# Cause it's stupd…
+# https://rubystyle.guide/#map-find-select-reduce-include-size
+Style/CollectionMethods:
+  Enabled: false
+
+# Hashrocket style looks better when describing task dependencies.
+Style/HashSyntax:
+  Exclude:
+    - Rakefile
+    - "**/*.rake"
