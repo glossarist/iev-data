@@ -34,7 +34,7 @@ module IEV
 
         # FIXME: this is a terrible assumption but the IEV export only provides
         # year and month
-        year, month = incomplete_date.split('-')
+        year, month = incomplete_date.split("-")
         DateTime.parse("#{year}-#{month}-01").to_s
       end
 
@@ -200,7 +200,7 @@ module IEV
 
         to_asciimath = Nokogiri::HTML.fragment(input, "UTF-8")
 
-        to_asciimath.css('i').each do |math_element|
+        to_asciimath.css("i").each do |math_element|
           # puts "HTML MATH!!  #{math_element.to_xml}"
           # puts "HTML MATH!!  #{math_element.text}"
           decoded = text_to_asciimath(math_element.text)
@@ -215,7 +215,7 @@ module IEV
           end
         end
 
-        to_asciimath.css('sub').each do |math_element|
+        to_asciimath.css("sub").each do |math_element|
           case math_element.text.length
           when 0
             math_element.remove
@@ -224,7 +224,7 @@ module IEV
           end
         end
 
-        to_asciimath.css('sup').each do |math_element|
+        to_asciimath.css("sup").each do |math_element|
           case math_element.text.length
           when 0
             math_element.remove
@@ -233,14 +233,14 @@ module IEV
           end
         end
 
-        to_asciimath.css('ol').each do |element|
-          element.css('li').each do |li|
+        to_asciimath.css("ol").each do |element|
+          element.css("li").each do |li|
             li.replace ". #{li.text}"
           end
         end
 
-        to_asciimath.css('ul').each do |element|
-          element.css('li').each do |li|
+        to_asciimath.css("ul").each do |element|
+          element.css("li").each do |li|
             li.replace "* #{li.text}"
           end
         end
@@ -251,7 +251,7 @@ module IEV
         end
 
         html_entities_to_stem(
-          to_asciimath.children.to_s.gsub(/\]stem:\[/, '').gsub(/<\/?[uo]l>/, '')
+          to_asciimath.children.to_s.gsub(/\]stem:\[/, "").gsub(/<\/?[uo]l>/, "")
         )
       end
 
@@ -348,7 +348,7 @@ module IEV
         to_asciimath = Nokogiri::HTML.fragment(input, "UTF-8")
         # to_asciimath.remove_namespaces!
 
-        to_asciimath.css('math').each do |math_element|
+        to_asciimath.css("math").each do |math_element|
           asciimath = MathML2AsciiMath.m2a(text_to_asciimath(math_element.to_xml)).strip
           # puts"ASCIIMATH!!  #{asciimath}"
 
@@ -413,8 +413,8 @@ module IEV
             gsub(/<a href="?(IEV)\s*(\d\d\d-\d\d-\d\d)"?>(.*?)<\/?a>/, '{{\3, \1:\2}}').
             gsub(/<a href="?\s*(\d\d\d-\d\d-\d\d)"?>(.*?)<\/?a>/, '{{\3, IEV:\2}}').
             gsub(/<a href="(.*?)">(.*?)<\/a>/, '\1[\2]').
-            gsub(Regexp.new([SIMG_PATH_REGEX, "\\s*", FIGURE_TWO_REGEX].join('')), "image::/assets/images/parts/#{term_domain}/\\1[Figure \\2 - \\3; \\6]").
-            gsub(Regexp.new([SIMG_PATH_REGEX, "\\s*", FIGURE_ONE_REGEX].join('')), "image::/assets/images/parts/#{term_domain}/\\1[Figure \\2 - \\3]").
+            gsub(Regexp.new([SIMG_PATH_REGEX, "\\s*", FIGURE_TWO_REGEX].join("")), "image::/assets/images/parts/#{term_domain}/\\1[Figure \\2 - \\3; \\6]").
+            gsub(Regexp.new([SIMG_PATH_REGEX, "\\s*", FIGURE_ONE_REGEX].join("")), "image::/assets/images/parts/#{term_domain}/\\1[Figure \\2 - \\3]").
             gsub(/<img\s+(.+?)\s*>/, "image::/assets/images/parts/#{term_domain}/\\1[]").
             gsub(/<br>/, "\n").
             gsub(/<b>(.*?)<\/b>/, "*\\1*")
