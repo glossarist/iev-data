@@ -23,19 +23,19 @@ Gem::Specification.new do |spec|
   spec.test_files    = `git ls-files -- {spec}/*`.split("\n")
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
 
-  spec.add_runtime_dependency "thor", "~> 1.0"
   spec.add_runtime_dependency "creek", "~> 2.5"
+  spec.add_runtime_dependency "mathml2asciimath", "< 1"
   spec.add_runtime_dependency "relaton", "~> 1.0"
   spec.add_runtime_dependency "sequel", "~> 5.40"
   spec.add_runtime_dependency "sqlite3", "~> 1.4.2"
-  spec.add_runtime_dependency "mathml2asciimath", "< 1"
+  spec.add_runtime_dependency "thor", "~> 1.0"
   spec.add_runtime_dependency "zeitwerk", "~> 2.4"
 
-  spec.add_development_dependency "pry"
+  spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "debase"
+  spec.add_development_dependency "pry"
   spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "ruby-debug-ide"
   spec.add_development_dependency "ruby-prof"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "bundler", "~> 2.1"
 end
