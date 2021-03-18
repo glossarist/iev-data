@@ -11,13 +11,13 @@ module IEV::Termbase
     attr_accessor :terms
     DEFAULT_LANGUAGE = "eng"
 
-    def initialize(options={})
+    def initialize(options = {})
       terms = options.delete(:terms) || []
       terms.each do |term|
         add_term(term)
       end
 
-      options.each_pair do |k,v|
+      options.each_pair do |k, v|
         self.send("#{k}=", v)
       end
     end
@@ -48,7 +48,7 @@ module IEV::Termbase
     end
 
     def to_file(filename)
-      File.open(filename,"w") do |file|
+      File.open(filename, "w") do |file|
         file.write(to_hash.to_yaml)
       end
     end

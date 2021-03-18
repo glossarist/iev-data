@@ -32,7 +32,7 @@ module IEV
         code
       end
 
-      def self.three_char_code(two_char_code, code_type="terminology")
+      def self.three_char_code(two_char_code, code_type = "terminology")
         memo_index = [two_char_code, code_type]
         THREE_CHAR_MEMO[memo_index] ||= new(two_char_code).find(code_type)
       end

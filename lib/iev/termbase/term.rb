@@ -37,7 +37,7 @@ module IEV::Termbase
 
     attr_accessor :superseded_concepts
 
-    def initialize(options={})
+    def initialize(options = {})
       initialize_from_options(options)
       # @examples = []
       # @notes = []
@@ -111,7 +111,7 @@ module IEV::Termbase
       chi: "注",
       dan: "Note",
       dut: "OPMERKING",
-      fin: "HUOM\\.?",  # Matches "HUOM", "HUOM.", "HUOM 1." and "HUOM. 1." (numeral added by the method)
+      fin: "HUOM\\.?", # Matches "HUOM", "HUOM.", "HUOM 1." and "HUOM. 1." (numeral added by the method)
       fre: "A noter",
       # ger: "",
       jpn: "備考",
