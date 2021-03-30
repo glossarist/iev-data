@@ -77,6 +77,12 @@ module IEV::Termbase
           "when 'CI' environment variable is set and enabled otherwise",
         methods: %i[xlsx2yaml xlsx2db db2yaml]
 
+      shared_option :debug_markup_conversion,
+        desc: "Prints some debug messages on HTML to AsciiDoc conversions",
+        type: :boolean,
+        default: false,
+        methods: %i[xlsx2yaml db2yaml]
+
       shared_option :debug_term_attributes,
         desc: "Prints some debug messages on term attributes",
         type: :boolean,
