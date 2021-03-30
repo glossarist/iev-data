@@ -33,4 +33,30 @@ RSpec.describe IEV::Termbase::MarkupConverter do
     pending "Not implemented yet"
     expect(subject.convert).to include('\* What', '\_a\_', '\~text\~')
   end
+
+  example "complicated example" do
+    pending "Some tweaks are still needed"
+
+    src = <<~HTML
+      This text <b>consists of</b> rich text with <i>some elements being
+      implicitly-<sup>ended</i>.
+      <p>It also has paragraphs,<br>line breaks &amp; entities,
+      including &rarr;Unicode&larr; ones.
+      <p>And finally, a <a href="http://example.com">link</a>!
+    HTML
+
+    expectation = <<~ASCIIDOC
+      This text **consists of** rich text with __some elements being
+      implicitly-^^ended^^__.
+
+      It also has paragraphs,+
+      line breaks & entities,
+      including &rarr;Unicode&larr; ones.
+
+      And finally, a http://example.com[link]!
+    ASCIIDOC
+
+    expect(described_class.new(src).convert).to eq(expectation)
+  end
+
 end
