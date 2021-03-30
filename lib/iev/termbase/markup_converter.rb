@@ -61,6 +61,21 @@ module IEV
         [left, render_inner(node), right].join
       end
 
+      def on_a(node)
+        href = node.attribute("href")&.value
+        type, normalized_href = recognize_link(href)
+
+        case type
+        when :iev
+          surround_inner node, "{{", ", #{normalized_href}}}"
+        when :url
+          surround_inner node, "#{normalized_href}[", "]"
+        else
+          debug :markup_conversion, "Unrecognized link to '#{href}'"
+          render_inner node
+        end
+      end
+
       def on_b(node)
         surround_inner node, "**"
       end
@@ -90,6 +105,15 @@ module IEV
 
       def on_sup(node)
         surround_inner node, "^^"
+      end
+
+      def recognize_link(str)
+        case str
+        when /\Ahttps?:\/\//
+          return [:url, str]
+        when /\A(?:IEV)?\s*(\d{3}-\d{2}-\d{2})\Z/
+          return [:iev, "IEV:#{$1}"]
+        end
       end
     end
   end

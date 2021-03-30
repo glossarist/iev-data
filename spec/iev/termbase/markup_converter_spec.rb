@@ -114,6 +114,16 @@ RSpec.describe IEV::Termbase::MarkupConverter do
     ASCIIDOC
   end
 
+  example "Arbitrary <a href=\"http://example.test\">link</a>." do
+    expect(subject.convert).to eq("Arbitrary http://example.test[link].")
+  end
+
+  example "IEV link to <a href=IEV102-03-23>magnitude</a> concept." do
+    expect(subject.convert).to eq(<<~ASCIIDOC.chomp)
+      IEV link to {{magnitude, IEV:102-03-23}} concept.
+    ASCIIDOC
+  end
+
   example "complicated example" do
     pending "Some tweaks are still needed"
 
