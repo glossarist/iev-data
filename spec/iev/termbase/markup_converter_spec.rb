@@ -124,6 +124,22 @@ RSpec.describe IEV::Termbase::MarkupConverter do
     ASCIIDOC
   end
 
+  example "<ol><li>One<li>Two<li>Three</ol>" do
+    expect(subject.convert.strip).to eq(<<~ASCIIDOC.chomp)
+      . One
+      . Two
+      . Three
+    ASCIIDOC
+  end
+
+  example "<ul><li>One<li>Two<li>Three</ul>" do
+    expect(subject.convert.strip).to eq(<<~ASCIIDOC.chomp)
+      * One
+      * Two
+      * Three
+    ASCIIDOC
+  end
+
   example "complicated example" do
     pending "Some tweaks are still needed"
 

@@ -61,6 +61,14 @@ module IEV
         [left, render_inner(node), right].join
       end
 
+      def render_list(node, bullet_str)
+        node.children
+          .grep(Oga::XML::Element)
+          .map { |li| render_inner(li).prepend(bullet_str, " ") }
+          .join("\n")
+          .yield_self { |s| "\n\n#{s}\n\n" }
+      end
+
       def on_a(node)
         href = node.attribute("href")&.value
         type, normalized_href = recognize_link(href)
@@ -94,6 +102,10 @@ module IEV
         asciimath_formula.empty? ? "" : "stem:[#{asciimath_formula}]"
       end
 
+      def on_ol(node)
+        render_list(node, ".")
+      end
+
       def on_p(node)
         sep = "\n" * 2
         surround_inner node, sep, ""
@@ -105,6 +117,10 @@ module IEV
 
       def on_sup(node)
         surround_inner node, "^^"
+      end
+
+      def on_ul(node)
+        render_list(node, "*")
       end
 
       def recognize_link(str)
