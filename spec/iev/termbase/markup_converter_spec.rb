@@ -66,6 +66,15 @@ RSpec.describe IEV::Termbase::MarkupConverter do
     expect(subject.convert).to eq("^^superscript with implicit end^^")
   end
 
+  example "<math><mi>a</mi><mo>+</mo><mn>3</mn></math>" do
+    expect(subject.convert).to eq("stem:[a + 3]")
+  end
+
+  example "<math xmlns=\"http://www.w3.org/1998/Math/MathML\">" +
+    "<mi>a</mi><mo>+</mo><mn>3</mn></math>" do
+    expect(subject.convert).to eq("stem:[a + 3]")
+  end
+
   example "complicated example" do
     pending "Some tweaks are still needed"
 

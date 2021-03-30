@@ -69,6 +69,12 @@ module IEV
         surround_inner node, "__"
       end
 
+      def on_math(node)
+        mathml_formula = node.to_xml
+        asciimath_formula = MathML2AsciiMath.m2a(mathml_formula).strip
+        asciimath_formula.empty? ? "" : "stem:[#{asciimath_formula}]"
+      end
+
       def on_sub(node)
         surround_inner node, "~~"
       end
