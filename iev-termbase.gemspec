@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "creek", "~> 2.5"
   spec.add_runtime_dependency "mathml2asciimath", "< 1"
   spec.add_runtime_dependency "relaton", "~> 1.0"
+  spec.add_runtime_dependency "reverse_adoc"
   spec.add_runtime_dependency "sequel", "~> 5.40"
   spec.add_runtime_dependency "sqlite3", "~> 1.4.2"
   spec.add_runtime_dependency "thor", "~> 1.0"
