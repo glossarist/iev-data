@@ -23,8 +23,6 @@ module IEV
 
       def parse_source
         @dom = Oga.parse_html(source)
-      rescue
-        warn :markup_conversion, "HTML parse error"
       end
 
       def generate_asciidoc(node = dom)
@@ -39,8 +37,6 @@ module IEV
           translate_element(node)
         when Oga::XML::Text
           node.text
-        when nil
-          nil
         else
           warn :markup_conversion, "Unsupported node type: #{node.inspect}"
         end
