@@ -75,6 +75,45 @@ RSpec.describe IEV::Termbase::MarkupConverter do
     expect(subject.convert).to eq("stem:[a + 3]")
   end
 
+  example "<p>Text with</p><p>two paragraphs.</p>" do
+    pending "Strip new lines from the beginning"
+    expect(subject.convert).to eq(<<~ASCIIDOC.chomp)
+      Text with
+
+      two paragraphs.
+    ASCIIDOC
+    expect(subject.convert).to eq("")
+  end
+
+  example "Text with<p>paragraphs<p>but without closing tags." do
+    expect(subject.convert).to eq(<<~ASCIIDOC.chomp)
+      Text with
+
+      paragraphs
+
+      but without closing tags.
+    ASCIIDOC
+  end
+
+  example "Excessing<p><p>paragraphs<p>are ignored.<p><p><p>" do
+    pending "Not implemented yet"
+    expect(subject.convert).to eq(<<~ASCIIDOC.chomp)
+      Excessing
+
+      paragraphs
+
+      are ignored.
+    ASCIIDOC
+  end
+
+  example "Text<br>with <br />line breaks." do
+    expect(subject.convert).to eq(<<~ASCIIDOC.chomp)
+      Text+
+      with +
+      line breaks.
+    ASCIIDOC
+  end
+
   example "complicated example" do
     pending "Some tweaks are still needed"
 
