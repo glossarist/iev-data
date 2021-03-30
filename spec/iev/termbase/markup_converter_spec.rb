@@ -34,6 +34,38 @@ RSpec.describe IEV::Termbase::MarkupConverter do
     expect(subject.convert).to include('\* What', '\_a\_', '\~text\~')
   end
 
+  example "<i>italics</i>" do
+    expect(subject.convert).to eq("__italics__")
+  end
+
+  example "<i>italics with implicit end" do
+    expect(subject.convert).to eq("__italics with implicit end__")
+  end
+
+  example "<b>bold</b>" do
+    expect(subject.convert).to eq("**bold**")
+  end
+
+  example "<b>bold with implicit end" do
+    expect(subject.convert).to eq("**bold with implicit end**")
+  end
+
+  example "<sub>subscript</sub>" do
+    expect(subject.convert).to eq("~~subscript~~")
+  end
+
+  example "<sub>subscript with implicit end" do
+    expect(subject.convert).to eq("~~subscript with implicit end~~")
+  end
+
+  example "<sup>superscript</sup>" do
+    expect(subject.convert).to eq("^^superscript^^")
+  end
+
+  example "<sup>superscript with implicit end" do
+    expect(subject.convert).to eq("^^superscript with implicit end^^")
+  end
+
   example "complicated example" do
     pending "Some tweaks are still needed"
 

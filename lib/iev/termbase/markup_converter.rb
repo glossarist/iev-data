@@ -52,6 +52,30 @@ module IEV
           generate_asciidoc(node.children)
         end
       end
+
+      def render_inner(node)
+        generate_asciidoc(node.children)
+      end
+
+      def surround_inner(node, left, right = left)
+        [left, render_inner(node), right].join
+      end
+
+      def on_b(node)
+        surround_inner node, "**"
+      end
+
+      def on_i(node)
+        surround_inner node, "__"
+      end
+
+      def on_sub(node)
+        surround_inner node, "~~"
+      end
+
+      def on_sup(node)
+        surround_inner node, "^^"
+      end
     end
   end
 end
