@@ -23,6 +23,8 @@ module IEV
 
       def parse_source
         @dom = Oga.parse_html(source)
+      rescue
+        warn :markup_conversion, "HTML parse error"
       end
 
       def generate_asciidoc(node = dom)
