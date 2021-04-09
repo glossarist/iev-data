@@ -6,6 +6,8 @@
 module IEV
   module Termbase
     module DataConversions
+      HTMLEntitiesDecoder = HTMLEntities.new(:expanded)
+
       refine String do
         def decode_html!
           replace(decode_html)
@@ -13,7 +15,7 @@ module IEV
         end
 
         def decode_html
-          HTMLEntities.new(:expanded).decode(self)
+          HTMLEntitiesDecoder.decode(self)
         end
 
         # Normalize various encoding anomalies like `\uFEFF` in strings
