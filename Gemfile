@@ -10,3 +10,5 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 # Specify your gem's dependencies in tc211-termbase.gemspec
 gemspec
+
+gem "html2asciimath", path: "../html2asciimath"
