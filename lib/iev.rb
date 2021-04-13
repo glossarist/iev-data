@@ -3,6 +3,7 @@
 
 # frozen_string_literal: true
 
+require "asciimath"
 require "benchmark"
 require "creek"
 require "html2asciimath"

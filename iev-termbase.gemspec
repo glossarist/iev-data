@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = `git ls-files -- {spec}/*`.split("\n")
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
 
+  spec.add_runtime_dependency "asciimath", "~> 2.0"
   spec.add_runtime_dependency "creek", "~> 2.5"
   spec.add_runtime_dependency "mathml2asciimath", "< 1"
   spec.add_runtime_dependency "relaton", "~> 1.0"
