@@ -28,9 +28,12 @@ module IEV
 
       private
 
-      # @todo
+      # From HTML math through AsciiMath to MathML, which can be considered
+      # normal form at this stage.
       def process_html_math(str)
-        str
+        HTML2AsciiMath.transform_text(str) do |asciimath|
+          AsciiMath.parse(asciimath).to_mathml
+        end
       end
 
       def html_to_asciidoc(str)
