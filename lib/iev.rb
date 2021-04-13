@@ -5,6 +5,7 @@
 
 require "benchmark"
 require "creek"
+require "html2asciimath"
 require "mathml2asciimath"
 require "relaton"
 require "relaton_bib"
