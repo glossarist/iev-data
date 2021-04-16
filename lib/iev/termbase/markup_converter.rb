@@ -22,7 +22,6 @@ module IEV
         str = source
         str = process_html_math(str)
         str = html_to_asciidoc(str)
-        str = str.strip
         str
       end
 
@@ -37,7 +36,7 @@ module IEV
       end
 
       def html_to_asciidoc(str)
-        ReverseAdoc.convert(str)
+        ReverseAdoc.convert(str).strip
       end
 
       module ReverseAdocConverters
