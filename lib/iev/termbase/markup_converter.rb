@@ -31,7 +31,7 @@ module IEV
       # normal form at this stage.
       def process_html_math(str)
         HTML2AsciiMath.transform_text(str) do |asciimath|
-          AsciiMath.parse(asciimath).to_mathml
+          AsciiMath.parse(asciimath).to_mathml rescue asciimath # handle n ^ th
         end
       end
 
