@@ -23,7 +23,7 @@ module IEV
 
       def run!(&block)
         retval = nil
-        @profile = RubyProf.profile do
+        @profile = RubyProf.profile allow_exceptions: true do
           @bench = Benchmark.measure do
             retval = block.call
           end
@@ -48,11 +48,15 @@ module IEV
       end
 
       def print_benchmark(suffix)
+        return if bench.nil?
+
         contents = [Benchmark::CAPTION, bench.to_s].join("\n")
         File.write(report_file_name(suffix), contents)
       end
 
       def print_profile(suffix, printer)
+        return if profile.nil?
+
         File.open(report_file_name(suffix), "w") do |file|
           printer.new(profile).print(file)
         end
