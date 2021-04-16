@@ -41,7 +41,9 @@ module IEV
 
       def asciimath_to_mathml(str)
         AsciiMath.parse(str).to_mathml
-      rescue # handle n ^ th
+      rescue # this is wrong!
+
+        # incorrect s = "\" n ^ \"th\""
         str
       end
 
