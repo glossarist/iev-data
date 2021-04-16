@@ -31,12 +31,18 @@ module IEV
       # normal form at this stage.
       def process_html_math(str)
         HTML2AsciiMath.transform_text(str) do |asciimath|
-          AsciiMath.parse(asciimath).to_mathml rescue asciimath # handle n ^ th
+          asciimath_to_mathml(asciimath)
         end
       end
 
       def html_to_asciidoc(str)
         ReverseAdoc.convert(str).strip
+      end
+
+      def asciimath_to_mathml(str)
+        AsciiMath.parse(str).to_mathml
+      rescue # handle n ^ th
+        str
       end
 
       module ReverseAdocConverters
