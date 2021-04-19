@@ -31,6 +31,10 @@ module IEV
       end
 
       def split_source_field(source)
+        # TODO Calling String#gsub with a single hash argument would be probably
+        # better than calling that method multiple times.  But change is
+        # not necessarily that easy to do.
+
         # IEC 62047-22:2014, 3.1.1, modified – In the definition, ...
         source = source
           .gsub(/;\s?([A-Z][A-Z])/, ';; \1')
@@ -273,6 +277,8 @@ module IEV
           # "ISO/IEC/IEEE 24765:2010,  <i>Systems and software engineering – Vocabulary</i>, 3.234 (2)
           [/, ([\d\.\w]+ \(\d+\))/, "1"],
         ].map do |regex, rule|
+          # TODO Rubocop complains about unused rule -- need to make sure
+          # that no one forgot about something.
           res = []
           # puts "str is '#{str}'"
           # puts "regex is '#{regex.to_s}'"
