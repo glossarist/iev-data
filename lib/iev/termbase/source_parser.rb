@@ -28,6 +28,111 @@ module IEV
         @parsed_sources = src_split.map { |src| extract_single_source(src) }
       end
 
+      def split_source_field(source)
+        # IEC 62047-22:2014, 3.1.1, modified – In the definition, ...
+        source = source
+          .gsub(/;\s?([A-Z][A-Z])/, ';; \1')
+          .gsub(/MOD[,\.]/, "MOD;;")
+
+        # 702-01-02 MOD,ITU-R Rec. 431 MOD
+        # 161-06-01 MOD. ITU RR 139 MOD
+        source = source
+          .gsub(/MOD,\s*([UIC\d])/, 'MOD;; \1')
+          .gsub(/MOD[,\.]/, "MOD;;")
+
+        # 702-09-44 MOD, 723-07-47, voir 723-10-91
+        source = source
+          .gsub(/MOD,\s*(\d{3})/, 'MOD;; \1')
+          .gsub(/,\s*see\s*(\d{3})/, ';;see \1')
+          .gsub(/,\s*voir\s*(\d{3})/, ';;voir \1')
+
+        # IEC 62303:2008, 3.1, modified and IEC 62302:2007, 3.2; IAEA 4
+        # CEI 62303:2008, 3.1, modifiée et CEI 62302:2007, 3.2; AIEA 4
+        source = source
+          .gsub(/modified and ([ISOECUT])/, 'modified;; \1')
+          .gsub(/modifiée et ([ISOECUT])/, 'modifiée;; \1')
+
+        # 725-12-50, ITU RR 11
+        source = source.gsub(/,\s+ITU/, ";; ITU")
+
+        # 705-02-01, 702-02-07
+        source = source.gsub(/(\d{2,3}-\d{2,3}-\d{2,3}),\s*(\d{2,3}-\d{2,3}-\d{2,3})/, '\1;; \2')
+
+        source.split(";;").map(&:strip)
+      end
+
+      def extract_single_source(raw_ref)
+        # source = "ISO/IEC GUIDE 99:2007 1.26"
+        # raw_ref = str.match(/\A[^,\()]+/).to_s
+
+        # puts "[extract_single_source] #{raw_ref}"
+
+        relation_type = extract_source_relationship(raw_ref)
+
+        # définition 3.60 de la 62127-1
+        # definition 3.60 of 62127-1
+        # définition 3.60 de la 62127-1
+        # definition 3.7 of IEC 62127-1 MOD, adapted from 4.2.9 of IEC 61828 and 3.6 of IEC 61102
+        # définition 3.7 de la CEI 62127-1 MOD, adaptées sur la base du 4.2.9 de la CEI 61828 et du 3.6 de la CEI 61102
+        # definition 3.54 of 62127-1 MOD
+        # définition 3.54 de la CEI 62127-1 MOD
+        # IEC 62313:2009, 3.6, modified
+        # IEC 62313:2009, 3.6, modifié
+
+        clean_ref = raw_ref
+          .gsub(/CEI/, "IEC")
+          .gsub(/Guide IEC/, "IEC Guide")
+          .gsub(/Guide ISO\/IEC/, "ISO/IEC Guide")
+          .gsub(/VEI/, "IEV")
+          .gsub(/UIT/, "ITU")
+          .gsub(/IUT-R/, "ITU-R")
+          .gsub(/UTI-R/, "ITU-R")
+          .gsub(/Recomm[ea]ndation ITU-T/, "ITU-T Recommendation")
+          .gsub(/ITU-T (\w.\d{3}):(\d{4})/, 'ITU-T Recommendation \1 (\2)')
+          .gsub(/ITU-R Rec. (\d+)/, 'ITU-R Recommendation \1')
+          .gsub(/[≈≠]\s+/, "")
+          .sub(/ИЗМ\Z/, "MOD")
+          .sub(/definition ([\d\.]+) of ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
+          .sub(/definition ([\d\.]+) of IEC ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
+          .sub(/définition ([\d\.]+) de la ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
+          .sub(/définition ([\d\.]+) de la IEC ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
+          .sub(/(\d{3})\ (\d{2})\ (\d{2})/, '\1-\2-\3') # for 221 04 03
+
+          # .sub(/\A(from|d'après|voir la|see|See|voir|Voir)\s+/, "")
+
+        source_ref = extract_source_ref(clean_ref)
+          .sub(/, modifi(ed|é)\Z/, "")
+          .strip
+
+        clause = extract_source_clause(clean_ref)
+
+        # puts "CLAUSENIL!!! #{raw_ref}" if clause.nil?
+        # puts "SOURCE!!! #{raw_ref}" if source_ref.nil?
+
+        # puts "[RAW] #{raw_ref}"
+        # h = {
+        #   source_ref: source_ref,
+        #   clause: clause,
+        #   relation_type: relation_type
+        # }
+
+        # pp h
+
+        item = ::IEV::Termbase::RelatonDb.instance.fetch(source_ref)
+
+        src = {}
+
+        src["ref"] = source_ref
+        src["clause"] = clause if clause
+        src["link"] = item.url if item
+        src["relationship"] = relation_type
+        src["original"] = raw_ref
+
+        src
+      rescue ::RelatonBib::RequestError => e
+        warn e.message
+      end
+
       def extract_source_ref(str)
         case str
         when /SI Brochure/, /Brochure sur le SI/
@@ -234,111 +339,6 @@ module IEV
             "type" => type.to_s,
           }
         end
-      end
-
-      def extract_single_source(raw_ref)
-        # source = "ISO/IEC GUIDE 99:2007 1.26"
-        # raw_ref = str.match(/\A[^,\()]+/).to_s
-
-        # puts "[extract_single_source] #{raw_ref}"
-
-        relation_type = extract_source_relationship(raw_ref)
-
-        # définition 3.60 de la 62127-1
-        # definition 3.60 of 62127-1
-        # définition 3.60 de la 62127-1
-        # definition 3.7 of IEC 62127-1 MOD, adapted from 4.2.9 of IEC 61828 and 3.6 of IEC 61102
-        # définition 3.7 de la CEI 62127-1 MOD, adaptées sur la base du 4.2.9 de la CEI 61828 et du 3.6 de la CEI 61102
-        # definition 3.54 of 62127-1 MOD
-        # définition 3.54 de la CEI 62127-1 MOD
-        # IEC 62313:2009, 3.6, modified
-        # IEC 62313:2009, 3.6, modifié
-
-        clean_ref = raw_ref
-          .gsub(/CEI/, "IEC")
-          .gsub(/Guide IEC/, "IEC Guide")
-          .gsub(/Guide ISO\/IEC/, "ISO/IEC Guide")
-          .gsub(/VEI/, "IEV")
-          .gsub(/UIT/, "ITU")
-          .gsub(/IUT-R/, "ITU-R")
-          .gsub(/UTI-R/, "ITU-R")
-          .gsub(/Recomm[ea]ndation ITU-T/, "ITU-T Recommendation")
-          .gsub(/ITU-T (\w.\d{3}):(\d{4})/, 'ITU-T Recommendation \1 (\2)')
-          .gsub(/ITU-R Rec. (\d+)/, 'ITU-R Recommendation \1')
-          .gsub(/[≈≠]\s+/, "")
-          .sub(/ИЗМ\Z/, "MOD")
-          .sub(/definition ([\d\.]+) of ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
-          .sub(/definition ([\d\.]+) of IEC ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
-          .sub(/définition ([\d\.]+) de la ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
-          .sub(/définition ([\d\.]+) de la IEC ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
-          .sub(/(\d{3})\ (\d{2})\ (\d{2})/, '\1-\2-\3') # for 221 04 03
-
-          # .sub(/\A(from|d'après|voir la|see|See|voir|Voir)\s+/, "")
-
-        source_ref = extract_source_ref(clean_ref)
-          .sub(/, modifi(ed|é)\Z/, "")
-          .strip
-
-        clause = extract_source_clause(clean_ref)
-
-        # puts "CLAUSENIL!!! #{raw_ref}" if clause.nil?
-        # puts "SOURCE!!! #{raw_ref}" if source_ref.nil?
-
-        # puts "[RAW] #{raw_ref}"
-        # h = {
-        #   source_ref: source_ref,
-        #   clause: clause,
-        #   relation_type: relation_type
-        # }
-
-        # pp h
-
-        item = ::IEV::Termbase::RelatonDb.instance.fetch(source_ref)
-
-        src = {}
-
-        src["ref"] = source_ref
-        src["clause"] = clause if clause
-        src["link"] = item.url if item
-        src["relationship"] = relation_type
-        src["original"] = raw_ref
-
-        src
-      rescue ::RelatonBib::RequestError => e
-        warn e.message
-      end
-
-      def split_source_field(source)
-        # IEC 62047-22:2014, 3.1.1, modified – In the definition, ...
-        source = source
-          .gsub(/;\s?([A-Z][A-Z])/, ';; \1')
-          .gsub(/MOD[,\.]/, "MOD;;")
-
-        # 702-01-02 MOD,ITU-R Rec. 431 MOD
-        # 161-06-01 MOD. ITU RR 139 MOD
-        source = source
-          .gsub(/MOD,\s*([UIC\d])/, 'MOD;; \1')
-          .gsub(/MOD[,\.]/, "MOD;;")
-
-        # 702-09-44 MOD, 723-07-47, voir 723-10-91
-        source = source
-          .gsub(/MOD,\s*(\d{3})/, 'MOD;; \1')
-          .gsub(/,\s*see\s*(\d{3})/, ';;see \1')
-          .gsub(/,\s*voir\s*(\d{3})/, ';;voir \1')
-
-        # IEC 62303:2008, 3.1, modified and IEC 62302:2007, 3.2; IAEA 4
-        # CEI 62303:2008, 3.1, modifiée et CEI 62302:2007, 3.2; AIEA 4
-        source = source
-          .gsub(/modified and ([ISOECUT])/, 'modified;; \1')
-          .gsub(/modifiée et ([ISOECUT])/, 'modifiée;; \1')
-
-        # 725-12-50, ITU RR 11
-        source = source.gsub(/,\s+ITU/, ";; ITU")
-
-        # 705-02-01, 702-02-07
-        source = source.gsub(/(\d{2,3}-\d{2,3}-\d{2,3}),\s*(\d{2,3}-\d{2,3}-\d{2,3})/, '\1;; \2')
-
-        source.split(";;").map(&:strip)
       end
     end
   end
