@@ -87,7 +87,7 @@ module IEV
 
         # pp h
 
-        item = ::IEV::Termbase::RelatonDb.instance.fetch(source_ref)
+        item = RelatonDb.instance.fetch(source_ref)
 
         src = {}
 
