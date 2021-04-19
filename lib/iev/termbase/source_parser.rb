@@ -71,9 +71,7 @@ module IEV
 
         clean_ref = normalize_ref_string(raw_ref)
 
-        source_ref = match_source_ref_string(clean_ref)
-          .sub(/, modifi(ed|é)\Z/, "")
-          .strip
+        source_ref = extract_source_ref(clean_ref)
 
         clause = extract_source_clause(clean_ref)
 
@@ -135,6 +133,12 @@ module IEV
           .sub(/(\d{3})\ (\d{2})\ (\d{2})/, '\1-\2-\3') # for 221 04 03
 
           # .sub(/\A(from|d'après|voir la|see|See|voir|Voir)\s+/, "")
+      end
+
+      def extract_source_ref(str)
+        match_source_ref_string(str)
+          .sub(/, modifi(ed|é)\Z/, "")
+          .strip
       end
 
       def match_source_ref_string(str)
