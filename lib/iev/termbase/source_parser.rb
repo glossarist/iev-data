@@ -281,11 +281,7 @@ module IEV
 
         # pp results
 
-        if results.first
-          results.first[:clause]
-        else
-          nil
-        end
+        results.dig(0, :clause)
       end
 
       def extract_source_relationship(str)
