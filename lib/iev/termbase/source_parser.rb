@@ -108,7 +108,7 @@ module IEV
           .sub(/définition ([\d\.]+) de la IEC ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
           .sub(/(\d{3})\ (\d{2})\ (\d{2})/, '\1-\2-\3') # for 221 04 03
 
-          # .sub(/\A(from|d'après|voir la|see|See|voir|Voir)\s+/, "")
+        # .sub(/\A(from|d'après|voir la|see|See|voir|Voir)\s+/, "")
       end
 
       def extract_source_ref(str)
@@ -198,7 +198,6 @@ module IEV
           debug :sources, "Failed to parse source: '#{str}'"
           str
         end
-
       end
 
       def extract_source_clause(str)
@@ -264,7 +263,7 @@ module IEV
           [/\AISO [\d:]+, (d[ée]finition \d+)/, "1"],
 
           # "ISO/IEC/IEEE 24765:2010,  <i>Systems and software engineering – Vocabulary</i>, 3.234 (2)
-          [/, ([\d\.\w]+ \(\d+\))/, "1"]
+          [/, ([\d\.\w]+ \(\d+\))/, "1"],
         ].map do |regex, rule|
           res = []
           # puts "str is '#{str}'"
@@ -273,7 +272,7 @@ module IEV
             # puts "result is #{result.first}"
             res << {
               index: $~.offset(0)[0],
-              clause: result.first.strip
+              clause: result.first.strip,
             }
           end
           res
