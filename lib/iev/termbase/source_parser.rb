@@ -89,15 +89,13 @@ module IEV
 
         item = RelatonDb.instance.fetch(source_ref)
 
-        src = {}
-
-        src["ref"] = source_ref
-        src["clause"] = clause if clause
-        src["link"] = item.url if item
-        src["relationship"] = relation_type
-        src["original"] = raw_ref
-
-        src
+        {
+          "ref" => source_ref,
+          "clause" => clause,
+          "link" => item&.url,
+          "relationship" => relation_type,
+          "original" => raw_ref,
+        }.compact
       rescue ::RelatonBib::RequestError => e
         warn e.message
       end
