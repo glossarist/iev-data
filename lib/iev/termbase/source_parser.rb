@@ -129,67 +129,67 @@ module IEV
           "JCGM VIM"
         # IEC 60050-121, 151-12-05
         when /IEC 60050-(\d+), (\d{2,3}-\d{2,3}-\d{2,3})/
-          "IEC 60050-#{$LAST_MATCH_INFO[1]}"
+          "IEC 60050-#{$1}"
         when /IEC 60050-(\d+):(\d+), (\d{2,3}-\d{2,3}-\d{2,3})/
-          "IEC 60050-#{$LAST_MATCH_INFO[1]}:#{$LAST_MATCH_INFO[2]}"
+          "IEC 60050-#{$1}:#{$2}"
         when /(AIEA|IAEA) (\d+)/
-          "IAEA #{$LAST_MATCH_INFO[2]}"
+          "IAEA #{$2}"
         when /IEC\sIEEE ([\d\:\-]+)/
-          "IEC/IEEE #{$LAST_MATCH_INFO[1]}".sub(/:\Z/, "")
+          "IEC/IEEE #{$1}".sub(/:\Z/, "")
         when /CISPR ([\d\:\-]+)/
-          "IEC CISPR #{$LAST_MATCH_INFO[1]}"
+          "IEC CISPR #{$1}"
         when /RR (\d+)/
           "ITU RR"
         # IEC 50(845)
         when /IEC (\d+)\((\d+)\)/
-          "IEC 600#{$LAST_MATCH_INFO[1]}-#{$LAST_MATCH_INFO[1]}"
+          "IEC 600#{$1}-#{$1}"
         when /(ISO|IEC)[\/\ ](PAS|TR|TS) ([\d\:\-]+)/
-          "#{$LAST_MATCH_INFO[1]}/#{$LAST_MATCH_INFO[2]} #{$LAST_MATCH_INFO[3]}".sub(/:\Z/, "")
+          "#{$1}/#{$2} #{$3}".sub(/:\Z/, "")
         when /ISO\/IEC ([\d\:\-]+)/
-          "ISO/IEC #{$LAST_MATCH_INFO[1]}".sub(/:\Z/, "")
+          "ISO/IEC #{$1}".sub(/:\Z/, "")
         when /ISO\/IEC\/IEEE ([\d\:\-]+)/
-          "ISO/IEC/IEEE #{$LAST_MATCH_INFO[1]}".sub(/:\Z/, "")
+          "ISO/IEC/IEEE #{$1}".sub(/:\Z/, "")
 
         # ISO 140/4
         when /ISO (\d+)\/(\d+)/
-          "ISO #{$LAST_MATCH_INFO[1]}-#{$LAST_MATCH_INFO[2]}"
+          "ISO #{$1}-#{$2}"
         when /Norme ISO (\d+)-(\d+)/
-          "ISO #{$LAST_MATCH_INFO[1]}:#{$LAST_MATCH_INFO[2]}"
+          "ISO #{$1}:#{$2}"
         when /ISO\/IEC Guide ([\d\:\-]+)/i
-          "ISO/IEC Guide #{$LAST_MATCH_INFO[1]}".sub(/:\Z/, "")
+          "ISO/IEC Guide #{$1}".sub(/:\Z/, "")
         when /(ISO|IEC) Guide ([\d\:\-]+)/i
-          "#{$LAST_MATCH_INFO[1]} Guide #{$LAST_MATCH_INFO[2]}".sub(/:\Z/, "")
+          "#{$1} Guide #{$2}".sub(/:\Z/, "")
 
         # ITU-T Recommendation F.791 (11/2015)
         when /ITU-T Recommendation (\w.\d+) \((\d+\/\d+)\)/i
-          "ITU-T Recommendation #{$LAST_MATCH_INFO[1]} (#{$LAST_MATCH_INFO[2]})"
+          "ITU-T Recommendation #{$1} (#{$2})"
 
         # ITU-T Recommendation F.791:2015
         when /ITU-T Recommendation (\w.\d+):(\d+)/i
-          "ITU-T Recommendation #{$LAST_MATCH_INFO[1]} (#{$LAST_MATCH_INFO[2]})"
+          "ITU-T Recommendation #{$1} (#{$2})"
 
         when /ITU-T Recommendation (\w\.\d+)/i
-          "ITU-T Recommendation #{$LAST_MATCH_INFO[1]}"
+          "ITU-T Recommendation #{$1}"
 
         # ITU-R Recommendation 592 MOD
         when /ITU-R Recommendation (\d+)/i
-          "ITU-R Recommendation #{$LAST_MATCH_INFO[1]}"
+          "ITU-R Recommendation #{$1}"
         # ISO 669: 2000 3.1.16
         when /ISO ([\d\-]+:\s?\d{4})/
-          "ISO #{$LAST_MATCH_INFO[1]}".sub(/:\Z/, "")
+          "ISO #{$1}".sub(/:\Z/, "")
         when /ISO ([\d\:\-]+)/
-          "ISO #{$LAST_MATCH_INFO[1]}".sub(/:\Z/, "")
+          "ISO #{$1}".sub(/:\Z/, "")
         when /IEC ([\d\:\-]+)/
-          "IEC #{$LAST_MATCH_INFO[1]}".sub(/:\Z/, "")
+          "IEC #{$1}".sub(/:\Z/, "")
         when /definition (\d\.[\d\.]+) of ([\d\-])/
-          "IEC #{$LAST_MATCH_INFO[2]}".sub(/:\Z/, "")
+          "IEC #{$2}".sub(/:\Z/, "")
         when /définition (\d\.[\d\.]+) de la ([\d\-])/
-          "IEC #{$LAST_MATCH_INFO[2]}".sub(/:\Z/, "")
+          "IEC #{$2}".sub(/:\Z/, "")
 
         when /IEV (\d{2,3}-\d{2,3}-\d{2,3})/, /(\d{2,3}-\d{2,3}-\d{2,3})/
           "IEV"
         when /IEV part\s+(\d+)/, /partie\s+(\d+)\s+de l'IEV/
-          "IEC 60050-#{$LAST_MATCH_INFO[1]}"
+          "IEC 60050-#{$1}"
 
         when /International Telecommunication Union (ITU) Constitution/,
           /Constitution de l’Union internationale des télécommunications (UIT)/
@@ -316,7 +316,7 @@ module IEV
         when /(modified|modifié|modifiée|modifiés|MOD)\s*[–-–]?\s+(.+)\Z/
           {
             "type" => type.to_s,
-            "modification" => $LAST_MATCH_INFO[2],
+            "modification" => $2,
           }
         else
           {
