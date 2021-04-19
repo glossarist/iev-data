@@ -87,12 +87,10 @@ module IEV
 
         # pp h
 
-        item = RelatonDb.instance.fetch(source_ref)
-
         {
           "ref" => source_ref,
           "clause" => clause,
-          "link" => item&.url,
+          "link" => obtain_source_link(source_ref),
           "relationship" => relation_type,
           "original" => raw_ref,
         }.compact
@@ -345,6 +343,11 @@ module IEV
             "type" => type.to_s,
           }
         end
+      end
+
+      # Uses Relaton to obtain link for given source ref.
+      def obtain_source_link(ref)
+        RelatonDb.instance.fetch(ref)&.url
       end
     end
   end
