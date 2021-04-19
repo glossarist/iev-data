@@ -3,6 +3,8 @@
 # (c) Copyright 2020 Ribose Inc.
 #
 
+# rubocop:todo Style/RedundantRegexpEscape
+
 module IEV
   module Termbase
     # Parses information from the spreadsheet's SOURCE column.
@@ -56,7 +58,7 @@ module IEV
         source = source.gsub(/,\s+ITU/, ";; ITU")
 
         # 705-02-01, 702-02-07
-        source = source.gsub(/(\d{2,3}-\d{2,3}-\d{2,3}),\s*(\d{2,3}-\d{2,3}-\d{2,3})/, '\1;; \2')
+        source = source.gsub(/(\d{2,3}-\d{2,3}-\d{2,3}),\s*(\d{2,3}-\d{2,3}-\d{2,3})/, '\1;; \2') # rubocop:todo Layout/LineLength
 
         source.split(";;").map(&:strip)
       end
@@ -79,6 +81,8 @@ module IEV
       end
 
       def normalize_ref_string(str)
+        # rubocop:todo Layout/LineLength
+
         # définition 3.60 de la 62127-1
         # definition 3.60 of 62127-1
         # définition 3.60 de la 62127-1
@@ -109,6 +113,8 @@ module IEV
           .sub(/(\d{3})\ (\d{2})\ (\d{2})/, '\1-\2-\3') # for 221 04 03
 
         # .sub(/\A(from|d'après|voir la|see|See|voir|Voir)\s+/, "")
+
+        # rubocop:enable Layout/LineLength
       end
 
       def extract_source_ref(str)
@@ -201,6 +207,8 @@ module IEV
       end
 
       def extract_source_clause(str)
+        # rubocop:todo Layout/LineLength
+
         # Strip out the modifications
         str = str.sub(/[,\ ]*modif.+\s[-–].*\Z/, "")
 
@@ -282,6 +290,8 @@ module IEV
         # pp results
 
         results.dig(0, :clause)
+
+        # rubocop:enable Layout/LineLength
       end
 
       def extract_source_relationship(str)
@@ -327,3 +337,5 @@ module IEV
     end
   end
 end
+
+# rubocop:enable Style/RedundantRegexpEscape
