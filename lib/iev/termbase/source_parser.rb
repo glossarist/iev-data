@@ -69,36 +69,7 @@ module IEV
 
         relation_type = extract_source_relationship(raw_ref)
 
-        # définition 3.60 de la 62127-1
-        # definition 3.60 of 62127-1
-        # définition 3.60 de la 62127-1
-        # definition 3.7 of IEC 62127-1 MOD, adapted from 4.2.9 of IEC 61828 and 3.6 of IEC 61102
-        # définition 3.7 de la CEI 62127-1 MOD, adaptées sur la base du 4.2.9 de la CEI 61828 et du 3.6 de la CEI 61102
-        # definition 3.54 of 62127-1 MOD
-        # définition 3.54 de la CEI 62127-1 MOD
-        # IEC 62313:2009, 3.6, modified
-        # IEC 62313:2009, 3.6, modifié
-
-        clean_ref = raw_ref
-          .gsub(/CEI/, "IEC")
-          .gsub(/Guide IEC/, "IEC Guide")
-          .gsub(/Guide ISO\/IEC/, "ISO/IEC Guide")
-          .gsub(/VEI/, "IEV")
-          .gsub(/UIT/, "ITU")
-          .gsub(/IUT-R/, "ITU-R")
-          .gsub(/UTI-R/, "ITU-R")
-          .gsub(/Recomm[ea]ndation ITU-T/, "ITU-T Recommendation")
-          .gsub(/ITU-T (\w.\d{3}):(\d{4})/, 'ITU-T Recommendation \1 (\2)')
-          .gsub(/ITU-R Rec. (\d+)/, 'ITU-R Recommendation \1')
-          .gsub(/[≈≠]\s+/, "")
-          .sub(/ИЗМ\Z/, "MOD")
-          .sub(/definition ([\d\.]+) of ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
-          .sub(/definition ([\d\.]+) of IEC ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
-          .sub(/définition ([\d\.]+) de la ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
-          .sub(/définition ([\d\.]+) de la IEC ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
-          .sub(/(\d{3})\ (\d{2})\ (\d{2})/, '\1-\2-\3') # for 221 04 03
-
-          # .sub(/\A(from|d'après|voir la|see|See|voir|Voir)\s+/, "")
+        clean_ref = normalize_ref_string(raw_ref)
 
         source_ref = extract_source_ref(clean_ref)
           .sub(/, modifi(ed|é)\Z/, "")
@@ -131,6 +102,39 @@ module IEV
         src
       rescue ::RelatonBib::RequestError => e
         warn e.message
+      end
+
+      def normalize_ref_string(str)
+        # définition 3.60 de la 62127-1
+        # definition 3.60 of 62127-1
+        # définition 3.60 de la 62127-1
+        # definition 3.7 of IEC 62127-1 MOD, adapted from 4.2.9 of IEC 61828 and 3.6 of IEC 61102
+        # définition 3.7 de la CEI 62127-1 MOD, adaptées sur la base du 4.2.9 de la CEI 61828 et du 3.6 de la CEI 61102
+        # definition 3.54 of 62127-1 MOD
+        # définition 3.54 de la CEI 62127-1 MOD
+        # IEC 62313:2009, 3.6, modified
+        # IEC 62313:2009, 3.6, modifié
+
+        str
+          .gsub(/CEI/, "IEC")
+          .gsub(/Guide IEC/, "IEC Guide")
+          .gsub(/Guide ISO\/IEC/, "ISO/IEC Guide")
+          .gsub(/VEI/, "IEV")
+          .gsub(/UIT/, "ITU")
+          .gsub(/IUT-R/, "ITU-R")
+          .gsub(/UTI-R/, "ITU-R")
+          .gsub(/Recomm[ea]ndation ITU-T/, "ITU-T Recommendation")
+          .gsub(/ITU-T (\w.\d{3}):(\d{4})/, 'ITU-T Recommendation \1 (\2)')
+          .gsub(/ITU-R Rec. (\d+)/, 'ITU-R Recommendation \1')
+          .gsub(/[≈≠]\s+/, "")
+          .sub(/ИЗМ\Z/, "MOD")
+          .sub(/definition ([\d\.]+) of ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
+          .sub(/definition ([\d\.]+) of IEC ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
+          .sub(/définition ([\d\.]+) de la ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
+          .sub(/définition ([\d\.]+) de la IEC ([\d\-\:]+) MOD/, 'IEC \2, \1, modified - ')
+          .sub(/(\d{3})\ (\d{2})\ (\d{2})/, '\1-\2-\3') # for 221 04 03
+
+          # .sub(/\A(from|d'après|voir la|see|See|voir|Voir)\s+/, "")
       end
 
       def extract_source_ref(str)
