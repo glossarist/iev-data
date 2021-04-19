@@ -13,6 +13,7 @@ module IEV
       include CLI::UI
 
       def initialize
+        info "Initializing Relaton..."
         @db = Relaton::Db.new "db", nil
       end
 
