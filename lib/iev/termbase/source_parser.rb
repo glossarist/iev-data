@@ -62,30 +62,10 @@ module IEV
       end
 
       def extract_single_source(raw_ref)
-        # source = "ISO/IEC GUIDE 99:2007 1.26"
-        # raw_ref = str.match(/\A[^,\()]+/).to_s
-
-        # puts "[extract_single_source] #{raw_ref}"
-
         relation_type = extract_source_relationship(raw_ref)
-
         clean_ref = normalize_ref_string(raw_ref)
-
         source_ref = extract_source_ref(clean_ref)
-
         clause = extract_source_clause(clean_ref)
-
-        # puts "CLAUSENIL!!! #{raw_ref}" if clause.nil?
-        # puts "SOURCE!!! #{raw_ref}" if source_ref.nil?
-
-        # puts "[RAW] #{raw_ref}"
-        # h = {
-        #   source_ref: source_ref,
-        #   clause: clause,
-        #   relation_type: relation_type
-        # }
-
-        # pp h
 
         {
           "ref" => source_ref,
