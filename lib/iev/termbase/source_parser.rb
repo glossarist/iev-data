@@ -71,7 +71,7 @@ module IEV
 
         clean_ref = normalize_ref_string(raw_ref)
 
-        source_ref = extract_source_ref(clean_ref)
+        source_ref = match_source_ref_string(clean_ref)
           .sub(/, modifi(ed|é)\Z/, "")
           .strip
 
@@ -137,7 +137,7 @@ module IEV
           # .sub(/\A(from|d'après|voir la|see|See|voir|Voir)\s+/, "")
       end
 
-      def extract_source_ref(str)
+      def match_source_ref_string(str)
         case str
         when /SI Brochure/, /Brochure sur le SI/
           # SI Brochure, 9th edition, 2019, 2.3.1
