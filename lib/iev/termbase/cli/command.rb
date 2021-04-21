@@ -78,19 +78,19 @@ module IEV::Termbase
         methods: %i[xlsx2yaml xlsx2db db2yaml]
 
       shared_option :debug_term_attributes,
-        desc: "Prints some debug messages on term attributes",
+        desc: "Enables debug messages about term attributes recognition",
         type: :boolean,
         default: false,
         methods: %i[xlsx2yaml db2yaml]
 
       shared_option :debug_sources,
-        desc: "...",
+        desc: "Enables debug messages about authoritative sources recognition",
         type: :boolean,
         default: false,
         methods: %i[xlsx2yaml db2yaml]
 
       shared_option :debug_relaton,
-        desc: "...",
+        desc: "Enables debug messages about Relaton integration",
         type: :boolean,
         default: false,
         methods: %i[xlsx2yaml db2yaml]
