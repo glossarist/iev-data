@@ -24,17 +24,5 @@ module IEV::Termbase
         end
       end
     end
-
-    def to_hash
-      self.inject({}) do |acc, (id, concept)|
-        acc.merge!(id => concept.to_hash)
-      end
-    end
-
-    def to_file(filename)
-      File.open(filename, "w") do |file|
-        file.write(to_hash.to_yaml)
-      end
-    end
   end
 end
