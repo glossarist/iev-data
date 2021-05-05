@@ -7,6 +7,7 @@ module IEV
   module Termbase
     module DataConversions
       HTML_ENTITIES_DECODER = HTMLEntities.new(:expanded)
+      HTML_ENTITIES_MUTEX = Mutex.new
 
       refine String do
         def decode_html!
@@ -15,7 +16,12 @@ module IEV
         end
 
         def decode_html
-          HTML_ENTITIES_DECODER.decode(self)
+          # I don't remember why exactly, but I consider HTMLEntites gem
+          # thread-unsafe.
+          # See: https://github.com/glossarist/iev-data/issues/174.
+          HTML_ENTITIES_MUTEX.synchronize do
+            HTML_ENTITIES_DECODER.decode(self)
+          end
         end
 
         # Normalize various encoding anomalies like `\uFEFF` in strings
