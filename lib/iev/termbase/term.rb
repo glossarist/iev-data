@@ -85,22 +85,6 @@ module IEV::Termbase
       end
     end
 
-    # entry-status
-    ## Must be one of notValid valid superseded retired
-    def entry_status=(value)
-      case value
-      when "有效的", "käytössä", "действующий", "válido"
-        value = "valid"
-      when "korvattu", "reemplazado"
-        value = "superseded"
-      when "информация отсутствует" # "information absent"!?
-        value = "retired"
-      when %w(notValid valid superseded retired)
-        # do nothing
-      end
-      @entry_status = value
-    end
-
     # classification
     ## Must be one of the following: preferred admitted deprecated
     def classification=(value)
