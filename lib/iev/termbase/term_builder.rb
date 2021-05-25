@@ -47,7 +47,7 @@ module IEV
         IEV::Termbase::Term.new(
           id: term_id,
           entry_status: extract_entry_status,
-          classification: find_value_for("SYNONYM1STATUS"),
+          classification: extract_classification,
           date_accepted: flesh_date(find_value_for("PUBLICATIONDATE")),
           date_amended: flesh_date(find_value_for("PUBLICATIONDATE")),
           review_date: flesh_date(find_value_for("PUBLICATIONDATE")),
@@ -371,6 +371,21 @@ module IEV
         case find_value_for("STATUS").downcase
         when "standard" then "valid"
         else nil
+        end
+      end
+
+      def extract_classification
+        classification_val = find_value_for("SYNONYM1STATUS")
+
+        case classification_val
+        when ""
+          "admitted"
+        when "认可的", "допустимый", "admitido"
+          "admitted"
+        when "首选的", "suositettava", "suositeltava", "рекомендуемый", "preferente"
+          "preferred"
+        else
+          classification_val
         end
       end
 

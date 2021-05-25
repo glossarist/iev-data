@@ -85,22 +85,6 @@ module IEV::Termbase
       end
     end
 
-    # classification
-    ## Must be one of the following: preferred admitted deprecated
-    def classification=(value)
-      case value
-      when ""
-        value = "admitted"
-      when "认可的", "допустимый", "admitido"
-        value = "admitted"
-      when "首选的", "suositettava", "suositeltava", "рекомендуемый", "preferente"
-        value = "preferred"
-      when %w(preferred admitted deprecated)
-        # do nothing
-      end
-      @classification = value
-    end
-
     def related_concepts
       # TODO someday other relation types too
       arr = [superseded_concepts].flatten.compact
