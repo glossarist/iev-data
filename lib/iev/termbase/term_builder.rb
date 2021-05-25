@@ -63,21 +63,6 @@ module IEV
           authoritative_source: extract_authoritative_source,
           language_code: term_language,
           superseded_concepts: extract_superseded_concepts,
-
-          # @todo: Unsorted Attributes
-          #
-          # We need to revisit this attributes and also update
-          # the correct mapping with the existing attributes.
-          #
-          abbrev: nil,
-          alt: nil,
-          country_code: nil,
-          review_indicator: nil,
-          authoritative_source_similarity: nil,
-          lineage_source: nil,
-          review_status: nil,
-          review_type: nil,
-          review_decision_notes: nil,
         )
       end
 
