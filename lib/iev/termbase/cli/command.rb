@@ -14,7 +14,7 @@ module IEV::Termbase
         db = Sequel.sqlite
         DbWriter.new(db).import_spreadsheet(file)
         ds = filter_dataset(db, options)
-        collection = ConceptCollection.build_from_dataset(ds)
+        collection = build_collection_from_dataset(ds)
         save_collection_to_files(collection, options[:output])
         summary
       end
@@ -35,7 +35,7 @@ module IEV::Termbase
         handle_generic_options(options)
         db = Sequel.sqlite(dbfile)
         ds = filter_dataset(db, options)
-        collection = ConceptCollection.build_from_dataset(ds)
+        collection = build_collection_from_dataset(ds)
         save_collection_to_files(collection, options[:output])
         summary
       end
