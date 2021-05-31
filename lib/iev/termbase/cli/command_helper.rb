@@ -69,6 +69,17 @@ module IEV::Termbase
 
         query
       end
+
+      def build_collection_from_dataset(ds)
+        Profiler.measure("building-collection") do
+          ConceptCollection.new.tap do |concept_collection|
+            ds.each do |row|
+              term = TermBuilder.build_from(row)
+              concept_collection.add_term(term)
+            end
+          end
+        end
+      end
     end
   end
 end
