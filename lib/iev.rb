@@ -6,6 +6,7 @@
 require "benchmark"
 require "creek"
 require "mathml2asciimath"
+require "glossarist"
 require "relaton"
 require "relaton_bib"
 require "ruby-prof"
