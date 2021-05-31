@@ -44,7 +44,7 @@ module IEV
 
         split_definition
 
-        IEV::Termbase::Term.new(
+        Glossarist::LocalizedConcept.new(
           id: term_id,
           entry_status: extract_entry_status,
           classification: extract_classification,
