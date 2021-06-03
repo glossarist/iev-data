@@ -65,10 +65,10 @@ module IEV::Termbase
         query
       end
 
-      def build_collection_from_dataset(ds)
+      def build_collection_from_dataset(dataset)
         Profiler.measure("building-collection") do
           Glossarist::Collection.new.tap do |concept_collection|
-            ds.each do |row|
+            dataset.each do |row|
               term = TermBuilder.build_from(row)
               concept = concept_collection.fetch_or_initialize(term.id)
               concept.add_l10n(term)
