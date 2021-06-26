@@ -17,7 +17,7 @@ jobs:
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: "3.0"
           # Termbase releases are so rare, that there is virtually no benefit
           # in caching gems for that job.
           bundler-cache: false
