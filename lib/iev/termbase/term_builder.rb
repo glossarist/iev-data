@@ -414,23 +414,33 @@ module IEV
 
       def build_expression_designation(raw_term, attribute_data:, status:)
         term = mathml_to_asciimath(parse_anchor_tag(raw_term))
+        term_attributes = TermAttrsParser.new(attribute_data.to_s)
 
-        IEV::Termbase::NestedTermBuilder.build(
-          type: "expression",
-          term: term,
-          data: attribute_data,
-          status: status,
-        )
+        return nil if term.nil?
+
+        {
+          "type" => "expression",
+          "prefix" => term_attributes.prefix,
+          "normative_status" => status&.downcase,
+          "usage_info" => term_attributes.usage_info,
+          "designation" => term,
+          "part_of_speech" => term_attributes.part_of_speech,
+          "geographical_area" => term_attributes.geographical_area,
+          "gender" => term_attributes.gender,
+          "plurality" => term_attributes.plurality,
+        }.compact
       end
 
       def build_symbol_designation(raw_term)
         term = mathml_to_asciimath(parse_anchor_tag(raw_term))
 
-        IEV::Termbase::NestedTermBuilder.build(
-          type: "symbol",
-          international: true,
-          term: term,
-        )
+        return nil if term.nil?
+
+        {
+          "type" => "symbol",
+          "designation" => term,
+          "international" => true,
+        }.compact
       end
     end
   end
