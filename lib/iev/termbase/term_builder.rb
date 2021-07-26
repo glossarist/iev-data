@@ -139,7 +139,7 @@ module IEV
         build_expression_designation(
           raw_term,
           attribute_data: find_value_for("TERMATTRIBUTE"),
-          status: "Preferred",
+          status: "preferred",
         )
       end
 
@@ -152,7 +152,7 @@ module IEV
             build_expression_designation(
               raw_term,
               attribute_data: find_value_for("SYNONYM#{num}ATTRIBUTE"),
-              status: find_value_for("SYNONYM#{num}STATUS"),
+              status: find_value_for("SYNONYM#{num}STATUS")&.downcase,
             )
           end
         end
@@ -421,7 +421,7 @@ module IEV
         {
           "type" => "expression",
           "prefix" => term_attributes.prefix,
-          "normative_status" => status&.downcase,
+          "normative_status" => status,
           "usage_info" => term_attributes.usage_info,
           "designation" => term,
           "part_of_speech" => term_attributes.part_of_speech,
