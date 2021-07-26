@@ -136,12 +136,9 @@ module IEV
         raw_term = find_value_for("TERM")
         raw_term = "NA" if raw_term == "....."
 
-        term = mathml_to_asciimath(parse_anchor_tag(raw_term))
-
-        IEV::Termbase::NestedTermBuilder.build(
-          type: "expression",
-          term: term,
-          data: find_value_for("TERMATTRIBUTE"),
+        build_expression_designation(
+          raw_term,
+          attribute_data: find_value_for("TERMATTRIBUTE"),
           status: "Preferred",
         )
       end
@@ -152,12 +149,9 @@ module IEV
 
           # Some synonyms have more than one entry
           designations.split(/<[pbr]+>/).map do |raw_term|
-            term = mathml_to_asciimath(parse_anchor_tag(raw_term))
-
-            IEV::Termbase::NestedTermBuilder.build(
-              type: "expression",
-              term: term,
-              data: find_value_for("SYNONYM#{num}ATTRIBUTE"),
+            build_expression_designation(
+              raw_term,
+              attribute_data: find_value_for("SYNONYM#{num}ATTRIBUTE"),
               status: find_value_for("SYNONYM#{num}STATUS"),
             )
           end
@@ -167,13 +161,7 @@ module IEV
       end
 
       def extract_international_symbol_designation
-        term = mathml_to_asciimath(parse_anchor_tag(find_value_for("SYMBOLE")))
-
-        IEV::Termbase::NestedTermBuilder.build(
-          type: "symbol",
-          international: true,
-          term: term,
-        )
+        build_symbol_designation(find_value_for("SYMBOLE"))
       end
 
       def text_to_asciimath(text)
@@ -420,6 +408,29 @@ module IEV
             gsub(/<b>(.*?)<\/b>/, "*\\1*")
 
         end
+      end
+
+      private
+
+      def build_expression_designation(raw_term, attribute_data:, status:)
+        term = mathml_to_asciimath(parse_anchor_tag(raw_term))
+
+        IEV::Termbase::NestedTermBuilder.build(
+          type: "expression",
+          term: term,
+          data: attribute_data,
+          status: status,
+        )
+      end
+
+      def build_symbol_designation(raw_term)
+        term = mathml_to_asciimath(parse_anchor_tag(raw_term))
+
+        IEV::Termbase::NestedTermBuilder.build(
+          type: "symbol",
+          international: true,
+          term: term,
+        )
       end
     end
   end
