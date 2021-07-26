@@ -161,7 +161,8 @@ module IEV
       end
 
       def extract_international_symbol_designation
-        build_symbol_designation(find_value_for("SYMBOLE"))
+        raw_term = find_value_for("SYMBOLE")
+        raw_term && build_symbol_designation(raw_term)
       end
 
       def text_to_asciimath(text)
@@ -416,8 +417,6 @@ module IEV
         term = mathml_to_asciimath(parse_anchor_tag(raw_term))
         term_attributes = TermAttrsParser.new(attribute_data.to_s)
 
-        return nil if term.nil?
-
         {
           "type" => "expression",
           "prefix" => term_attributes.prefix,
@@ -433,8 +432,6 @@ module IEV
 
       def build_symbol_designation(raw_term)
         term = mathml_to_asciimath(parse_anchor_tag(raw_term))
-
-        return nil if term.nil?
 
         {
           "type" => "symbol",
