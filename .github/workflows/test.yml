@@ -18,6 +18,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
+          bundler-cache: true
 
       - name: Setup
         run: bin/setup
@@ -42,6 +43,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
+          bundler-cache: true
 
       - name: Setup
         run: bin/setup
@@ -60,6 +62,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
+          bundler-cache: true
 
       - name: Setup
         run: bin/setup
@@ -84,6 +87,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
+          bundler-cache: true
 
       - name: Setup
         run: bin/setup
