@@ -7,7 +7,7 @@ PATH
       mathml2asciimath (< 1)
       relaton (~> 1.0)
       sequel (~> 5.40)
-      sqlite3 (~> 1.4.2)
+      sqlite3 (~> 1.4)
       thor (~> 1.0)
       zeitwerk (~> 2.4)
 
@@ -24,9 +24,6 @@ GEM
     creek (2.5.3)
       nokogiri (>= 1.10.0)
       rubyzip (>= 1.0.0)
-    debase (0.2.4.1)
-      debase-ruby_core_source (>= 0.10.2)
-    debase-ruby_core_source (0.10.12)
     diff-lcs (1.4.4)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
@@ -183,8 +180,6 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
     rspec-support (3.10.2)
-    ruby-debug-ide (0.7.2)
-      rake (>= 0.8.1)
     ruby-prof (1.4.3)
     ruby2_keywords (0.0.5)
     rubyntlm (0.6.3)
@@ -206,17 +201,16 @@ GEM
 
 PLATFORMS
   x86_64-darwin-17
+  x86_64-darwin-20
   x86_64-linux
 
 DEPENDENCIES
   bundler (~> 2.1)
-  debase
   iev-termbase!
   pry
   rake (~> 13.0)
   rspec (~> 3.0)
-  ruby-debug-ide
   ruby-prof
 
 BUNDLED WITH
-   2.2.21
+   2.2.29
