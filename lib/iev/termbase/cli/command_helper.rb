@@ -13,9 +13,9 @@ module IEV::Termbase
       def save_collection_to_files(collection, output_dir)
         Profiler.measure("writing-yamls") do
           info "Writing concepts to files..."
-          collection.path = File.expand_path("./concepts", output_dir)
-          FileUtils.mkdir_p(collection.path)
-          collection.save_concepts
+          path = File.expand_path("./concepts", output_dir)
+          FileUtils.mkdir_p(path)
+          collection.save_to_files(path)
         end
       end
 
@@ -67,11 +67,13 @@ module IEV::Termbase
 
       def build_collection_from_dataset(dataset)
         Profiler.measure("building-collection") do
-          Glossarist::Collection.new.tap do |concept_collection|
+          Glossarist::ManagedConceptCollection.new.tap do |concept_collection|
             dataset.each do |row|
               term = TermBuilder.build_from(row)
-              concept = concept_collection.fetch_or_initialize(term.id)
-              concept.add_l10n(term)
+              if term
+                concept = concept_collection.fetch_or_initialize(term.id)
+                concept.add_l10n(term)
+              end
             end
           end
         end

@@ -40,6 +40,10 @@ module IEV::Termbase
         summary
       end
 
+      def self.exit_on_failure?
+        true
+      end
+
       # Options must be declared at the bottom because Thor must have commands
       # defined in advance.
 

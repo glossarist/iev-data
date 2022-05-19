@@ -48,8 +48,16 @@ module IEV
           id: term_id,
           entry_status: extract_entry_status,
           classification: extract_classification,
-          date_accepted: flesh_date(find_value_for("PUBLICATIONDATE")),
-          date_amended: flesh_date(find_value_for("PUBLICATIONDATE")),
+          dates: [
+            {
+              type: :accepted,
+              date: flesh_date(find_value_for("PUBLICATIONDATE"))
+            },
+            {
+              type: :amended,
+              date: flesh_date(find_value_for("PUBLICATIONDATE"))
+            }
+          ],
           review_date: flesh_date(find_value_for("PUBLICATIONDATE")),
           review_decision_date: flesh_date(find_value_for("PUBLICATIONDATE")),
           review_decision_event: "published",
@@ -59,10 +67,10 @@ module IEV
           terms: extract_terms,
           notes: extract_notes,
           examples: extract_examples,
-          definition: extract_definition_value,
-          authoritative_source: extract_authoritative_source,
+          definition: [{ "content" => extract_definition_value }],
+          sources: extract_authoritative_source,
           language_code: term_language,
-          superseded_concepts: extract_superseded_concepts,
+          related: extract_superseded_concepts,
         )
       end
 
@@ -92,15 +100,28 @@ module IEV
           (?:<p>\s*)?
           (
             (?<example>
+              # English example
               \bEXAMPLE\b |
-              \bEXEMPLE\b
+              \bExamples\s+are\b: |
+              \bExamples\b: |
+              \bExample\b: |
+              \bExamples\s+of\b\s+[^:]*: |
+              \bExample\s+of\b\s+[^:]*: |
+              # French examples
+              \bEXEMPLE\b |
+              \bExemples\b:
             )
             |
             (?<note>
               Note\s*\d+\sto\sentry: |
+              Note&nbsp;\d+\sto\sentry: |
+              Note\s*\d+\sto\sthe\sentry: |
+              Note\sto\sentry\s*\d+: |
               Note\s*\d+?\sà\sl['’]article: |
               <NOTE\/?>?\s*\d?\s+.*?– |
-              NOTE(?:\s+-)?
+              NOTE(?:\s+-)? |
+              Note\s+\d+\s– |
+              Note&nbsp;\d+\s
             )
           )
           \s*
@@ -381,12 +402,15 @@ module IEV
       def extract_authoritative_source
         source_val = find_value_for("SOURCE")
         return nil if source_val.nil?
-        SourceParser.new(source_val).parsed_sources
+        SourceParser.new(source_val).parsed_sources.compact.map do |source|
+          source.merge({ "type" => "authoritative" })
+        end
       end
 
       def extract_superseded_concepts
         replaces_val = find_value_for("REPLACES")
         return nil if replaces_val.nil?
+
         SupersessionParser.new(replaces_val).supersessions
       end
 
@@ -417,10 +441,15 @@ module IEV
         term = mathml_to_asciimath(parse_anchor_tag(raw_term))
         term_attributes = TermAttrsParser.new(attribute_data.to_s)
 
+        statuses = {
+          "obsoleto" => "deprecated",
+          "напуштен" => "deprecated",
+        }
+
         {
           "type" => "expression",
           "prefix" => term_attributes.prefix,
-          "normative_status" => status,
+          "normative_status" => statuses[status] || status,
           "usage_info" => term_attributes.usage_info,
           "designation" => term,
           "part_of_speech" => term_attributes.part_of_speech,

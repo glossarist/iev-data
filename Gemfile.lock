@@ -3,7 +3,7 @@ PATH
   specs:
     iev-termbase (0.1.13)
       creek (~> 2.5)
-      glossarist (~> 0.1.0)
+      glossarist-new (~> 1.0.0)
       mathml2asciimath (< 1)
       relaton (~> 1.0)
       sequel (~> 5.40)
@@ -76,7 +76,7 @@ GEM
     faraday_middleware (1.2.0)
       faraday (~> 1.0)
     gb-agencies (0.0.7)
-    glossarist (0.1.2)
+    glossarist-new (1.0.0)
     graphql (1.13.6)
     graphql-client (0.16.0)
       activesupport (>= 3.0)
