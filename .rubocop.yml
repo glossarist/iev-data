@@ -36,10 +36,6 @@ Lint/AmbiguousBlockAssociation:
 Metrics:
   Enabled: false
 
-# Obviously this is not a Rails application.
-Rails:
-  Enabled: false
-
 # Cause it's stupd…
 # https://rubystyle.guide/#map-find-select-reduce-include-size
 Style/CollectionMethods:
