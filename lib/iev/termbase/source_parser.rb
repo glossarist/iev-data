@@ -191,9 +191,9 @@ module IEV
           "ISO #{$1}".sub(/:\Z/, "")
         when /IEC ([\d\:\-]+)/
           "IEC #{$1}".sub(/:\Z/, "")
-        when /definition (\d\.[\d\.]+) of ([\d\-])/
+        when /definition (\d\.[\d\.]+) of ([\d\-]*)/
           "IEC #{$2}".sub(/:\Z/, "")
-        when /définition (\d\.[\d\.]+) de la ([\d\-])/
+        when /définition (\d\.[\d\.]+) de la ([\d\-]*)/
           "IEC #{$2}".sub(/:\Z/, "")
 
         when /IEV (\d{2,3}-\d{2,3}-\d{2,3})/, /(\d{2,3}-\d{2,3}-\d{2,3})/
