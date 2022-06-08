@@ -51,12 +51,12 @@ module IEV
           dates: [
             {
               type: :accepted,
-              date: flesh_date(find_value_for("PUBLICATIONDATE"))
+              date: flesh_date(find_value_for("PUBLICATIONDATE")),
             },
             {
               type: :amended,
-              date: flesh_date(find_value_for("PUBLICATIONDATE"))
-            }
+              date: flesh_date(find_value_for("PUBLICATIONDATE")),
+            },
           ],
           review_date: flesh_date(find_value_for("PUBLICATIONDATE")),
           review_decision_date: flesh_date(find_value_for("PUBLICATIONDATE")),
