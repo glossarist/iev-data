@@ -35,7 +35,7 @@ module IEV
         # FIXME: this is a terrible assumption but the IEV export only provides
         # year and month
         year, month = incomplete_date.split("-")
-        DateTime.parse("#{year}-#{month}-01").to_s
+        DateTime.parse("#{year}-#{month || "01"}-01").to_s
       end
 
       def build_term_object
@@ -102,14 +102,12 @@ module IEV
             (?<example>
               # English example
               \bEXAMPLE\b |
-              \bExamples\s+are\b: |
-              \bExamples\b: |
-              \bExample\b: |
-              \bExamples\s+of\b\s+[^:]*: |
-              \bExample\s+of\b\s+[^:]*: |
+              ^\bExamples\s+are\b: |
+              ^\bExamples\b: |
+              ^\bExample\b: |
               # French examples
               \bEXEMPLE\b |
-              \bExemples\b:
+              ^\bExemples\b:
             )
             |
             (?<note>
@@ -135,11 +133,23 @@ module IEV
         remaining_str = find_value_for("DEFINITION")
 
         while md = remaining_str&.match(slicer_rx)
-          next_part_arr.push(md.pre_match)
+          next_part = md.pre_match
+          next_part.sub!(/^\[:Ex(a|e)mple\]/, "Ex\\1mple")
+          next_part_arr.push(next_part)
           next_part_arr = md[:example] ? @examples : @notes
+          # 112-03-17
+          # supplements the name of a quantity, especially for a component in a system, to indicate the quotient of that quantity by the total volume
+          # <NOTE – Examples: amount-of-substance volume concentration of component B (or concentration of B, in particular, ion concentration), molecular concentration of B, electron concentration (or electron density).
+          #
+          # In the above case the `Example` is part of the note but in the current implemnentation
+          # of the code it will add and empty `Note` and put the rest in an `Example`.
+          # So In this case we will replace the `Example` with `[:Example]` and revert it in the next
+          # iteration so it will not be caught by the regex.
           remaining_str = md.post_match
+          remaining_str.sub!(/^Ex(a|e)mple/, "[:Ex\\1mple]") if md[:note]
         end
 
+        remaining_str.sub!(/^\[:Ex(a|e)mple\]/, "Ex\\1mple")
         next_part_arr.push(remaining_str)
         @definition = definition_arr.first
         @definition = nil if @definition&.empty?
