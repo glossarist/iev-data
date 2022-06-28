@@ -105,11 +105,11 @@ module IEV
       def extract_usage_info(str)
         info_rx = %r{
           # regular ASCII less and greater than signs
-          < (?<inner>.*?) >
+          <(?<inner>(?>[^<>]|(\g<0>))*)>
           |
           # ＜ and ＞, i.e. full-width less and greater than signs
           # which are used instead of ASCII signs in some CJK terms
-          \uFF1C (?<inner>.*?) \uFF1E
+          \uFF1C (?<inner>(?>[^\uFF1C\uFF1E]|(\g<0>))*) \uFF1E
         }x.freeze
 
         remove_from_string(str, info_rx) do |md|
