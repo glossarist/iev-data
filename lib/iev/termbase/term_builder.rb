@@ -32,10 +32,12 @@ module IEV
       def flesh_date(incomplete_date)
         return incomplete_date if incomplete_date.nil? || incomplete_date.empty?
 
-        # FIXME: this is a terrible assumption but the IEV export only provides
-        # year and month
-        year, month = incomplete_date.split("-")
-        DateTime.parse("#{year}-#{month || '01'}-01").to_s
+        year, month, day = incomplete_date.split("-")
+
+        month ||= "01"
+        day ||= "01"
+
+        DateTime.parse("#{year}-#{month}-#{day}").to_s
       end
 
       def build_term_object
