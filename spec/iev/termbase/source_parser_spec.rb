@@ -57,4 +57,21 @@ RSpec.describe IEV::Termbase::SourceParser do
       .and contain_exactly("CEI 62303:2008, 3.1, modifiée",
         "CEI 62302:2007, 3.2", "AIEA 4")
   end
+
+  example "IEC 62302:2007, 3.2, modified – math element \"<i>L</i>\"" do
+    expected_parsed_sources = {
+      "ref" => "IEC 62302:2007",
+      "clause" => "3.2",
+      "link" => "https://webstore.iec.ch/publication/6790",
+      "relationship" => {
+        "type" => "modified",
+        "modification" => "math element \"stem:[L]\"",
+      },
+      "original" => "IEC 62302:2007, 3.2, modified – math element \"stem:[L]\"",
+    }
+
+    expect(subject.parsed_sources)
+      .to be_an(Array)
+      .and contain_exactly(expected_parsed_sources)
+  end
 end
