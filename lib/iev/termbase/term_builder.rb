@@ -250,9 +250,9 @@ module IEV
       def extract_authoritative_source
         source_val = find_value_for("SOURCE")
         return nil if source_val.nil?
+
         SourceParser.new(source_val).parsed_sources.compact.map do |source|
           source.merge({ "type" => "authoritative" })
-
         end
       end
 
@@ -267,7 +267,7 @@ module IEV
 
       def build_expression_designation(raw_term, attribute_data:, status:)
         term = IEV::Termbase::Converter.mathml_to_asciimath(
-          parse_anchor_tag(raw_term)
+          parse_anchor_tag(raw_term),
         )
         term_attributes = TermAttrsParser.new(attribute_data.to_s)
 
@@ -291,7 +291,7 @@ module IEV
 
       def build_symbol_designation(raw_term)
         term = IEV::Termbase::Converter.mathml_to_asciimath(
-          parse_anchor_tag(raw_term)
+          parse_anchor_tag(raw_term),
         )
 
         {
