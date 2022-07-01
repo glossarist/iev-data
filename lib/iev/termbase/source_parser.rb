@@ -13,6 +13,7 @@ module IEV
     #   SourceParser.new(cell_data_string).parsed_sources
     class SourceParser
       include CLI::UI
+      include Utilities
       using DataConversions
 
       attr_reader :src_split, :parsed_sources, :raw_str, :src_str
@@ -78,7 +79,7 @@ module IEV
           "clause" => clause,
           "link" => obtain_source_link(source_ref),
           "relationship" => relation_type,
-          "original" => raw_ref,
+          "original" => IEV::Termbase::Converter.mathml_to_asciimath(raw_ref),
         }.compact
       rescue ::RelatonBib::RequestError => e
         warn e.message
@@ -323,10 +324,12 @@ module IEV
           {
             "type" => type.to_s,
           }
-        when /(modified|modifié|modifiée|modifiés|MOD)\s*[–-–]?\s+(.+)\Z/
+        when /(modified|modifié|modifiée|modifiés|MOD)\s*[–-]?\s+(.+)\Z/
           {
             "type" => type.to_s,
-            "modification" => $2,
+            "modification" => IEV::Termbase::Converter.mathml_to_asciimath(
+              $2,
+            ).strip,
           }
         else
           {
