@@ -7,7 +7,7 @@ RSpec.describe IEV::Termbase::SourceParser do
   subject do
     example = RSpec.current_example
     attributes_str = example.metadata[:string] || example.description
-    described_class.new(attributes_str)
+    described_class.new(attributes_str, "IEV")
   end
 
   around do |example|
