@@ -204,7 +204,7 @@ module IEV
       def extract_definition_value
         if @definition
           IEV::Termbase::Converter.mathml_to_asciimath(
-            replace_newlines(parse_anchor_tag(@definition)),
+            replace_newlines(parse_anchor_tag(@definition, term_domain)),
           ).strip
         end
       end
@@ -212,7 +212,7 @@ module IEV
       def extract_examples
         @examples.map do |str|
           IEV::Termbase::Converter.mathml_to_asciimath(
-            replace_newlines(parse_anchor_tag(str)),
+            replace_newlines(parse_anchor_tag(str, term_domain)),
           ).strip
         end
       end
@@ -220,7 +220,7 @@ module IEV
       def extract_notes
         @notes.map do |str|
           IEV::Termbase::Converter.mathml_to_asciimath(
-            replace_newlines(parse_anchor_tag(str)),
+            replace_newlines(parse_anchor_tag(str, term_domain)),
           ).strip
         end
       end
@@ -251,7 +251,10 @@ module IEV
         source_val = find_value_for("SOURCE")
         return nil if source_val.nil?
 
-        SourceParser.new(source_val).parsed_sources.compact.map do |source|
+        SourceParser.new(source_val, term_domain)
+          .parsed_sources
+          .compact
+          .map do |source|
           source.merge({ "type" => "authoritative" })
         end
       end
@@ -267,7 +270,7 @@ module IEV
 
       def build_expression_designation(raw_term, attribute_data:, status:)
         term = IEV::Termbase::Converter.mathml_to_asciimath(
-          parse_anchor_tag(raw_term),
+          parse_anchor_tag(raw_term, term_domain),
         )
         term_attributes = TermAttrsParser.new(attribute_data.to_s)
 
@@ -291,7 +294,7 @@ module IEV
 
       def build_symbol_designation(raw_term)
         term = IEV::Termbase::Converter.mathml_to_asciimath(
-          parse_anchor_tag(raw_term),
+          parse_anchor_tag(raw_term, term_domain),
         )
 
         {
