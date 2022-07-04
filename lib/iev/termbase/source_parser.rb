@@ -18,9 +18,10 @@ module IEV
 
       attr_reader :src_split, :parsed_sources, :raw_str, :src_str
 
-      def initialize(source_str)
+      def initialize(source_str, term_domain)
         @raw_str = source_str.dup.freeze
         @src_str = raw_str.decode_html.sanitize.freeze
+        @term_domain = term_domain
         parse
       end
 
@@ -79,7 +80,9 @@ module IEV
           "clause" => clause,
           "link" => obtain_source_link(source_ref),
           "relationship" => relation_type,
-          "original" => IEV::Termbase::Converter.mathml_to_asciimath(raw_ref),
+          "original" => IEV::Termbase::Converter.mathml_to_asciimath(
+            parse_anchor_tag(raw_ref, @term_domain),
+          ),
         }.compact
       rescue ::RelatonBib::RequestError => e
         warn e.message
@@ -328,7 +331,7 @@ module IEV
           {
             "type" => type.to_s,
             "modification" => IEV::Termbase::Converter.mathml_to_asciimath(
-              $2,
+              parse_anchor_tag($2, @term_domain),
             ).strip,
           }
         else
