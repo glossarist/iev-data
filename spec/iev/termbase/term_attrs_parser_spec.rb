@@ -152,6 +152,10 @@ RSpec.describe IEV::Termbase::TermAttrsParser do
       expect(subject.usage_info).to eq("info with extra spaces")
     end
 
+    it "<info with <sup>tags</sup> and text> m" do
+      expect(subject.usage_info).to eq("info with <sup>tags</sup> and text")
+    end
+
     it "works for empty strings", string: "" do
       expect(subject.usage_info).to be(nil)
     end
