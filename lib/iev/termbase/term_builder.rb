@@ -3,8 +3,6 @@
 # (c) Copyright 2020 Ribose Inc.
 #
 
-require "pp"
-
 module IEV
   module Termbase
     class TermBuilder

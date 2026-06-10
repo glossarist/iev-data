@@ -25,11 +25,13 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 2.7"
 
+  spec.add_runtime_dependency "benchmark"
   spec.add_runtime_dependency "creek", "~> 2.5"
   spec.add_runtime_dependency "mathml2asciimath", "< 1"
   spec.add_runtime_dependency "glossarist-new", "~> 1.0.0"
   spec.add_runtime_dependency "relaton", "~> 1.20"
   spec.add_runtime_dependency "sequel", "~> 5.40"
+  spec.add_runtime_dependency "singleton"
   spec.add_runtime_dependency "sqlite3", "~> 2.0"
   spec.add_runtime_dependency "thor", "~> 1.0"
   spec.add_runtime_dependency "zeitwerk", "~> 2.4"
@@ -38,5 +40,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "ruby-prof"
+  spec.add_development_dependency "ruby-prof" unless Gem.win_platform?
 end

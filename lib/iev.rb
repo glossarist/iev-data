@@ -9,7 +9,7 @@ require "mathml2asciimath"
 require "glossarist"
 require "relaton"
 require "relaton_bib"
-require "ruby-prof"
+require "ruby-prof" unless Gem.win_platform?
 require "sequel"
 require "thor"
 require "yaml"

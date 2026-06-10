@@ -1,16 +1,27 @@
 name: rake
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 on:
   push:
-    branches: [ main ]
+    branches: [ master, main ]
+    tags: [ v* ]
     paths-ignore:
       - '**.md'
       - 'docs/**'
   pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
   workflow_dispatch:
 
 jobs:
   rake:
     uses: metanorma/ci/.github/workflows/generic-rake.yml@main
     secrets:
-      pat_token: ${{ secrets.GITHUB_TOKEN }}
+      pat_token: ${{ secrets.GLOSSARIST_CI_PAT_TOKEN }}
