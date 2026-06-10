@@ -34,10 +34,14 @@ module IEV::Termbase
       def db2yaml(dbfile)
         handle_generic_options(options)
         db = Sequel.sqlite(dbfile)
-        ds = filter_dataset(db, options)
-        collection = build_collection_from_dataset(ds)
-        save_collection_to_files(collection, options[:output])
-        summary
+        begin
+          ds = filter_dataset(db, options)
+          collection = build_collection_from_dataset(ds)
+          save_collection_to_files(collection, options[:output])
+          summary
+        ensure
+          db.disconnect
+        end
       end
 
       def self.exit_on_failure?

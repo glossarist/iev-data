@@ -25,9 +25,13 @@ module IEV::Termbase
         info "Saving database to a file..."
         src_db.synchronize do |src_conn|
           dest_conn = SQLite3::Database.new(dbfile)
-          b = SQLite3::Backup.new(dest_conn, "main", src_conn, "main")
-          b.step(-1)
-          b.finish
+          begin
+            b = SQLite3::Backup.new(dest_conn, "main", src_conn, "main")
+            b.step(-1)
+            b.finish
+          ensure
+            dest_conn.close
+          end
         end
       end
 

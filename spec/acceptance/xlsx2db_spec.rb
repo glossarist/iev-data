@@ -16,22 +16,25 @@ RSpec.describe "IEV Termbase" do
         expect(dbfile).to satisfy { |p| File.file? p }
 
         db = SQLite3::Database.new(dbfile)
+        begin
+          sql = <<~SQL
+            select count(*)
+            from concepts
+            where language = 'en'
+          SQL
 
-        sql = <<~SQL
-          select count(*)
-          from concepts
-          where language = 'en'
-        SQL
+          expect(db.execute(sql).first.first).to eq(2)
 
-        expect(db.execute(sql).first.first).to eq(2)
+          sql = <<~SQL
+            select term
+            from concepts
+            where language = 'en' and ievref = '103-01-01'
+          SQL
 
-        sql = <<~SQL
-          select term
-          from concepts
-          where language = 'en' and ievref = '103-01-01'
-        SQL
-
-        expect(db.execute(sql).first.first).to eq("function")
+          expect(db.execute(sql).first.first).to eq("function")
+        ensure
+          db.close
+        end
       end
     end
   end
