@@ -1,0 +1,16 @@
+name: rake
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  rake:
+    uses: metanorma/ci/.github/workflows/generic-rake.yml@main
+    secrets:
+      pat_token: ${{ secrets.GITHUB_TOKEN }}
