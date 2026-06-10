@@ -1,5 +1,15 @@
 = IEC IEV Termbase programs
 
+[IMPORTANT]
+====
+*This gem is deprecated and no longer maintained.*
+
+Development has moved to the IEV repository:
+https://github.com/glossarist/iev
+
+Please use https://github.com/glossarist/iev[glossarist/iev] instead.
+====
+
 == Purpose
 
 This gem is used for parsing Excel exports from IEV.
